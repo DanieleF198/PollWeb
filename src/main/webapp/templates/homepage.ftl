@@ -10,7 +10,8 @@
         <@macros.style />
     </head>
     <body>
-        <div style="height: 500px;">
+        <@macros.header />
+        <div style="height: 1000px;">
             <div class="container mt-5 h-100">
                 <div class="row shadow-lg h-100">
                     <div class="col-lg-4 bg-success"></div>
@@ -19,6 +20,6 @@
                 </div>
             </div>
         </div>
-        <@globalTemplate.script />
+        <@macros.script />
     </body>
 </html>
