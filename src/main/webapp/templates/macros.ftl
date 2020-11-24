@@ -9,7 +9,7 @@
 </#macro>
     
 <#macro header>
-    <nav class="navbar navbar-expand-lg fixed-top navbar-light shadow bg-light" style="border-bottom:20px solid #fec107">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light shadow bg-light" style="border-bottom:20px solid #fec107;">
         <a class="navbar-brand" href="#">
             <img src="images/logoDDP.png" width="80" height="50" alt="" loading="lazy">
         </a>
@@ -38,4 +38,22 @@
             </form>
         </div>
     </nav>
+</#macro>
+    
+<#macro footer>
+    <footer class="footer border-top mt-5 pt-4 pb-2 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <a href="#" class="mr-3 text-secondary text-decoration-none">Chi siamo</a>
+                    <a href="#" class="ml-3 mr-3 text-secondary text-decoration-none">Contattaci</a>
+                    <a href="#" class="ml-3 mr-3 text-secondary text-decoration-none">Policy & Privacy</a>
+                    <a href="#" class="ml-3 mr-3 text-secondary text-decoration-none">FAQ</a>
+                </div>
+                <div class="col-lg-4">
+                    <p class="text-secondary">mandaci una mail a <a href="#" class="text-dark text-decoration-none">QuackDuckPoll@outlook.it</a></p>
+                </div>   
+            </div>
+        </div>
+    </footer>           
 </#macro>

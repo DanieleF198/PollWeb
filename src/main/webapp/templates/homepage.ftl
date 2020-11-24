@@ -10,16 +10,13 @@
         <@macros.style />
     </head>
     <body>
-        <@macros.header />
-        <div style="height: 1000px;">
-            <div class="container mt-5 h-100">
-                <div class="row shadow-lg h-100">
-                    <div class="col-lg-4 bg-success"></div>
-                    <div class="col-lg-4 bg-light"><div style="text-align: center; margin-top:50%;">CIAO!<br/> questa e' giusto una scheramata di prova che ho creato per fare testing e per riprendere la mano con bootstrap.</div></div>
-                    <div class="col-lg-4 bg-danger"></div>
-                </div>
-            </div>
+        <div class="d-flex flex-column min-vh-100">
+            <@macros.header />
+            <main class="flex-fill">
+                <img src="images/logoDDP.png" alt="" loading="lazy" class ="img-fluid" style="margin-top:6%; height: auto">
+            </main>
+            <@macros.footer />
+            <@macros.script />
         </div>
-        <@macros.script />
     </body>
 </html>
