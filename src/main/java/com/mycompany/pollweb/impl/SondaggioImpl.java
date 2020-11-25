@@ -20,16 +20,20 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     private int id;
     private int userId;
     private boolean quiz;
+    private int stato; //0 da fare - 1 fatto - 2 confermato
+    private boolean visibilita;
     private List <DomandaImpl> domande = new ArrayList<>();
     private String testoApertura;
     private String testoChiusura;
     private Date creazione;
     private Date scadenza; 
 
-    public SondaggioImpl(int id, int userId, boolean quiz, Date creazione, Date scadenza ,String testoApertura,String testoChiusura) {
+    public SondaggioImpl(int id, int userId, boolean quiz, int stato, boolean visibilita, Date creazione, Date scadenza ,String testoApertura,String testoChiusura) {
         this.id = id;
         this.userId = userId;
         this.quiz = quiz;
+        this.stato = stato;
+        this.visibilita = visibilita;
         this.creazione = creazione;
         this.scadenza = scadenza;
         this.testoApertura = testoApertura;
@@ -66,12 +70,24 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
         return scadenza;
     }
 
+    @Override
     public String getTestoApertura() {
         return testoApertura;
     }
 
+    @Override
     public String getTestoChiusura() {
         return testoChiusura;
+    }
+
+    @Override
+    public int getStato() {
+        return stato;
+    }
+
+    @Override
+    public boolean isVisibilita() {
+        return visibilita;
     }
     
     @Override
@@ -104,12 +120,24 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
         this.scadenza = scadenza;
     }
 
+    @Override
     public void setTestoApertura(String testoApertura) {
         this.testoApertura = testoApertura;
     }
 
+    @Override
     public void setTestoChiusura(String testoChiusura) {
         this.testoChiusura = testoChiusura;
+    }
+
+    @Override
+    public void setStato(int stato) {
+        this.stato = stato;
+    }
+
+    @Override
+    public void setVisibilita(boolean visibilita) {
+        this.visibilita = visibilita;
     }
     
 }

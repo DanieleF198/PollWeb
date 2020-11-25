@@ -32,6 +32,10 @@ public interface Sondaggio extends DataItem<Integer> {
 
     public String getTestoChiusura();
     
+    public int getStato();
+
+    public boolean isVisibilita();
+    
     public void setId(int newId);
 
     public void setQuiz(boolean quiz);
@@ -47,5 +51,9 @@ public interface Sondaggio extends DataItem<Integer> {
     public void setTestoApertura(String testoApertura);
 
     public void setTestoChiusura(String testoChiusura);
+    
+    public void setStato(int stato);
+
+    public void setVisibilita(boolean visibilita);
     
 }
