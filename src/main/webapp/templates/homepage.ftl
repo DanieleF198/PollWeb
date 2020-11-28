@@ -8,8 +8,9 @@
         <meta charset="${charset}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <@macros.style />
+        <@macros.carouselOvverridingStyle />
     </head>
-    <body>
+    <body class="bg-light">
         <div class="d-flex flex-column min-vh-100">
             <@macros.header />
             <main class="flex-fill">
@@ -31,7 +32,7 @@
                     </div>
                 </div>
                 <!-- End welcome section -->
-                <div class="container-fluid" style="background-color: #FFFBC9">
+                <div class="container-fluid mb-5" style="background-color: #FFFBC9">
                     
                     <!-- Mini-banners section -->
                     <div class="container">
@@ -70,9 +71,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- End mini-banners section -->
-                    
                 </div>
+                <!-- End mini-banners section -->
+                <@macros.publicSurveyCorousel />
             </main>
             <@macros.footer />
             <@macros.script />

@@ -4,6 +4,68 @@
     <link rel="stylesheet" href="css/style.css">
     <!-- End style -->
 </#macro>
+    
+<#macro carouselOvverridingStyle>
+    <!-- bootstrap carousel ovverriding style -->
+    <style>
+        .carousel-control-prev  {
+            margin-left: -100px
+        }
+        
+        .carousel-control-next {
+            margin-right: -100px
+        }
+        
+        @media screen and (max-width: 1200px){
+            .carousel-control-prev {
+                margin-left: -85px
+            }
+        
+            .carousel-control-next {
+                margin-right: -85px
+            }
+        }
+        
+        @media screen and (max-width: 992px){
+            .carousel-control-prev {
+                margin-left: -80px
+            }
+        
+            .carousel-control-next {
+                margin-right: -80px
+            }
+        }
+        
+        @media screen and (max-width: 768px){
+            .carousel-control-prev {
+                margin-left: -60px
+            }
+        
+            .carousel-control-next {
+                margin-right: -60px
+            }
+        }
+        
+        @media screen and (max-width: 576px){
+            .carousel-control-prev {
+                margin-left: -50px
+            }
+        
+            .carousel-control-next {
+                margin-right: -50px
+            }
+        }
+        
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+        }
+
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+        }
+    </style>
+    <!-- Endbootstrap carousel ovverriding style -->
+</#macro>
 
 <#macro script>
     <!-- Script -->
@@ -49,20 +111,109 @@
     
 <#macro footer>
     <!-- Footer -->
-    <footer class="footer border-top mt-5 pt-4 pb-2 bg-light">
+    <footer class="footer border-top mt-5 pt-4 pb-2 bg-dark">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <a href="#" class="mr-3 text-secondary text-decoration-none">Chi siamo</a>
-                    <a href="#" class="ml-3 mr-3 text-secondary text-decoration-none">Contattaci</a>
-                    <a href="#" class="ml-3 mr-3 text-secondary text-decoration-none">Policy & Privacy</a>
-                    <a href="#" class="ml-3 mr-3 text-secondary text-decoration-none">FAQ</a>
+                    <a href="#" class="mr-3 text-light text-decoration-none">Chi siamo</a>
+                    <a href="#" class="ml-3 mr-3 text-light text-decoration-none">Contattaci</a>
+                    <a href="#" class="ml-3 mr-3 text-light text-decoration-none">Policy & Privacy</a>
+                    <a href="#" class="ml-3 text-light text-decoration-none">FAQ</a>
                 </div>
                 <div class="col-lg-4">
-                    <p class="text-secondary">mandaci una mail a <a href="#" class="text-dark text-decoration-none">QuackDuckPoll@outlook.it</a></p>
+                    <p class="text-light">mandaci una mail a <a href="#" class="text-warning text-decoration-none">QuackDuckPoll@outlook.it</a></p>
                 </div>   
             </div>
         </div>
     </footer>
     <!-- End footer -->
-</#macro>
+    </#macro>
+    
+    <#macro publicSurveyCorousel>
+    <!-- Public survey carousel -->
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row mb-1">
+                <div class="col-lg-12 text-center">
+                    <h3> Sondaggi pubblici </h3>
+                    <p> Le possibilit&#224; che ti offriamo, direttamente da quello che hanno realizzato gli altri utenti (<a href="#" class="text-info text-decoration-none">vedi altro</a>).</p>
+                </div>
+            </div>
+            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="card-deck mr-1 ml-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                </div>
+                                <div class="card-footer bg-warning">
+                                    <small class="text-black">Last updated 3 mins ago</small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                                <div class="card-footer bg-warning">
+                                    <small class="text-black">Last updated 3 mins ago</small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                                </div>
+                                <div class="card-footer bg-warning">
+                                    <small class="text-black">Last updated 3 mins ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="card-deck mr-1 ml-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title 2</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                </div>
+                                <div class="card-footer bg-warning">
+                                    <small class="text-black">Last updated 3 mins ago</small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title 2</h5>
+                                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                                </div>
+                                <div class="card-footer bg-warning">
+                                    <small class="text-black">Last updated 3 mins ago</small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title 2</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                                </div>
+                                <div class="card-footer bg-warning">
+                                    <small class="text-black">Last updated 3 mins ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev text-dark" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next text-dark" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- End public survey carousel -->
+    </#macro>
