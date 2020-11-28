@@ -131,7 +131,7 @@
     
     <#macro publicSurveyCorousel>
     <!-- Public survey carousel -->
-    <div class="container-fluid">
+    <div class="container-fluid mb-5">
         <div class="container">
             <div class="row mb-1">
                 <div class="col-lg-12 text-center">

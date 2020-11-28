@@ -74,6 +74,57 @@
                 </div>
                 <!-- End mini-banners section -->
                 <@macros.publicSurveyCorousel />
+                
+                <!-- Info section -->
+                <div class="container-fluid mb-5">
+                    <div class="container border-bottom">
+                        <div class="row mb-5 border-bottom">
+                            <div class="col-lg-8 mb-3">
+                                <img src="images/temp1(1000x500).jpg" width="750" height="350" class ="img-fluid" alt="" loading="lazy">
+                            </div>
+                            <div class="col-lg-4">
+                                <h3> I nostri sondaggi</h3>
+                                <p> in questa sezione che al momento non ho voglia di scrivere metteremo alla sinistra un immagine esplicativa e a destra un testo che descrive quella immagine e fornisce informazioni aggiuntive. </p>
+                                <p> Questo è un eventuale secondo paragrafo (probabilmente è riempitivo) in cui scriveremo altre cose ancora collegate a ciò che viene scritto nel primo paragrafo. </p>
+                            </div>
+                        </div>
+                        <div class="row mb-5 border-bottom">
+                            <div class="col-lg-4 order-2 order-lg-1">
+                                <h3> I nostri sondaggi - parte 2</h3>
+                                <p> in questa sezione che al momento non ho voglia di scrivere metteremo alla sinistra un immagine esplicativa e a destra un testo che descrive quella immagine e fornisce informazioni aggiuntive. </p>
+                                <p> Questo è un eventuale secondo paragrafo (probabilmente è riempitivo) in cui scriveremo altre cose ancora collegate a ciò che viene scritto nel primo paragrafo. </p>
+                            </div>
+                            <div class="col-lg-8 order-1 order-lg-2 mb-3">
+                                <img src="images/temp1(1000x500).jpg" width="750" height="350" class ="img-fluid" alt="" loading="lazy">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-8 mb-3">
+                                <img src="images/temp1(1000x500).jpg" width="750" height="350" class ="img-fluid" alt="" loading="lazy">
+                            </div>
+                            <div class="col-lg-4">
+                                <h3> I nostri sondaggi Parte 3</h3>
+                                <p> in questa sezione che al momento non ho voglia di scrivere metteremo alla sinistra un immagine esplicativa e a destra un testo che descrive quella immagine e fornisce informazioni aggiuntive. </p>
+                                <p> Questo è un eventuale secondo paragrafo (probabilmente è riempitivo) in cui scriveremo altre cose ancora collegate a ciò che viene scritto nel primo paragrafo. </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End info section -->
+                <!-- Join us section -->
+                <div class="container-fluid">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p class="h3 text-center mb-5">Noi non ti chiediamo nulla, quindi non hai nulla da perdere.</p>
+                                <form class="form-inline">
+                                    <button class="btn btn-warning btn-lg btn-block" type="button">Unisciti a noi</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End join us section -->
             </main>
             <@macros.footer />
             <@macros.script />
