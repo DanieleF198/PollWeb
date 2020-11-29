@@ -6,6 +6,7 @@
 package com.mycompany.pollweb.model;
 
 import com.mycompany.pollweb.data.DataItem;
+import org.json.JSONObject;
 
 /**
  *
@@ -21,7 +22,9 @@ public interface Domanda extends DataItem<Integer> {
     
     String getTipo();
     
-    String getRispostaCorretta();
+    JSONObject getRispostaCorretta();
+    
+    public JSONObject getOpzioni();
     
     public int getPosizione();
 
@@ -33,7 +36,9 @@ public interface Domanda extends DataItem<Integer> {
 
     void setTipo(String tipo);
 
-    void setRispostaCorretta(String rispostaCorretta);
+    void setRispostaCorretta(JSONObject rispostaCorretta);
+    
+    public void setOpzioni(JSONObject opzioni);
     
     public void setPosizione(int posizione);
 
