@@ -27,13 +27,23 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.20</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.json4s</groupId>
+            <artifactId>json4s-native_2.10</artifactId>
+            <version>3.2.3</version>
+        </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20201115</version>
+        </dependency>
+
     </dependencies>
 
     <build>

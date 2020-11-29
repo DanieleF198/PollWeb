@@ -7,6 +7,9 @@ package com.mycompany.pollweb.impl;
 
 import com.mycompany.pollweb.data.DataItemImpl;
 import com.mycompany.pollweb.model.Domanda;
+import org.json.JSONObject;
+
+
 
 /**
  *
@@ -20,16 +23,17 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     private String tipo;
     private int posizione;
     public boolean obbligatoria;
-    private String rispostaCorretta; //VEDIAMO SE DOBBIAMO GESTIRLO CON UN JSONoBJECT
-    //implementare opzioni con jsonObject/jsonArray
+    private JSONObject opzioni = new JSONObject();   
+    private JSONObject rispostaCorretta = new JSONObject();   
 
-    public DomandaImpl(int id, String titolo, String descrizione, String tipo, int posizione, boolean obbligatoria, String rispostaCorretta) {
+    public DomandaImpl(int id, String titolo, String descrizione, String tipo, int posizione, boolean obbligatoria, JSONObject opzioni, JSONObject rispostaCorretta) {
         this.id = id;
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.tipo = tipo;
         this.posizione = posizione;
         this.obbligatoria = obbligatoria;
+        this.opzioni = opzioni;
         this.rispostaCorretta = rispostaCorretta;
     }
     
@@ -54,8 +58,13 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     }
 
     @Override
-    public String getRispostaCorretta() {
+    public JSONObject getRispostaCorretta() {
         return rispostaCorretta;
+    }
+
+    @Override
+    public JSONObject getOpzioni() {
+        return opzioni;
     }
 
     @Override
@@ -84,8 +93,13 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     }
 
     @Override
-    public void setRispostaCorretta(String rispostaCorretta) {
+    public void setRispostaCorretta(JSONObject rispostaCorretta) {
         this.rispostaCorretta = rispostaCorretta;
+    }
+
+    @Override
+    public void setOpzioni(JSONObject opzioni) {
+        this.opzioni = opzioni;
     }
 
     @Override
