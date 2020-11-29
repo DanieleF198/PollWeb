@@ -16,6 +16,10 @@
             margin-right: -100px
         }
         
+        .variable-height{
+                height: 230px    
+            }
+        
         @media screen and (max-width: 1200px){
             .carousel-control-prev {
                 margin-left: -85px
@@ -24,9 +28,13 @@
             .carousel-control-next {
                 margin-right: -85px
             }
+            
+            .variable-height{
+                height: 230px    
+            }
         }
         
-        @media screen and (max-width: 992px){
+        @media screen and (max-width: 992px){ //considerare questo breakpoin per il massimo numero di caratteri nella descrione del carosello
             .carousel-control-prev {
                 margin-left: -80px
             }
@@ -34,15 +42,24 @@
             .carousel-control-next {
                 margin-right: -80px
             }
+            
+            .variable-height{
+                height: 170px    
+            }
         }
         
         @media screen and (max-width: 768px){
             .carousel-control-prev {
-                margin-left: -60px
+                margin-left: -50px
             }
+            
         
             .carousel-control-next {
-                margin-right: -60px
+                margin-right: -50px
+            }
+            
+            .variable-height{
+                height: 180px    
             }
         }
         
@@ -53,6 +70,10 @@
         
             .carousel-control-next {
                 margin-right: -50px
+            }
+            
+            .variable-height{
+                height: 200px    
             }
         }
         
@@ -143,62 +164,78 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <div class="card-deck mr-1 ml-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <div class="row no-gutters">
+                                <div class="col-lg-4 mb-3 variable-height">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                        </div>
+                                        <div class="card-footer bg-warning">
+                                            <small class="text-black">Last updated 3 mins ago</small>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-footer bg-warning">
-                                    <small class="text-black">Last updated 3 mins ago</small>
+                                <div class="col-lg-4 mb-3 variable-height">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                                        </div>
+                                        <div class="card-footer bg-warning">
+                                            <small class="text-black">Last updated 3 mins ago</small>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                                </div>
-                                <div class="card-footer bg-warning">
-                                    <small class="text-black">Last updated 3 mins ago</small>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                                </div>
-                                <div class="card-footer bg-warning">
-                                    <small class="text-black">Last updated 3 mins ago</small>
+                                <div class="col-lg-4 variable-height">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action. (MAX 200 char)</p>
+                                        </div>
+                                        <div class="card-footer bg-warning">
+                                            <small class="text-black">Last updated 3 mins ago</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <div class="card-deck mr-1 ml-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title 2</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <div class="row no-gutters">
+                                <div class="col-lg-4 mb-3 variable-height">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                        </div>
+                                        <div class="card-footer bg-warning">
+                                            <small class="text-black">Last updated 3 mins ago</small>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-footer bg-warning">
-                                    <small class="text-black">Last updated 3 mins ago</small>
+                                <div class="col-lg-4 mb-3 variable-height">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                                        </div>
+                                        <div class="card-footer bg-warning">
+                                            <small class="text-black">Last updated 3 mins ago</small>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title 2</h5>
-                                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                                </div>
-                                <div class="card-footer bg-warning">
-                                    <small class="text-black">Last updated 3 mins ago</small>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title 2</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                                </div>
-                                <div class="card-footer bg-warning">
-                                    <small class="text-black">Last updated 3 mins ago</small>
+                                <div class="col-lg-4 variable-height">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+                                        </div>
+                                        <div class="card-footer bg-warning">
+                                            <small class="text-black">Last updated 3 mins ago</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
