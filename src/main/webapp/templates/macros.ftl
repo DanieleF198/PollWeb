@@ -10,16 +10,16 @@
     <style>
         .carousel-control-prev  {
             margin-left: -100px
-        }
+            }
         
         .carousel-control-next {
             margin-right: -100px
-        }
+            }
         
         .variable-height{
                 height: 230px    
             }
-        
+       
         @media screen and (max-width: 1200px){
             .carousel-control-prev {
                 margin-left: -85px
@@ -85,6 +85,19 @@
             background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
         }
     </style>
+    
+    <noscript>
+      <style>
+        .carousel-control-next{
+            display: none;
+        }
+        
+        .carousel-control-prev{
+            display: none;
+        }
+      </style>
+    </noscript>
+    
     <!-- Endbootstrap carousel ovverriding style -->
 </#macro>
 
@@ -97,14 +110,60 @@
 </#macro>
     
 <#macro header>
+    
+<style>
+      #navbar-toggle-cbox {
+        display: none;
+      }
+    </style>
+    <noscript>
+      <style>
+        .dropdown:hover > .dropdown-menu {
+          display: block;
+        }
+
+        label[for=navbar-toggle-cbox] {
+          cursor: pointer;
+        }
+
+        #navbar-toggle-cbox:checked ~ .collapse {
+          display: block;
+        }
+        
+        .navbar-toggle{
+            display: none;
+        }
+        
+        @media screen and (max-width: 991px){
+            .navbar-toggle{
+                display: block;
+            }
+        }
+
+        #toggle-navbar {
+          display: none;
+        }
+      </style>
+    </noscript>
+
     <!-- Header -->
     <nav class="navbar navbar-expand-lg fixed-top navbar-light shadow bg-light" style="border-bottom:20px solid #fec107;">
         <a class="navbar-brand" href="#">
             <img src="images/logoDDP.png" width="80" height="50" alt="" loading="lazy">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        
+        <input aria-controls="navbar-main" id="navbar-toggle-cbox" role="button" type="checkbox">
+        
+        <noscript>
+            <label class="navbar-toggle" for="navbar-toggle-cbox">
+                <span class="navbar-toggler-icon"></span>
+            </label>
+        </noscript>
+        
+        <button class="navbar-toggler" type="button" id="toggle-navbar" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
