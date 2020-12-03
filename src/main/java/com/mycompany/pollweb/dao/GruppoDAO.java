@@ -3,18 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.pollweb.model;
-
-import com.mycompany.pollweb.data.DataItem;
+package com.mycompany.pollweb.dao;
 
 /**
  *
  * @author Cronio
  */
-public interface Gruppo extends DataItem<Integer> {
+public interface GruppoDAO {
     
-    public int getId();
-
-    public String getNomeGruppo();
-
 }

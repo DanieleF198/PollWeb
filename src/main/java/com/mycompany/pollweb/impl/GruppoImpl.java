@@ -14,17 +14,24 @@ import com.mycompany.pollweb.model.Gruppo;
  */
 public class GruppoImpl extends DataItemImpl<Integer> implements Gruppo {
     
-    private String id;
+    private int idGruppo;
     private String nomeGruppo;
 
-    public GruppoImpl(String id, String nomeGruppo) {
-        this.id = id;
+    public GruppoImpl(int idGruppo, String nomeGruppo) {
+        super();
+        this.idGruppo = idGruppo;
         this.nomeGruppo = nomeGruppo;
+    }
+    
+    public GruppoImpl() {
+        super();
+        idGruppo = 0;
+        nomeGruppo = "";
     }
 
     @Override
-    public String getId() { //getter
-        return id;
+    public int getId() { //getter
+        return idGruppo;
     }
 
     @Override
