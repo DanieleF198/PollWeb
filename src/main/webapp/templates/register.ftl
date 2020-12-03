@@ -45,7 +45,7 @@
                 bottom: 0;
             }
             
-            @media screen and (max-width: 992px) , screen and (max-height: 755px), screen and (max-width: 1200px) and (max-height: 774px){
+            @media screen and (max-width: 992px) and (max-height: 930px) , screen and (max-height: 755px), screen and (max-width: 1200px) and (max-height: 774px){
                 .footer{
                     position: relative;
                 }
