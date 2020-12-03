@@ -43,10 +43,14 @@
                 position: absolute;
                 width: 100%;
                 bottom: 0;
-            }      
+            }    
+            
+            @media screen and (max-height: 558px){
+            .footer{
+                position: relative;
+            }
       }
         </style>
-        <@macros.carouselOvverridingStyle />
     </head>
     <body class="bg-light">
                 <form class="form-signin">
@@ -63,7 +67,7 @@
                             <input type="checkbox" value="remember-me"/>
                             <span class="warning"></span>
                         </label>
-                        Ricordami
+                        &nbspRicordami
                     </div>
                     <button class="btn btn-lg btn-warning btn-block" type="submit">Accedi!</button>
                     <div class="mt-2 mb-3 text-center">

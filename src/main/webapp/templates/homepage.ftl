@@ -21,9 +21,9 @@
                             <div class="col-lg-5 pl-5 align-self-center">
                                 <h1>Quack, Duck, Poll!</h1>
                                 <h2>Uno spazio confortevole dove creare sondaggi in base alle tue esigenze</h2>
-                                <form class="form-inline pt-3">
-                                    <button class="btn btn-warning" type="button">Comincia adesso!</button>
-                                </form>
+                                <div class="pt-3">
+                                    <a href="register" class="btn btn-warning">Comincia adesso!</a>
+                                </div>
                             </div>
                             <div class="col-lg-7 pr-5">
                                 <img src="images/welcomeImage.png" alt="" loading="lazy" class ="img-fluid" style="margin-top:6%; height: auto">
@@ -117,9 +117,9 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <p class="h3 text-center mb-5">Noi non ti chiediamo nulla, quindi non hai nulla da perdere.</p>
-                                <form class="form-inline">
-                                    <button class="btn btn-warning btn-lg btn-block" type="button">Unisciti a noi</button>
-                                </form>
+                                <div class="form-inline">
+                                    <a href="register" class="btn btn-warning btn-lg btn-block">Unisciti a noi</a>
+                                </div>
                             </div>
                         </div>
                     </div>
