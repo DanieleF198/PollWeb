@@ -2,6 +2,97 @@
     <!-- Style -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        @keyframes check {
+            0% {height: 0;width: 0;}
+            25% {height: 0;width: 8px;}
+            50% {height: 18px;width: 8px;}
+        }
+        
+        .checkbox{
+            background-color:#fff;
+            display:inline-block;
+            height:26px;
+            margin:0 .25em;
+            width:26px;
+            border-radius:4px;
+            border:1px solid #ccc;
+            float:left
+        }
+        
+        .checkbox span{
+            display:block;
+            height:26px;
+            position:relative;
+            width:26px;
+            padding:0
+        }
+        
+        .checkbox span:after{
+            -moz-transform:scaleX(-1) rotate(135deg);
+            -ms-transform:scaleX(-1) rotate(135deg);
+            -webkit-transform:scaleX(-1) rotate(135deg);
+            transform:scaleX(-1) rotate(135deg);
+            -moz-transform-origin:left top;
+            -ms-transform-origin:left top;
+            -webkit-transform-origin:left top;
+            transform-origin:left top;
+            border-right:4px solid #fff;
+            border-top:4px solid #fff;
+            content:'';
+            display:block;
+            height:18px;
+            left:3px;
+            position:absolute;
+            top:15px;
+            width:8px
+        }
+        
+        .checkbox span:hover:after{
+            border-color:#999
+        }
+        
+        .checkbox input{
+            display:none
+        }
+        
+        .checkbox input:checked + span:after{
+            -webkit-animation:check .8s;
+            -moz-animation:check .8s;
+            -o-animation:check .8s;
+            animation:check .8s;
+            border-color:#555
+        }
+        
+        .checkbox input:checked + .default:after{
+            border-color:#444
+        }
+        
+        .checkbox input:checked + .primary:after{
+            border-color:#2196F3
+        }
+        
+        .checkbox input:checked + .success:after{
+            border-color:#8bc34a
+        }
+        
+        .checkbox input:checked + .info:after{
+            border-color:#3de0f5
+        }
+        
+        .checkbox input:checked + .warning:after{
+            border-color:#f0AD4E
+        }
+        
+        .checkbox input:checked + .danger:after{
+            border-color:#f44336
+        }
+        
+        .form-control:focus {
+            border-color: #f0ad4e;
+            box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
+        }
+    </style>
     <!-- End style -->
 </#macro>
     
@@ -179,11 +270,10 @@
                     <a class="nav-link" href="#">sondaggio d'esempio</a>
                 </li>
             </ul>
-            <form class="form-inline">
-                <button class="btn btn-warning" type="button">accedi</button>
-                <div class="ml-1"></div>
-                <button class="btn btn-outline-dark" type="button">iscriviti</button>
-            </form>
+            <div class="row ml-1 mr-2">
+                <a href="login" class="btn btn-warning">accedi</a>
+                <a href="register" class="btn btn-outline-dark ml-2">registrati</a>
+            </div>
         </div>
     </nav>
     <!-- End header-->

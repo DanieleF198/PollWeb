@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <#import "/macros.ftl" as macros>
 <#assign charset="UTF-8">
-<#assign title="homepage">
+<#assign title="Quack, Duck, Poll!">
 <html>
     <head>
         <title>${title}</title>
