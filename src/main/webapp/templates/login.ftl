@@ -65,7 +65,10 @@
                         </label>
                         Ricordami
                     </div>
-                    <button class="btn btn-lg btn-warning btn-block" type="submit">Sign in</button>
+                    <button class="btn btn-lg btn-warning btn-block" type="submit">Accedi!</button>
+                    <div class="mt-2 mb-3 text-center">
+                        <a href="homepage" class="text-muted">Torna alla homepage</a>
+                    </div>
                 </form>
             <@macros.footer />
             <@macros.script />
