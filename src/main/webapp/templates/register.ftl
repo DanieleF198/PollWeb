@@ -58,7 +58,7 @@
             <div class="text-center">
                 <img class="mb-4" src="images/logoDDP.png" alt="" width="140" height="90">
             </div>
-            <h1 class="h3 mb-3 font-weight-normal text-center">Compila il modulo</h4>
+            <h1 class="h3 mb-3 font-weight-normal text-center">Compila il modulo</h1>
             <form class="needs-validation" novalidate>
                 <div class="row">
                     <div class="col-lg-5 mb-3">
