@@ -103,7 +103,40 @@
         /* Firefox */
         input[type=number] {
             -moz-appearance: textfield;
-}
+        }
+        
+        .pagination > li > a{
+            background-color: white;
+            color: #353a40;
+        }
+
+        .pagination > li > a:focus,
+        .pagination > li > a:hover,
+        .pagination > li > span:focus,
+        .pagination > li > span:hover{
+            color: #33373d;
+            background-color: #eee;
+            border-color: #ddd;
+            border-color: #f0ad4e;
+            box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
+        }
+
+        .pagination > .active > a{
+            color: white;
+            background-color: #5A4181 !Important;
+            border: solid 1px #5A4181 !Important;
+            border-color: #f0ad4e;
+            box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
+        }
+
+        .pagination > .active > a:hover{
+            background-color: #5A4181 !Important;
+            border: solid 1px #5A4181;
+            border-color: #f0ad4e;
+            box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
+        }
+        
+        
     </style>
     <!-- End style -->
 </#macro>
@@ -251,7 +284,7 @@
 
     <!-- Header -->
     <nav class="navbar navbar-expand-lg fixed-top navbar-light shadow bg-light" style="border-bottom:20px solid #fec107;">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="#" style="pointer-events: none; cursor: default;">
             <img src="images/logoDDP.png" width="80" height="50" alt="" loading="lazy">
         </a>
         
@@ -270,10 +303,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="homepage">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">sondaggi pubblici</a>
+                    <a class="nav-link" href="publicPolls">sondaggi pubblici</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">crea sondaggio</a>
@@ -318,7 +351,7 @@
             <div class="row mb-1">
                 <div class="col-lg-12 text-center">
                     <h3> Sondaggi pubblici </h3>
-                    <p> Le possibilit&#224; che ti offriamo, direttamente da quello che hanno realizzato gli altri utenti (<a href="#" class="text-info text-decoration-none">vedi altro</a>).</p>
+                    <p> Le possibilit&#224; che ti offriamo, direttamente da quello che hanno realizzato gli altri utenti (<a href="publicPolls" class="text-info text-decoration-none">vedi altro</a>).</p>
                 </div>
             </div>
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">

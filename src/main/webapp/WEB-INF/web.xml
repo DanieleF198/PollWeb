@@ -12,6 +12,10 @@
         <servlet-name>Register</servlet-name>
         <servlet-class>com.mycompany.pollweb.controllers.Register</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PublicPolls</servlet-name>
+        <servlet-class>com.mycompany.pollweb.controllers.PublicPolls</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/homepage</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PublicPolls</servlet-name>
+        <url-pattern>/publicPolls</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>homepage</welcome-file>
