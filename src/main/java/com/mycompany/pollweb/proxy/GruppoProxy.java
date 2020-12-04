@@ -25,22 +25,28 @@ public class GruppoProxy extends GruppoImpl implements DataItemProxy {
         this.dataLayer = d;
     }
     
+    @Override
+    public void setKey(Integer key) {
+        super.setKey(key);
+        this.modified = true;
+    }
     
-    
-    
-    
-    
+    public void setNomeGruppo(String nomeGruppo){
+        super.setNomeGruppo(nomeGruppo);
+        this.modified = true;
+    }
     
     
 
+    //METODI ESCLUSIVI DEL PROXY
     @Override
-    public void setModified(boolean arg0) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setModified(boolean dirty) {
+        this.modified = dirty;
     }
 
     @Override
     public boolean isModified() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return modified;
     }
     
 }
