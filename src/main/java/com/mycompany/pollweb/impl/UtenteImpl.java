@@ -16,25 +16,24 @@ import com.mycompany.pollweb.model.Utente;
  */
 public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     
-    private int id;
     private String nome; 
     private String mail;
     private String password;
+    private int eta;
+    private String email;
     private int idGruppo;
     private List <SondaggioImpl> sondaggi = new ArrayList<>();
     private List <RispostaImpl> risposte = new ArrayList<>();
-
-    public UtenteImpl(int id, String nome, String mail, String password) {
-        this.id = id;
-        this.nome = nome;
-        this.mail = mail;
-        this.password = password;
+    
+    public UtenteImpl (){
+        super();
+        this.nome = "";
+        this.mail = "";
+        this.password = "";
+        this.eta = 0;
+        this.email = "";
     }
     
-    @Override
-    public int getId(){ //getter
-	return id;
-    }
     
     @Override
     public String getNome(){
@@ -61,13 +60,19 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
         return risposte;
     }
 
+    @Override
     public int getIdGruppo() {
         return idGruppo;
     }
-    
+
     @Override
-    public void setId(int newId){ //setter
-	this.id = newId;
+    public int getEta() {
+        return eta;
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
     }
     
     @Override
@@ -97,6 +102,16 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
 
     public void setIdGruppo(int idGruppo) {
         this.idGruppo = idGruppo;
+    }
+
+    @Override
+    public void setEta(int eta) {
+        this.eta = eta;
+    }
+
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
     }
     
 }

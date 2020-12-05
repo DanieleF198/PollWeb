@@ -8,6 +8,7 @@ package com.mycompany.pollweb.dao;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.data.DataLayer;
 import com.mycompany.pollweb.model.Gruppo;
+import com.mycompany.pollweb.model.Utente;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
@@ -25,6 +26,7 @@ public class PollWebDataLayer extends DataLayer {
     public void init() throws DataException {
         //registriamo i nostri dao
         registerDAO(Gruppo.class, new GruppoDAO_MySQL(this));
+        registerDAO(Utente.class, new UtenteDAO_MySQL(this));
     }
     
     //helpers 
@@ -32,4 +34,7 @@ public class PollWebDataLayer extends DataLayer {
         return (GruppoDAO) getDAO(Gruppo.class);
     }
       
+    public UtenteDAO getUtenteDAO() {
+        return (UtenteDAO) getDAO(Gruppo.class);
+    }
 }

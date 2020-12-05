@@ -16,8 +16,6 @@ import java.util.List;
  */
 public interface Utente extends DataItem<Integer> {
     
-    public int getId();
-    
     public String getNome();
     
     public String getMail();
@@ -30,7 +28,9 @@ public interface Utente extends DataItem<Integer> {
     
     public int getIdGruppo();
     
-    public void setId(int newId);
+    public int getEta();
+
+    public String getEmail();
     
     public void setNome(String newNome);
     
@@ -43,5 +43,9 @@ public interface Utente extends DataItem<Integer> {
     public void setRisposte(List<RispostaImpl> risposta);   
     
     public void setIdGruppo(int idGruppo);
-    
+
+    public void setEta(int eta);
+
+    public void setEmail(String email);
+            
 }
