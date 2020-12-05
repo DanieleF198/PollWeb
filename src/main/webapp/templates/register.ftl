@@ -45,7 +45,7 @@
                 bottom: 0;
             }
             
-            @media screen and (max-width: 992px) and (max-height: 930px) , screen and (max-height: 755px), screen and (max-width: 1200px) and (max-height: 774px), screen and (max-width: 768px) and (max-height: 1030px){
+            @media screen and (max-width: 992px) and (max-height: 960px) , screen and (max-height: 767px), screen and (max-width: 1200px) and (max-height: 788px), screen and (max-width: 768px) and (max-height: 1030px){
                 .footer{
                     position: relative;
                 }
@@ -120,6 +120,17 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="row">
+                    <div class="col-md-12 mt-1">
+                        <label class="checkbox">
+                            <input type="checkbox" value="remember-me"/>
+                            <span class="warning"></span>
+                        </label>
+                        &nbspRichiedi l'abilitazione per creare sondaggi (senza potrai solo compilarli).
+                    </div>
+                </div>
+                
                 <div class="mb-4"></div>
                 <button class="btn btn-warning btn-lg btn-block" type="submit">Unisciti alla community</button>
                 <div class="mt-2 mb-3 text-center">
