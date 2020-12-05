@@ -45,7 +45,7 @@ public class GruppoDAO_MySQL extends DAO implements GruppoDAO {
             super.init();
             
             sGruppoByID = connection.prepareStatement("SELECT * FROM Gruppo WHERE idGruppo=?");
-            sGruppi = connection.prepareStatement("SELECT ID AS idGruppo FROM Gruppo");
+            sGruppi = connection.prepareStatement("SELECT * FROM Gruppo");
             
             iGruppo = connection.prepareStatement("INSERT INTO Gruppo (idGruppo, nomeGruppo) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
             uGruppo = connection.prepareStatement("UPDATE Gruppo SET idGruppo=?, nomeGruppo=? WHERE ID=?");
@@ -93,27 +93,27 @@ public class GruppoDAO_MySQL extends DAO implements GruppoDAO {
     }
     
     @Override
-    public Gruppo getGruppo(int gruppo_key) throws DataException {
-        Gruppo a = null;
+    public Gruppo getGruppo(int idGruppo) throws DataException {
+        Gruppo g = null;
         //prima vediamo se l'oggetto è già stato caricato
-        if (dataLayer.getCache().has(Gruppo.class, gruppo_key)) {
-            a = dataLayer.getCache().get(Gruppo.class, gruppo_key);
+        if (dataLayer.getCache().has(Gruppo.class, idGruppo)) {
+            g = dataLayer.getCache().get(Gruppo.class, idGruppo);
         } else {
             //altrimenti lo carichiamo dal database
             try {
-                sGruppoByID.setInt(1, gruppo_key);
+                sGruppoByID.setInt(1, idGruppo);
                 try (ResultSet rs = sGruppoByID.executeQuery()) {
                     if (rs.next()) {
-                        a = createGruppo(rs);
+                        g = createGruppo(rs);
                         //e lo mettiamo anche nella cache
-                        dataLayer.getCache().add(Gruppo.class, a);
+                        dataLayer.getCache().add(Gruppo.class, g);
                     }
                 }
             } catch (SQLException ex) {
-                throw new DataException("Unable to load Gruppo by ID", ex);
+                throw new DataException("Unable to load Gruppo by idGruppo", ex);
             }
         }
-        return a;
+        return g;
     }
     
     @Override
@@ -125,7 +125,7 @@ public class GruppoDAO_MySQL extends DAO implements GruppoDAO {
                 result.add((Gruppo) getGruppo(rs.getInt("idGruppo")));
             }
         } catch (SQLException ex) {
-            throw new DataException("Unable to load gruppo", ex);
+            throw new DataException("Unable to load Gruppi", ex);
         }
         return result;
     }
@@ -140,6 +140,7 @@ public class GruppoDAO_MySQL extends DAO implements GruppoDAO {
                     return;
                 }
                 uGruppo.setString(1, gruppo.getNomeGruppo());
+                uGruppo.setInt(2, gruppo.getKey());
 
 
                 if (uGruppo.executeUpdate() == 0) {

@@ -18,8 +18,6 @@ public interface Utente extends DataItem<Integer> {
     
     public String getNome();
     
-    public String getMail();
-    
     public String getPassword();
 
     public List<SondaggioImpl> getSondaggi();
@@ -33,8 +31,6 @@ public interface Utente extends DataItem<Integer> {
     public String getEmail();
     
     public void setNome(String newNome);
-    
-    public void setMail(String newMail);
     
     public void setPassword(String newPassword);
     
