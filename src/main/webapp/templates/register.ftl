@@ -45,7 +45,7 @@
                 bottom: 0;
             }
             
-            @media screen and (max-width: 992px) and (max-height: 960px) , screen and (max-height: 767px), screen and (max-width: 1200px) and (max-height: 788px), screen and (max-width: 768px) and (max-height: 1030px){
+            @media screen and (max-width: 992px) and (max-height: 960px) , screen and (max-height: 767px), screen and (max-width: 1200px) and (max-height: 788px), screen and (max-width: 768px) and (max-height: 1046px), screen and (max-width: 576px) and (max-height: 1071px){
                 .footer{
                     position: relative;
                 }
@@ -127,7 +127,7 @@
                             <input type="checkbox" value="remember-me"/>
                             <span class="warning"></span>
                         </label>
-                        &nbspRichiedi l'abilitazione per creare sondaggi (senza potrai solo compilarli).
+                        &nbspRichiedi l'abilitazione per creare sondaggi.
                     </div>
                 </div>
                 
