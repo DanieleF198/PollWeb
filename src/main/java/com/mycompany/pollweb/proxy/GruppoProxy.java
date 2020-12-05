@@ -30,7 +30,8 @@ public class GruppoProxy extends GruppoImpl implements DataItemProxy {
         super.setKey(key);
         this.modified = true;
     }
-    
+     
+    @Override
     public void setNomeGruppo(String nomeGruppo){
         super.setNomeGruppo(nomeGruppo);
         this.modified = true;

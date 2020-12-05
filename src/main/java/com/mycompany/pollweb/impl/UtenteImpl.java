@@ -17,7 +17,6 @@ import com.mycompany.pollweb.model.Utente;
 public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     
     private String nome; 
-    private String mail;
     private String password;
     private int eta;
     private String email;
@@ -28,7 +27,6 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     public UtenteImpl (){
         super();
         this.nome = "";
-        this.mail = "";
         this.password = "";
         this.eta = 0;
         this.email = "";
@@ -38,11 +36,6 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     @Override
     public String getNome(){
 	return nome;
-    }
-    
-    @Override
-    public String getMail(){
-	return mail;
     }
     
     @Override
@@ -81,11 +74,6 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     }
     
     @Override
-    public void setMail(String newMail){
-	this.mail = newMail;
-    }
-    
-    @Override
     public void setPassword(String newPassword){
 	this.password = newPassword;
     }
@@ -100,6 +88,7 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
         this.risposte = risposta;
     }
 
+    @Override
     public void setIdGruppo(int idGruppo) {
         this.idGruppo = idGruppo;
     }

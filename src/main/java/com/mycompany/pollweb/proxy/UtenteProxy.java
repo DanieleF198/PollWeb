@@ -7,7 +7,13 @@ package com.mycompany.pollweb.proxy;
 
 import com.mycompany.pollweb.data.DataItemProxy;
 import com.mycompany.pollweb.data.DataLayer;
+import com.mycompany.pollweb.impl.RispostaImpl;
+import com.mycompany.pollweb.impl.SondaggioImpl;
 import com.mycompany.pollweb.impl.UtenteImpl;
+import com.mycompany.pollweb.model.Gruppo;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,8 +32,55 @@ public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
     }
     
     @Override
+    public int getIdGruppo(){
+        return super.getIdGruppo(); 
+    }
+    
+    @Override
     public void setKey(Integer key) {
         super.setKey(key);
+        this.modified = true;
+    }
+    
+    @Override
+    public void setNome(String newNome){
+        super.setNome(newNome);
+	this.modified = true;
+    }
+    
+    @Override
+    public void setPassword(String newPassword){
+        super.setPassword(newPassword);
+	this.modified = true;
+    }
+    
+    @Override
+    public void setSondaggi(List<SondaggioImpl> sondaggio) {
+        super.setSondaggi(sondaggio);
+        this.modified = true;
+    }
+    
+    @Override
+    public void setRisposte(List<RispostaImpl> risposta) {
+        super.setRisposte(risposta);
+        this.modified = true;
+    }
+
+    @Override
+    public void setIdGruppo(int idGruppo) {
+        super.setIdGruppo(idGruppo);
+        this.modified = true;
+    }
+
+    @Override
+    public void setEta(int eta) {
+        super.setEta(eta);
+        this.modified = true;
+    }
+
+    @Override
+    public void setEmail(String email) {
+        super.setEmail(email);
         this.modified = true;
     }
 
