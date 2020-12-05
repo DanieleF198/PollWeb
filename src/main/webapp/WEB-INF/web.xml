@@ -16,6 +16,10 @@
         <servlet-name>PublicPolls</servlet-name>
         <servlet-class>com.mycompany.pollweb.controllers.PublicPolls</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Dashboard</servlet-name>
+        <servlet-class>com.mycompany.pollweb.controllers.Dashboard</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/homepage</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>PublicPolls</servlet-name>
         <url-pattern>/publicPolls</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Dashboard</servlet-name>
+        <url-pattern>/dashboard</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>homepage</welcome-file>

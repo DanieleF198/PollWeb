@@ -314,6 +314,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">sondaggio d'esempio</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard">Zona utente (template)</a>
+                </li>
             </ul>
             <div class="row ml-1 mr-2">
                 <a href="login" class="btn btn-warning">accedi</a>
