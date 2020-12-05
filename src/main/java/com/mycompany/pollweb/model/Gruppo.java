@@ -12,9 +12,9 @@ import com.mycompany.pollweb.data.DataItem;
  * @author Cronio
  */
 public interface Gruppo extends DataItem<Integer> {
-    
-    public int getId();
 
     public String getNomeGruppo();
+    
+    public void setNomeGruppo(String nomeGruppo);
 
 }
