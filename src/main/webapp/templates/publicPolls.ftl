@@ -2,7 +2,7 @@
 <#import "/macros.ftl" as macros>
 <#assign charset="UTF-8">
 <#assign title="Quack, Duck, Poll!">
-<html>
+<html lang="it">
     <head>
         <title>${title}</title>
         <meta charset="${charset}">
@@ -222,6 +222,7 @@
                 </div>
                 <!-- End cards -->
                 
+                <!-- Pagination -->
                 <div class="container-fluid mt-5">
                     <div class="container">
                         <nav class="mt-3" aria-label="Page navigation example">
@@ -245,6 +246,7 @@
                         </nav>
                     </div>
                 </div>
+                <!-- End pagination -->
                 
             </main>
             <@macros.footer />

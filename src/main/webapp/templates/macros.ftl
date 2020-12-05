@@ -170,7 +170,7 @@
             }
         }
         
-        @media screen and (max-width: 992px){ //considerare questo breakpoin per il massimo numero di caratteri nella descrione del carosello
+        @media screen and (max-width: 992px){ //considerare questo breakpoint per il massimo numero di caratteri nella descrione del carosello
             .carousel-control-prev {
                 margin-left: -80px
             }

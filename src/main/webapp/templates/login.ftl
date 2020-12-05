@@ -2,7 +2,7 @@
 <#import "/macros.ftl" as macros>
 <#assign charset="UTF-8">
 <#assign title="login">
-<html>
+<html lang="it">
     <head>
         <title>${title}</title>
         <meta charset="${charset}">
@@ -15,7 +15,7 @@
                 padding: 15px;
                 margin: auto;
             }
-            .form-signin .checkbox {
+            .form-signin {
                 font-weight: 400;
             }
             .form-signin .form-control {
@@ -53,28 +53,30 @@
         </style>
     </head>
     <body class="bg-light">
-                <form class="form-signin">
-                    <div class="text-center">
-                        <img class="mb-4" src="images/logoDDP.png" alt="" width="140" height="90">
-                    </div>
-                    <h1 class="h3 mb-3 font-weight-normal text-center">Effettua l'accesso</h1>
-                    <label for="inputEmail" class="sr-only">Indirizzo e-mail</label>
-                    <input type="email" id="inputEmail" class="form-control" placeholder="Indirizzo e-mail" required autofocus>
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                    <div>
-                        <label class="checkbox mb-3">
-                            <input type="checkbox" value="remember-me"/>
-                            <span class="warning"></span>
-                        </label>
-                        &nbspRicordami
-                    </div>
-                    <button class="btn btn-lg btn-warning btn-block" type="submit">Accedi!</button>
-                    <div class="mt-2 mb-3 text-center">
-                        <a href="homepage" class="text-muted">Torna alla homepage</a>
-                    </div>
-                </form>
-            <@macros.footer />
-            <@macros.script />
+        <!-- Login form -->
+        <form class="form-signin">
+            <div class="text-center">
+                <img class="mb-4" src="images/logoDDP.png" alt="" width="140" height="90">
+            </div>
+            <h1 class="h3 mb-3 font-weight-normal text-center">Effettua l'accesso</h1>
+            <label for="inputEmail" class="sr-only">Indirizzo e-mail</label>
+            <input type="email" id="inputEmail" class="form-control" placeholder="Indirizzo e-mail" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <div>
+                <label class="checkbox mb-3">
+                    <input type="checkbox" value="remember-me"/>
+                    <span class="warning"></span>
+                </label>
+                &nbspRicordami
+            </div>
+            <button class="btn btn-lg btn-warning btn-block" type="submit">Accedi!</button>
+            <div class="mt-2 mb-3 text-center">
+                <a href="homepage" class="text-muted">Torna alla homepage</a>
+            </div>
+        </form>
+        <!-- End login form -->
+        <@macros.footer />
+        <@macros.script />
     </body>
 </html>

@@ -2,7 +2,7 @@
 <#import "/macros.ftl" as macros>
 <#assign charset="UTF-8">
 <#assign title="Quack, Duck, Poll!">
-<html>
+<html lang="it">
     <head>
         <title>${title}</title>
         <meta charset="${charset}">
@@ -32,9 +32,8 @@
                     </div>
                 </div>
                 <!-- End welcome section -->
-                <div class="container-fluid mb-5" style="background-color: #FFFBC9">
-                    
-                    <!-- Mini-banners section -->
+                <!-- Mini-banners section -->
+                <div class="container-fluid mb-5" style="background-color: #FFFBC9">  
                     <div class="container">
                         <div class="row pt-5 pb-5">
                             
