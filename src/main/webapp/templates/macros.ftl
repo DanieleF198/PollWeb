@@ -136,7 +136,9 @@
             box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
         }
         
-        
+        .table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+            background-color: #fcf9e3;
+        }
     </style>
     <!-- End style -->
 </#macro>

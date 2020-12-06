@@ -15,7 +15,7 @@
                 bottom: 0;
             }
             
-            @media screen and (max-width: 992px) and (max-height: 960px) , screen and (max-height: 767px), screen and (max-width: 1200px) and (max-height: 788px), screen and (max-width: 768px) and (max-height: 1046px), screen and (max-width: 576px) and (max-height: 1071px){
+            @media screen and (max-width: 992px) and (max-height: 930px) , screen and (max-height: 755px), screen and (max-width: 1200px) and (max-height: 774px), screen and (max-width: 768px) and (max-height: 1030px){
                 .footer{
                     position: relative;
                 }
@@ -25,32 +25,32 @@
     </head>
     <body class="bg-light">
         <!-- Register form -->
-        <div class="container" style="max-width: 576px;">
+        <div class="container" style="max-width: 605px;">
             <div class="text-center">
                 <img class="mb-4" src="images/logoDDP.png" alt="" width="140" height="90">
             </div>
             <h1 class="h3 mb-3 font-weight-normal text-center">Compila il modulo</h1>
             <form class="needs-validation" novalidate>
                 <div class="row">
-                    <div class="col-lg-5 mb-3">
+                    <div class="col-lg-4 mb-3">
                         <label for="firstName">Nome</label>
                         <input type="text" class="form-control" id="firstName" placeholder="" value="" required> 
                         <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
                             Il nome inserito non è valido.
                         </div>
                     </div>
-                    <div class="col-lg-5 mb-3">
+                    <div class="col-lg-4 mb-3">
                         <label for="lastName">Cognome</label>
                         <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
                         <div class="invalid-feedback">
                             Il cognome inserito non è valido
                         </div>
                     </div>
-                    <div class="col-lg-2 mb-3">
-                        <label for="age">Et&#224;</label>
-                        <input type="number" class="form-control" id="age" placeholder="" value="" required>
+                    <div class="col-lg-4 mb-3">
+                        <label for="age">Data di nascita</label>
+                        <input type="date" class="form-control" id="date" placeholder="" value="" required>
                         <div class="invalid-feedback">
-                            L'et&#224; inserità non è valida
+                            La data inserita non è valida
                         </div>
                     </div>
                 </div>
@@ -91,17 +91,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="row">
-                    <div class="col-md-12 mt-1">
-                        <label class="checkbox">
-                            <input type="checkbox" value="remember-me"/>
-                            <span class="warning"></span>
-                        </label>
-                        &nbspRichiedi l'abilitazione per creare sondaggi.
-                    </div>
-                </div>
-                
                 <div class="mb-4"></div>
                 <button class="btn btn-warning btn-lg btn-block" type="submit">Unisciti alla community</button>
                 <div class="mt-2 mb-3 text-center">
