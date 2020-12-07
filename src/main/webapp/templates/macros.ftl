@@ -2,6 +2,7 @@
     <!-- Style -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="images/favicon.ico">
     <style>
         @keyframes check {
             0% {height: 0;width: 0;}
@@ -138,6 +139,25 @@
         
         .table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
             background-color: #fcf9e3;
+        }
+        
+        #header-search {
+            border-radius: 1em 1em 1em 1em;
+            padding-right: 39px;
+        }
+
+        #search-field svg {
+            width: 30px;
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            right: 8px;
+        }
+        
+        #search-field{
+            display: inline-block; 
+            width: 100%;
+            position: relative
         }
     </style>
     <!-- End style -->

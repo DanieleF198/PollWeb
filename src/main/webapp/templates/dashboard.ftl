@@ -101,7 +101,13 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-lg-12">
-                                <input type="text" class="form-control" placeholder="Cerca" style="border-radius: 1em 1em 1em 1em !important;">
+                                <div id="search-field">
+                                    <input type="text" class="form-control "id="header-search" placeholder="Cerca..." />
+                                    <svg id="search-icon" class="search-icon" viewBox="0 0 24 24">
+                                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -145,6 +151,66 @@
                     </div>
                 </div>
                 <!-- End personal polls -->
+                <!-- Compilated polls -->
+                <div class="container-fluid mt-5">
+                    <div class="container bg-white border rounded-lg">
+                        <div class="row pt-3 pb-2 pl-2 pr-2 bg-warning margin-bottom">
+                            <div class="col-lg-12">
+                                <h2>I sondaggi che hai compilato</h2>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-12">
+                                <div id="search-field">
+                                    <input type="text" class="form-control "id="header-search" placeholder="Cerca..." />
+                                    <svg id="search-icon" class="search-icon" viewBox="0 0 24 24">
+                                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-12">
+                                <table class="table table-striped table-curved">
+                                    <thead>
+                                        <tr class="bg-warning">
+                                            <th scope="col">#</th>
+                                            <th scope="col">Titolo</th>
+                                            <th scope="col">Data creazione</th>
+                                            <th scope="col">data scadenza</th>
+                                            <th scope="col">operazioni</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>sondaggio 1</td>
+                                            <td>03/12/2020</td>
+                                            <td>05/12/2020</td>
+                                            <td>da fare</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td>sondaggio 2</td>
+                                            <td>28/11/2020</td>
+                                            <td>28/12/2020</td>
+                                            <td>da fare</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">3</th>
+                                            <td>sondaggio 3</td>
+                                            <td>01/12/2020</td>
+                                            <td>31/01/2021</td>
+                                            <td>da fare</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End compilated polls -->
             </main>
             <@macros.footer />
             <@macros.script />
