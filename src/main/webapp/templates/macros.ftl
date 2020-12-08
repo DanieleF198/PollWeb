@@ -159,6 +159,34 @@
             width: 100%;
             position: relative
         }
+        
+        .header-margin{
+            margin-top:5%;
+        }
+
+        @media screen and (max-width: 1200px){
+            .header-margin{
+                margin-top:7.5%
+            }
+        }
+
+        @media screen and (max-width: 992px){
+                .header-margin{
+                margin-top:10%
+            }
+        }
+        
+        @media screen and (max-width: 768px){
+                .header-margin{
+                margin-top:12.5%
+            }
+        }
+        
+        @media screen and (max-width: 576px){
+                .header-margin{
+                margin-top:15%
+            }
+        }
     </style>
     <!-- End style -->
 </#macro>

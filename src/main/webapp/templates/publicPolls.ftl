@@ -17,7 +17,7 @@
             <main class="flex-fill">
                 <!-- Search bar -->
                 <div class="container-fluid">
-                    <div style="margin-top:5%"></div>
+                    <div class="header-margin"></div>
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-12">
