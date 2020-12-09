@@ -17,7 +17,7 @@ import org.json.JSONObject;
  */
 public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     
-    private int id;
+    private int idSodnaggio;
     private String titolo; 
     private String descrizione;
     private String tipo;
@@ -26,20 +26,21 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     private JSONObject opzioni = new JSONObject();   
     private JSONObject rispostaCorretta = new JSONObject();   
 
-    public DomandaImpl(int id, String titolo, String descrizione, String tipo, int posizione, boolean obbligatoria, JSONObject opzioni, JSONObject rispostaCorretta) {
-        this.id = id;
-        this.titolo = titolo;
-        this.descrizione = descrizione;
-        this.tipo = tipo;
-        this.posizione = posizione;
-        this.obbligatoria = obbligatoria;
-        this.opzioni = opzioni;
-        this.rispostaCorretta = rispostaCorretta;
+    public DomandaImpl() {
+        super();
+        this.idSodnaggio = 0;
+        this.titolo = "";
+        this.descrizione = "";
+        this.tipo = "";
+        this.posizione = 0;
+        this.obbligatoria = false;
+        this.opzioni = null;
+        this.rispostaCorretta = null;
     }
-    
+
     @Override
-    public int getId() { //getter
-        return id;
+    public int getIdSondaggio() {
+        return idSodnaggio;
     }
 
     @Override
@@ -110,6 +111,11 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     @Override
     public void setObbligatoria(boolean obbligatoria) {
         this.obbligatoria = obbligatoria;
+    }
+
+    @Override
+    public void setIdSondaggio(int sondaggioId) {
+        this.idSodnaggio = sondaggioId;
     }
     
 }

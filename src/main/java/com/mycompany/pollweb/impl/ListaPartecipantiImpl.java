@@ -14,44 +14,33 @@ import com.mycompany.pollweb.model.ListaPartecipanti;
  */
 public class ListaPartecipantiImpl extends DataItemImpl<Integer> implements ListaPartecipanti  {
     
-    private int id;
-    private int utenteId;
-    private int sondaggioId;
+    private int idUtente;
+    private int idSondaggio;
 
-    public ListaPartecipantiImpl(int id, int utenteId, int sondaggioId) {
-        this.id = id;
-        this.utenteId = utenteId;
-        this.sondaggioId = sondaggioId;
+    public ListaPartecipantiImpl() {
+        super();
+        this.idUtente = 0;
+        this.idSondaggio = 0;
     }
 
     @Override
-    public int getId() { //getter
-        return id;
+    public int getIdUtente() {
+        return idUtente;
     }
 
     @Override
-    public int getUtenteId() {
-        return utenteId;
+    public int getIdSondaggio() {
+        return idSondaggio;
     }
 
     @Override
-    public int getSondaggioId() {
-        return sondaggioId;
+    public void setIdUtente(int idUtente) {
+        this.idUtente = idUtente;
     }
 
     @Override
-    public void setId(int id) { //setter
-        this.id = id;
-    }
-
-    @Override
-    public void setUtenteId(int utenteId) {
-        this.utenteId = utenteId;
-    }
-
-    @Override
-    public void setSondaggioId(int sondaggioId) {
-        this.sondaggioId = sondaggioId;
+    public void setIdSondaggio(int idSondaggio) {
+        this.idSondaggio = idSondaggio;
     }
     
 }

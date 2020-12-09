@@ -16,13 +16,11 @@ import java.util.List;
  */
 public interface Sondaggio extends DataItem<Integer> {
     
-    public int getId();
-    
     public boolean isQuiz();
 
     public List<DomandaImpl> getDomande();
 
-    public int getUserId();
+    public int getIdUtente();
     
     public Date getCreazione ();
     
@@ -35,14 +33,12 @@ public interface Sondaggio extends DataItem<Integer> {
     public int getStato();
 
     public boolean isVisibilita();
-    
-    public void setId(int newId);
 
     public void setQuiz(boolean quiz);
 
     public void setDomande(List<DomandaImpl> domande);
 
-    public void setUserId(int userId);
+    public void setIdUtente(int idUtente);
 
     public void setCreazione(Date creazione);
 

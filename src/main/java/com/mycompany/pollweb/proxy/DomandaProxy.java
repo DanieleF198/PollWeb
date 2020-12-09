@@ -7,30 +7,27 @@ package com.mycompany.pollweb.proxy;
 
 import com.mycompany.pollweb.data.DataItemProxy;
 import com.mycompany.pollweb.data.DataLayer;
-import com.mycompany.pollweb.impl.RispostaImpl;
-import com.mycompany.pollweb.impl.SondaggioImpl;
-import com.mycompany.pollweb.impl.UtenteImpl;
-import java.util.List;
-
+import com.mycompany.pollweb.impl.DomandaImpl;
+import org.json.JSONObject;
 
 /**
  *
  * @author Cronio
  */
-public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
+public class DomandaProxy extends DomandaImpl implements DataItemProxy {
     
     protected boolean modified;
     protected DataLayer dataLayer;
     
-    public UtenteProxy(DataLayer d) {
+    public DomandaProxy(DataLayer d) {
         super();
         this.modified = false;
         this.dataLayer = d;
     }
     
     @Override
-    public int getIdGruppo(){
-        return super.getIdGruppo(); 
+    public int getIdSondaggio(){
+        return super.getIdSondaggio(); 
     }
     
     @Override
@@ -40,47 +37,53 @@ public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
     }
     
     @Override
-    public void setNome(String newNome){
-        super.setNome(newNome);
-	this.modified = true;
+    public void setTitolo(String titolo) {
+        super.setTitolo(titolo);
+        this.modified = true;
+    }
+
+    @Override
+    public void setDescrizione(String descrizione) {
+        super.setDescrizione(descrizione);
+        this.modified = true;
+    }
+
+    @Override
+    public void setTipo(String tipo) {
+        super.setTipo(tipo);
+        this.modified = true;
+    }
+
+    @Override
+    public void setRispostaCorretta(JSONObject rispostaCorretta) {
+        super.setRispostaCorretta(rispostaCorretta);
+        this.modified = true;
+    }
+
+    @Override
+    public void setOpzioni(JSONObject opzioni) {
+        super.setOpzioni(opzioni);
+        this.modified = true;
+    }
+
+    @Override
+    public void setPosizione(int posizione) {
+        super.setPosizione(posizione);
+        this.modified = true;
+    }
+
+    @Override
+    public void setObbligatoria(boolean obbligatoria) {
+        super.setObbligatoria(obbligatoria);
+        this.modified = true;
     }
     
     @Override
-    public void setPassword(String newPassword){
-        super.setPassword(newPassword);
-	this.modified = true;
-    }
-    
-    @Override
-    public void setSondaggi(List<SondaggioImpl> sondaggio) {
-        super.setSondaggi(sondaggio);
+    public void setIdSondaggio(int idSondaggio) {
+        super.setIdSondaggio(idSondaggio);
         this.modified = true;
     }
     
-    @Override
-    public void setRisposte(List<RispostaImpl> risposta) {
-        super.setRisposte(risposta);
-        this.modified = true;
-    }
-
-    @Override
-    public void setIdGruppo(int idGruppo) {
-        super.setIdGruppo(idGruppo);
-        this.modified = true;
-    }
-
-    @Override
-    public void setEta(int eta) {
-        super.setEta(eta);
-        this.modified = true;
-    }
-
-    @Override
-    public void setEmail(String email) {
-        super.setEmail(email);
-        this.modified = true;
-    }
-
     //METODI ESCLUSIVI DEL PROXY
     @Override
     public void setModified(boolean dirty) {

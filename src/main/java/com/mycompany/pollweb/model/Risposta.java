@@ -16,9 +16,7 @@ import java.util.List;
  */
 public interface Risposta extends DataItem<Integer> {
     
-    public int getId();
-    
-    public int getUserId();
+    public int getIdUtente();
     
     public int getPunteggio();
 
@@ -26,7 +24,7 @@ public interface Risposta extends DataItem<Integer> {
     
     public String getNomeUtenteRisposta();
 
-    public void setUserId(int userId);
+    public void setIdUtente(int userId);
 
     public void setPunteggio(int punteggio);
 
