@@ -163,6 +163,10 @@
         .header-margin{
             margin-top:5%;
         }
+        
+        .margin-pagination-scroll-bar{
+            margin-top:0%;
+        }
 
         @media screen and (max-width: 1200px){
             .header-margin{
@@ -171,13 +175,13 @@
         }
 
         @media screen and (max-width: 992px){
-                .header-margin{
+            .header-margin{
                 margin-top:10%
             }
         }
         
         @media screen and (max-width: 768px){
-                .header-margin{
+            .header-margin{
                 margin-top:12.5%
             }
         }
@@ -185,6 +189,9 @@
         @media screen and (max-width: 576px){
                 .header-margin{
                 margin-top:15%
+            }
+            .margin-pagination-scroll-bar{
+                margin-top:2%;
             }
         }
     </style>
