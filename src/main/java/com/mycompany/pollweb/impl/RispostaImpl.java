@@ -15,28 +15,20 @@ import com.mycompany.pollweb.model.Risposta;
  */
 public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     
-    private int id;
-    private int userId;
+    private int idUtente;
     private int punteggio;
     private Date data;
     private String nomeUtenteRisposta;
 
-    public RispostaImpl(int id, int userId, int punteggio, Date data, String nomeUtenteRisposta) {
-        this.id = id;
-        this.userId = userId;
-        this.punteggio = punteggio;
-        this.data = data;
-        this.nomeUtenteRisposta = nomeUtenteRisposta;
-    }
-
-    @Override
-    public int getId() { //getter
-        return id;
+    public RispostaImpl() {
+        this.punteggio = 0;
+        this.data = null;
+        this.nomeUtenteRisposta = "";
     }
     
     @Override
-    public int getUserId() {
-        return userId;
+    public int getIdUtente() {
+        return idUtente;
     }
 
     @Override
@@ -55,8 +47,8 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     }
 
     @Override
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setIdUtente(int idUtente) {
+        this.idUtente = idUtente;
     }
 
     @Override

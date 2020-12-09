@@ -13,17 +13,13 @@ import java.util.List;
  * @author Cronio
  */
 public interface ListaPartecipanti extends DataItem<Integer> {
-    
-    public int getId();
 
-    public int getUtenteId();
+    public int getIdUtente();
 
-    public int getSondaggioId();
+    public int getIdSondaggio();
 
-    public void setId(int id);
+    public void setIdUtente(int utenteId);
 
-    public void setUtenteId(int utenteId);
-
-    public void setSondaggioId(int sondaggioId);
+    public void setIdSondaggio(int sondaggioId);
     
 }

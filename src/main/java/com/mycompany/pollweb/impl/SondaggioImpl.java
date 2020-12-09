@@ -17,8 +17,7 @@ import com.mycompany.pollweb.model.Sondaggio;
  */
 public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     
-    private int id;
-    private int userId;
+    private int idUtente;
     private boolean quiz;
     private int stato; //0 da fare - 1 fatto - 2 confermato
     private boolean visibilita;
@@ -28,21 +27,16 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     private Date creazione;
     private Date scadenza; 
 
-    public SondaggioImpl(int id, int userId, boolean quiz, int stato, boolean visibilita, Date creazione, Date scadenza ,String testoApertura,String testoChiusura) {
-        this.id = id;
-        this.userId = userId;
-        this.quiz = quiz;
-        this.stato = stato;
-        this.visibilita = visibilita;
-        this.creazione = creazione;
-        this.scadenza = scadenza;
-        this.testoApertura = testoApertura;
-        this.testoChiusura = testoChiusura;
-    }
-    
-    @Override
-    public int getId(){ //getter
-	return id;
+    public SondaggioImpl() {
+        super();
+        this.idUtente = 0;
+        this.quiz = false;
+        this.stato = 0;
+        this.visibilita = false;
+        this.creazione = null;
+        this.scadenza = null;
+        this.testoApertura = "";
+        this.testoChiusura = "";
     }
     
     @Override
@@ -56,8 +50,8 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     }
 
     @Override
-    public int getUserId() {
-        return userId;
+    public int getIdUtente() {
+        return idUtente;
     }
 
     @Override
@@ -89,11 +83,6 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     public boolean isVisibilita() {
         return visibilita;
     }
-    
-    @Override
-    public void setId(int newId){ //setter
-	this.id = newId;
-    }
 
     @Override
     public void setQuiz(boolean quiz) {
@@ -106,8 +95,8 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     }
 
     @Override
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setIdUtente(int idUtente) {
+        this.idUtente = idUtente;
     }
 
     @Override

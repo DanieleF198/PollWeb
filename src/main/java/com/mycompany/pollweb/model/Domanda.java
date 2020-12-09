@@ -14,7 +14,7 @@ import org.json.JSONObject;
  */
 public interface Domanda extends DataItem<Integer> {
     
-    int getId ();
+    public int getIdSondaggio();
     
     String getTitolo();
     
@@ -29,6 +29,8 @@ public interface Domanda extends DataItem<Integer> {
     public int getPosizione();
 
     public boolean isObbligatoria();
+    
+    public void setIdSondaggio(int sondaggioId);
 
     void setTitolo(String titolo);
 
