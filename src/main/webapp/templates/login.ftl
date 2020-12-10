@@ -68,7 +68,8 @@
                     <input type="checkbox" value="remember-me"/>
                     <span class="warning"></span>
                 </label>
-                &nbspRicordami
+                &nbspRicordami - 
+                <a href="#" class="text-info"> Password dimenticata?</a>
             </div>
             <button class="btn btn-lg btn-warning btn-block" type="submit">Accedi!</button>
             <div class="mt-2 mb-3 text-center">

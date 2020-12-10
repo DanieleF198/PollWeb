@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <#import "/macros.ftl" as macros>
 <#assign charset="UTF-8">
-<#assign title="Responsable request">
+<#assign title="Cambia password">
 <html lang="it">
     <head>
         <title>${title}</title>
@@ -45,7 +45,7 @@
                 bottom: 0;
             }    
             
-            @media screen and (max-height: 645px){
+            @media screen and (max-height: 775px){
             .footer{
                 position: relative;
             }
@@ -58,18 +58,30 @@
             <div class="text-center">
                 <img class="mb-4" src="images/logoDDP.png" alt="" width="140" height="90">
             </div>
-            <p class="h3 mb-3 font-weight-normal text-center">Quindi vuoi diventare responsabile?</p>
-            <p class="h5 font-weight-normal text-center">Da grandi poteri, derivano grandi responsabilit&#224;... Ma la responsabilit&#224; &#232; anche nostra che ti offriamo questo servizio.</p>
-            <p class="h5 font-weight-normal text-center">Per questo motivo ti chiediamo di fornirci il tuo codice fiscale, per tutelare tutti da comportamenti scorretti.</p>
+            <p class="h3 mb-3 font-weight-normal text-center">La sicurezza prima di tutto!</p>
+            <p class="h5 font-weight-normal text-center">Per questo motivo ti chiediamo di contattarci se stai avendo problemi di sicurezza col tuo account.</p>
+            <p class="h5 font-weight-normal text-center">Il nostro team &#232; sempre disposto ad aiutarti per ogni genere di problematica!</p>
             <div class="mt-3"></div>
             <form class="needs-validation" novalidate>
-                <label for="CV">Codice Fiscale</label>
-                <input type="text" class="form-control" id="CV" placeholder="" value="" required> 
+                <label for="currentPassword">Password corrente</label>
+                <input type="password" class="form-control" id="currentPassword" placeholder="" value="" required> 
                 <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
-                    Il codice fiscale inserito non è valido.
+                    La password inserita non coincide
+                </div>
+                <div class="mb-1"></div>
+                <label for="newPassword">Nuova password</label>
+                <input type="password" class="form-control" id="newPassword" placeholder="" value="" required> 
+                <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
+                    La password inserita non va bene
+                </div>
+                <div class="mb-1"></div>
+                <label for="confirmNewPassword">Conferma password</label>
+                <input type="password" class="form-control" id="confirmNewPassword" placeholder="" value="" required> 
+                <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
+                    La password inserita non va bene o non coincide
                 </div>
                 <div class="mb-3"></div>
-                <button class="btn btn-lg btn-warning btn-block" type="submit">Manda la richiesta!</button>
+                <button class="btn btn-lg btn-warning btn-block" type="submit">Cambia password</button>
                 <div class="mt-2 mb-3 text-center">
                     <a href="dashboard" class="text-muted">Torna alla zona utente</a>
                 </div>
