@@ -48,12 +48,12 @@ public class GruppoDAO_MySQL extends DAO implements GruppoDAO {
             sGruppi = connection.prepareStatement("SELECT * FROM Gruppo");
             
             iGruppo = connection.prepareStatement("INSERT INTO Gruppo (idGruppo, nomeGruppo) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
-            uGruppo = connection.prepareStatement("UPDATE Gruppo SET idGruppo=?, nomeGruppo=? WHERE ID=?");
-            dGruppo = connection.prepareStatement("DELETE FROM Gruppo WHERE ID=?");
+            uGruppo = connection.prepareStatement("UPDATE Gruppo SET idGruppo=?, nomeGruppo=? WHERE idGruppo=?");
+            dGruppo = connection.prepareStatement("DELETE FROM Gruppo WHERE idGruppo=?");
             
             
         } catch (SQLException ex) {
-            throw new DataException("Error initializing newspaper data layer", ex);
+            throw new DataException("Error initializing PollWebdb data layer", ex);
         }
     }
     
@@ -84,7 +84,7 @@ public class GruppoDAO_MySQL extends DAO implements GruppoDAO {
     private GruppoProxy createGruppo(ResultSet rs) throws DataException {
         GruppoProxy g = createGruppo();
         try {
-            g.setKey(rs.getInt("ID"));
+            g.setKey(rs.getInt("idGruppo"));
             g.setNomeGruppo(rs.getString("nomeGruppo"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Gruppo object form ResultSet", ex);
