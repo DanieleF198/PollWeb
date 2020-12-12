@@ -48,20 +48,54 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mb-2">
+                                    <p><b>Sondaggio pubblico o privato?</b></p>
                                     <p>Se il sondaggio privato non &#232; disponibile, &#232; perch&#232; devi richiedere l'abilitazione, <a href="/PollWeb/sendRespRequest" class="text-info">clicca qui</a> per mandare la richiesta, richieder&#224; solo l'aggiunta del tuo codice fiscale!</p>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-3 mb-3">
+                            <div class="row">
+                                <div class="col-lg-12">
                                     <div>
                                         <label class="checkbox mb-3">
-                                            <input type="checkbox" value="remember-me"/>
+                                            <input type="checkbox" value="private"/>
                                             <span class="warning"></span>
                                         </label>
                                         &nbspSondaggio privato
                                     </div>
+                                    <br>
+                                    <p>In caso di sondaggio privato nella sezione finale ti verr&#224; chiesto di caricare un file .csv contenente le email delle persone che intendi invitare.</p>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-2">
+                                    <label for="expiration"><b>Data di scadenza (facoltativo)</b></label>
+                                    <div class="mb-2" style="width: 180px">
+                                        <input type="date" class="form-control" id="expiration" placeholder="" value="">
+                                        <div class="invalid-feedback">
+                                            La data inserita non è valida
+                                        </div>
+                                    </div>
+                                    <p>In ogni caso potrai modificare o annullare tale data nella tua pagina personale dopo aver finito di creare il sondaggio.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-2">
+                                    <p><b>Quiz (a tua scelta)</b></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div>
+                                        <label class="checkbox mb-3">
+                                            <input type="checkbox" value="quiz"/>
+                                            <span class="warning"></span>
+                                        </label>
+                                        &nbspRendi il sondaggio un quiz!
+                                    </div>
+                                    <br>
+                                    <p>In questo caso, oltre a non poter usare domande a risposta aperta, ti verr&#224; chiesto di (in maniera x) segnalarci le risposte corrette</p>
+                                </div>
+                            </div>
+                            
                         </form>
                     </div>
                     <!-- End general information -->
