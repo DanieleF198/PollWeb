@@ -7,13 +7,13 @@
         <title>${title}</title>
         <meta charset="${charset}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <@macros.style />
+        <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css"/>
 
         <@macros.carouselOvverridingStyle />
     </head>
     <body class="bg-light">
         <div class="d-flex flex-column min-vh-100">
-            <@macros.header />
+            <@macros.header imagePath="images/logoDDP.png"/>
             <main class="flex-fill">
                 <!-- Search bar -->
                 <div class="container-fluid">

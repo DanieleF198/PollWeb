@@ -7,7 +7,7 @@
         <title>${title}</title>
         <meta charset="${charset}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <@macros.style />
+        <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css"/>
         <style>
             .form-signin {
                 width: 100%;
@@ -46,10 +46,10 @@
             }    
             
             @media screen and (max-height: 558px){
-            .footer{
-                position: relative;
+                .footer{
+                    position: relative;
+                }
             }
-      }
         </style>
     </head>
     <body class="bg-light">

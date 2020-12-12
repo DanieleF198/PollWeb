@@ -1,8 +1,8 @@
-<#macro style>
+<#macro style imagePath stylePath>
     <!-- Style -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="${stylePath}">
+    <link rel="shortcut icon" href="${imagePath}">
     <style>
         @keyframes check {
             0% {height: 0;width: 0;}
@@ -104,6 +104,33 @@
         /* Firefox */
         input[type=number] {
             -moz-appearance: textfield;
+        }
+        
+        /* This is the default state */
+        .custom-radio .custom-control-label::before {
+            background-color: white;
+        }
+
+        /* This is the checked state */
+        .custom-radio .custom-control-input:checked~.custom-control-label::before,
+        .custom-radio .custom-control-input:checked~.custom-control-label::after {
+            background-color: #f0AD4E; 
+            border-radius: 50%;
+        }
+
+        /* active state i.e. displayed while the mouse is being pressed down */
+        .custom-radio .custom-control-input:active ~ .custom-control-label::before {
+            border-color: #f0AD4E;
+            background-color: white;
+        }
+
+        /* the shadow; displayed while the element is in focus */
+        .custom-radio .custom-control-input:focus ~ .custom-control-label::before {
+            box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
+        }
+
+        .custom-control-label::before {
+            background-color: darkorange;
         }
         
         .pagination > li > a{
@@ -302,7 +329,7 @@
     <!-- End script -->
 </#macro>
     
-<#macro header>
+<#macro header imagePath>
     
 <style>
       #navbar-toggle-cbox {
@@ -341,8 +368,9 @@
 
     <!-- Header -->
     <nav class="navbar navbar-expand-lg fixed-top navbar-light shadow bg-light" style="border-bottom:20px solid #fec107;">
+        
         <a class="navbar-brand" href="#" style="pointer-events: none; cursor: default;">
-            <img src="images/logoDDP.png" width="80" height="50" alt="" loading="lazy">
+            <img src="${imagePath}" width="80" height="50" alt="" loading="lazy">
         </a>
         
         <input aria-controls="navbar-main" id="navbar-toggle-cbox" role="button" type="checkbox">
@@ -360,24 +388,24 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="homepage">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/PollWeb/homepage">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="publicPolls">sondaggi pubblici</a>
+                    <a class="nav-link" href="/PollWeb/publicPolls">sondaggi pubblici</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">crea sondaggio</a>
+                    <a class="nav-link" href="/PollWeb/makerPoll/firsSection">crea sondaggio</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">sondaggio d'esempio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="dashboard">Zona utente (template)</a>
+                    <a class="nav-link" href="/PollWeb/dashboard">Zona utente (template)</a>
                 </li>
             </ul>
             <div class="row ml-1 mr-2">
-                <a href="login" class="btn btn-warning">accedi</a>
-                <a href="register" class="btn btn-outline-dark ml-2">registrati</a>
+                <a href="/PollWeb/login" class="btn btn-warning">accedi</a>
+                <a href="/PollWeb/register" class="btn btn-outline-dark ml-2">registrati</a>
             </div>
         </div>
     </nav>
