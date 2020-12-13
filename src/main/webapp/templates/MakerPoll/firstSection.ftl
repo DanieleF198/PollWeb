@@ -18,7 +18,7 @@
                     <!-- General information -->
                     <div class="container">
                         <h1 class="h3 mb-3 font-weight-normal">Creazione sondaggio - informazioni generali</h1>
-                        <form class="needs-validation" novalidate>
+                        <form method="post" action="questionsMaker" class="needs-validation" novalidate>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="title">Titolo</label>
@@ -95,7 +95,7 @@
                                     <p>In questo caso, oltre a non poter usare domande a risposta aperta, ti verr&#224; chiesto di (in maniera x) segnalarci le risposte corrette</p>
                                 </div>
                             </div>
-                            
+                            <button class="btn btn-lg btn-warning" type="submit">Inizia con le domande</button>
                         </form>
                     </div>
                     <!-- End general information -->

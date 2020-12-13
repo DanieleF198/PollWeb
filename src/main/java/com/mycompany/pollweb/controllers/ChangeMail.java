@@ -86,7 +86,7 @@ public class ChangeMail extends BaseController {
             TemplateResult res = new TemplateResult(getServletContext());
             res.activate("changeMail.ftl", request, response);
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ChangeMail.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

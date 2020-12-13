@@ -31,8 +31,13 @@ public class FirstSection extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
          try {
-            action_default(request, response);
-
+             
+            if (request.getParameter("questionsMarker") != null) {
+                action_questions(request, response);
+            } else {
+                action_default(request, response);
+            }
+            
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
             action_error(request, response);
@@ -88,8 +93,12 @@ public class FirstSection extends BaseController {
             TemplateResult res = new TemplateResult(getServletContext());
             res.activate("MakerPoll/firstSection.ftl", request, response);
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FirstSection.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void action_questions(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        response.sendRedirect("QuestionsMaker"); //ATTENZIONE, per ora fa solo un redirect, ma quando implementeremo effettivamente vanno considerati i casi di errore 
     }
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {

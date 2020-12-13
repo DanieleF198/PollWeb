@@ -87,7 +87,7 @@ public class Dashboard extends BaseController {
             request.setAttribute("username", "PuppetUser"); //questo set è solo di prova, dovrà essere sostituito col valore effettivo caricato dinamicamente tramite il DAO
             res.activate("dashboard.ftl", request, response); 
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -86,7 +86,7 @@ public class PublicPolls extends BaseController {
             TemplateResult res = new TemplateResult(getServletContext());
             res.activate("publicPolls.ftl", request, response);
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PublicPolls.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

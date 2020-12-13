@@ -93,7 +93,7 @@ public class Login extends BaseController {
             TemplateResult res = new TemplateResult(getServletContext());
             res.activate("login.ftl", request, response);
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

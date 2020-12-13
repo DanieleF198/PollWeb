@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.pollweb.controllers;
+package com.mycompany.pollweb.controllers.makerPoll;
 
+import com.mycompany.pollweb.controllers.BaseController;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
  * @author joker
  */
 
-public class SendRespRequest extends BaseController {
+public class QuestionsMaker extends BaseController {
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
@@ -84,9 +85,9 @@ public class SendRespRequest extends BaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
        try {
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("sendRespRequest.ftl", request, response);
+            res.activate("MakerPoll/questionsMaker.ftl", request, response);
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(SendRespRequest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(QuestionsMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
