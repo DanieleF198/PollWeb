@@ -21,6 +21,7 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     private String nomeUtenteRisposta;
 
     public RispostaImpl() {
+        super();
         this.punteggio = 0;
         this.data = null;
         this.nomeUtenteRisposta = "";
