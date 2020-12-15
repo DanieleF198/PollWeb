@@ -222,10 +222,12 @@
             }
         }
         
+        /*TAB with CSS - for now support a max of 6 */
+        
         .tab-wrap {
-            -webkit-transition: 0.3s box-shadow ease;
-            transition: 0.3s box-shadow ease;
-            border-radius: 6px;
+            -webkit-transition: 0.4s box-shadow ease;
+            transition: 0.4s box-shadow ease;
+            border-radius: 3px;
             max-width: 100%;
             display: -webkit-box;
             display: -ms-flexbox;
@@ -235,12 +237,7 @@
             position: relative;
             list-style: none;
             background-color: #fff;
-            margin: 40px 0;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-        }
-        
-        .tab-wrap:hover {
-            box-shadow: 0 12px 23px rgba(0, 0, 0, 0.23), 0 10px 10px rgba(0, 0, 0, 0.19);
         }
 
         .tab {
@@ -255,7 +252,7 @@
             transition: 0.5s opacity ease-in, 0.8s transform ease, 0.8s -webkit-transform ease;
             position: relative;
             top: 0;
-            z-index: 100;
+            z-index: 99;
             -webkit-transform: translateY(0px);
                     transform: translateY(0px);
             text-shadow: 0 0 0;
@@ -315,6 +312,19 @@
                     transform: translateY(0px);
             text-shadow: 0 0 0;
         }
+        .tab:checked:nth-of-type(6) ~ .tab__content:nth-of-type(6) {
+            opacity: 1;
+            -webkit-transition: 0.5s opacity ease-in, 0.8s -webkit-transform ease;
+            transition: 0.5s opacity ease-in, 0.8s -webkit-transform ease;
+            transition: 0.5s opacity ease-in, 0.8s transform ease;
+            transition: 0.5s opacity ease-in, 0.8s transform ease, 0.8s -webkit-transform ease;
+            position: relative;
+            top: 0;
+            z-index: 100;
+            -webkit-transform: translateY(0px);
+                    transform: translateY(0px);
+            text-shadow: 0 0 0;
+        }
         .tab:first-of-type:not(:last-of-type) + label {
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
@@ -327,13 +337,13 @@
             border-bottom-left-radius: 0;
         }
         .tab:checked + label {
-            background-color: #fff;
+            background-color: #FEC107;
             box-shadow: 0 -1px 0 #fff inset;
             cursor: default;
         }
         .tab:checked + label:hover {
             box-shadow: 0 -1px 0 #fff inset;
-            background-color: #fff;
+            background-color: #FEC107;
         }
         .tab + label {
             box-shadow: 0 -1px 0 #eee inset;
@@ -346,7 +356,7 @@
                 -ms-flex-positive: 3;
                     flex-grow: 3;
             text-align: center;
-            background-color: #f2f2f2;
+            background-color: #FFF5D9;
             -webkit-user-select: none;
                -moz-user-select: none;
                 -ms-user-select: none;
@@ -357,14 +367,15 @@
             height: 50px;
             box-sizing: border-box;
             padding: 15px;
+            margin-bottom: 0px;
         }
         .tab + label:hover {
-            background-color: #f9f9f9;
+            background-color: #FFECB5;
             box-shadow: 0 1px 0 #f4f4f4 inset;
         }
         .tab__content {
             padding: 10px 25px;
-            background-color: transparent;
+            background-color: white;
             position: absolute;
             width: 100%;
             z-index: -1;
@@ -374,7 +385,44 @@
                     transform: translateY(-3px);
             border-radius: 6px;
         }
-
+        
+        .custom-left{
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+        
+        .custom-center{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .custom-right{
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+        }
+        
+        
+        @media screen and (max-width: 991px){
+            .custom-left{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        
+            .custom-right{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+                .custom-block{
+                width: 100%; 
+                display:block;
+            }
+        }
     </style>
     <!-- End style -->
 </#macro>
