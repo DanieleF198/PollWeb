@@ -533,7 +533,7 @@
     
 <#macro header imagePath>
     
-<style>
+    <style>
       #navbar-toggle-cbox {
         display: none;
       }
@@ -556,7 +556,7 @@
             display: none;
         }
         
-        @media screen and (max-width: 991px){
+        @media screen and (max-width: 1200px){
             .navbar-toggle{
                 display: block;
             }
@@ -569,7 +569,7 @@
     </noscript>
 
     <!-- Header -->
-    <nav class="navbar navbar-expand-lg fixed-top navbar-light shadow bg-light" style="border-bottom:20px solid #fec107;">
+    <nav class="navbar navbar-expand-xl fixed-top navbar-light shadow bg-light" style="border-bottom:20px solid #fec107;">
         
         <a class="navbar-brand" href="#" style="pointer-events: none; cursor: default;">
             <img src="${imagePath}" width="80" height="50" alt="" loading="lazy">

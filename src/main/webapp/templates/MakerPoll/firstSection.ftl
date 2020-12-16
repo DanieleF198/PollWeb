@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <#import "/macros.ftl" as macros>
 <#assign charset="UTF-8">
-<#assign title="Creazione sondaggi">
+<#assign title="Creazione sondaggi - impostazioni generali">
 <html lang="it">
     <head>
         <title>${title}</title>
@@ -63,6 +63,24 @@
                                     </div>
                                     <br>
                                     <p>In caso di sondaggio privato nella sezione finale ti verr&#224; chiesto di caricare un file .csv contenente le email delle persone che intendi invitare.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-2">
+                                    <p><b>Sondaggio modificabile dopo essere stato compilato?</b></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div>
+                                        <label class="checkbox mb-3">
+                                            <input type="checkbox" value="private"/>
+                                            <span class="warning"></span>
+                                        </label>
+                                        &nbspSondaggio modificabile
+                                    </div>
+                                    <br>
+                                    <p>In caso di sondaggio modificabile qualsiasi utente che ha compilato il sondaggio potr&#224; cambiare le risposte che ha dato in qualsiasi momento prima della scadenza</p>
                                 </div>
                             </div>
                             <div class="row">

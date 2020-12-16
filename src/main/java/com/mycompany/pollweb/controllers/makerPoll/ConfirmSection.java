@@ -25,12 +25,21 @@ import java.util.logging.Logger;
  * @author joker
  */
 
-public class QuestionsMaker extends BaseController {
+public class ConfirmSection extends BaseController {
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
          try {
-            action_default(request, response);
+            if (request.getParameter("confirm") != null) {
+                action_confirm(request, response);
+            } else if(request.getParameter("nextQuestion") != null){
+                action_next_question(request, response);
+            } else if(request.getParameter("prevQuestion") != null){
+                action_prev_question(request, response);
+            } else {
+                action_default(request, response);
+            }
+
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
             action_error(request, response);
@@ -84,12 +93,25 @@ public class QuestionsMaker extends BaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
        try {
             TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("MakerPoll/questionsMaker.ftl", request, response);
+            res.activate("MakerPoll/confirmSection.ftl", request, response);
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(QuestionsMaker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConfirmSection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    private void action_confirm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        response.sendRedirect("confirmSection"); //ATTENZIONE, per ora fa solo un redirect, ma quando implementeremo effettivamente vanno considerati i casi di errore 
+    }
+    
+    private void action_next_question(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        response.sendRedirect("questionsMaker"); //ATTENZIONE, per ora fa solo un redirect, ma quando implementeremo effettivamente vanno considerati i casi di errore 
+    }
+    
+    private void action_prev_question(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        response.sendRedirect("questionsMaker"); //ATTENZIONE, per ora fa solo un redirect, ma quando implementeremo effettivamente vanno considerati i casi di errore 
+    }
+
+
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
         if (request.getAttribute("exception") != null) {
             (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
