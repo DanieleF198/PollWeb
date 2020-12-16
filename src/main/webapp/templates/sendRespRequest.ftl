@@ -7,38 +7,8 @@
         <title>${title}</title>
         <meta charset="${charset}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css"/>
+        <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css" bootstrapPath="css/bootstrap.css"/>
         <style>
-            .form-signin {
-                width: 100%;
-                max-width: 330px;
-                padding: 15px;
-                margin: auto;
-            }
-            .form-signin {
-                font-weight: 400;
-            }
-            .form-signin .form-control {
-                position: relative;
-                box-sizing: border-box;
-                height: auto;
-                padding: 10px;
-                font-size: 16px;
-            }
-            .form-signin .form-control:focus {
-                z-index: 2;
-            }
-            .form-signin input[type="email"] {
-                margin-bottom: -1px;
-                border-bottom-right-radius: 0;
-                border-bottom-left-radius: 0;
-            }
-            .form-signin input[type="password"] {
-                margin-bottom: 10px;
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
-            }
-            
             .footer {
                 position: absolute;
                 width: 100%;
@@ -46,10 +16,10 @@
             }    
             
             @media screen and (max-height: 645px){
-            .footer{
-                position: relative;
+                .footer{
+                    position: relative;
+                }
             }
-      }
         </style>
     </head>
     <body class="bg-light">

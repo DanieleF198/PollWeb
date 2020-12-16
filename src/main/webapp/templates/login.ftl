@@ -7,7 +7,7 @@
         <title>${title}</title>
         <meta charset="${charset}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css"/>
+        <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css" bootstrapPath="css/bootstrap.css"/>
         <style>
             .form-signin {
                 width: 100%;
@@ -20,7 +20,8 @@
             }
             .form-signin .form-control {
                 position: relative;
-                box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                        box-sizing: border-box;
                 height: auto;
                 padding: 10px;
                 font-size: 16px;

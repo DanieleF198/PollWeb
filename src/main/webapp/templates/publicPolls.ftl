@@ -7,7 +7,7 @@
         <title>${title}</title>
         <meta charset="${charset}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css"/>
+        <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css" bootstrapPath="css/bootstrap.css"/>
 
         <@macros.carouselOvverridingStyle />
     </head>
