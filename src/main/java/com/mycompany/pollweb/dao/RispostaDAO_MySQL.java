@@ -10,7 +10,6 @@ import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.data.DataItemProxy;
 import com.mycompany.pollweb.data.DataLayer;
 import com.mycompany.pollweb.model.Risposta;
-import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.proxy.RispostaProxy;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -28,6 +27,7 @@ import javax.persistence.OptimisticLockException;
 public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     
     private PreparedStatement sRispostaByID;
+    private PreparedStatement sRispostaByIDUtente;
     private PreparedStatement sRisposte;
     private PreparedStatement iRisposta;
     private PreparedStatement uRisposta;
@@ -43,6 +43,7 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             super.init();
             
             sRispostaByID = connection.prepareStatement("SELECT * FROM Risposta WHERE idRisposta=?");
+            sRispostaByIDUtente = connection.prepareStatement("SELECT * FROM Risposta WHERE idUtente=?");
             sRisposte = connection.prepareStatement("SELECT * FROM Risposta");
             
             iRisposta = connection.prepareStatement("INSERT INTO Risposta (idRisposta,idUtente,dataCreazione,punteggio,nomeUtenteRisposta) VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -61,6 +62,7 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
         try {
             
             sRispostaByID.close();
+            sRispostaByIDUtente.close();
             
             sRisposte.close();
             
@@ -95,15 +97,15 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     }
     
     @Override
-    public Risposta getRisposta(int idSondaggio) throws DataException {
+    public Risposta getRisposta(int idRisposta) throws DataException {
         Risposta r = null;
         //prima vediamo se l'oggetto è già stato caricato
-        if (dataLayer.getCache().has(Risposta.class, idSondaggio)) {
-            r = dataLayer.getCache().get(Risposta.class, idSondaggio);
+        if (dataLayer.getCache().has(Risposta.class, idRisposta)) {
+            r = dataLayer.getCache().get(Risposta.class, idRisposta);
         } else {
             //altrimenti lo carichiamo dal database
             try {
-                sRispostaByID.setInt(1, idSondaggio);
+                sRispostaByID.setInt(1, idRisposta);
                 try (ResultSet rs = sRispostaByID.executeQuery()) {
                     if (rs.next()) {
                         r = createSondaggio(rs);
@@ -112,7 +114,31 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
                     }
                 }
             } catch (SQLException ex) {
-                throw new DataException("Unable to load Sondaggio by idRisposta", ex);
+                throw new DataException("Unable to load Risposta by idRisposta", ex);
+            }
+        }
+        return r;
+    }
+    
+    @Override
+    public Risposta getRispostaByIdUtente(int idUtente) throws DataException {
+        Risposta r = null;
+        //prima vediamo se l'oggetto è già stato caricato
+        if (dataLayer.getCache().has(Risposta.class, idUtente)) {
+            r = dataLayer.getCache().get(Risposta.class, idUtente);
+        } else {
+            //altrimenti lo carichiamo dal database
+            try {
+                sRispostaByIDUtente.setInt(1, idUtente);
+                try (ResultSet rs = sRispostaByIDUtente.executeQuery()) {
+                    if (rs.next()) {
+                        r = createSondaggio(rs);
+                        //e lo mettiamo anche nella cache
+                        dataLayer.getCache().add(Risposta.class, r);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Risposta by idUtente", ex);
             }
         }
         return r;

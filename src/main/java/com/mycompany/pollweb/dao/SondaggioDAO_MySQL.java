@@ -27,6 +27,7 @@ import javax.persistence.OptimisticLockException;
 public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     
     private PreparedStatement sSondaggioByID;
+    private PreparedStatement sSondaggioByIDUtente;
     private PreparedStatement sSondaggi;
     private PreparedStatement iSondaggio;
     private PreparedStatement uSondaggio;
@@ -42,6 +43,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             super.init();
             
             sSondaggioByID = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idSondaggio=?");
+            sSondaggioByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
             sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio");
             
             iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idSondaggio,idUtente,testoApertura,testoChiusura,stato,quiz,visibilita,dataCreazione,dataChiusura) VALUES(?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -60,6 +62,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
         try {
             
             sSondaggioByID.close();
+            sSondaggioByIDUtente.close();
             
             sSondaggi.close();
             
@@ -108,6 +111,30 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             try {
                 sSondaggioByID.setInt(1, idSondaggio);
                 try (ResultSet rs = sSondaggioByID.executeQuery()) {
+                    if (rs.next()) {
+                        s = createSondaggio(rs);
+                        //e lo mettiamo anche nella cache
+                        dataLayer.getCache().add(Sondaggio.class, s);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Sondaggio by idSondaggio", ex);
+            }
+        }
+        return s;
+    }
+    
+    @Override
+    public Sondaggio getSondaggioByIdUtente(int idUtente) throws DataException {
+        Sondaggio s = null;
+        //prima vediamo se l'oggetto è già stato caricato
+        if (dataLayer.getCache().has(Sondaggio.class, idUtente)) {
+            s = dataLayer.getCache().get(Sondaggio.class, idUtente);
+        } else {
+            //altrimenti lo carichiamo dal database
+            try {
+                sSondaggioByIDUtente.setInt(1, idUtente);
+                try (ResultSet rs = sSondaggioByIDUtente.executeQuery()) {
                     if (rs.next()) {
                         s = createSondaggio(rs);
                         //e lo mettiamo anche nella cache
