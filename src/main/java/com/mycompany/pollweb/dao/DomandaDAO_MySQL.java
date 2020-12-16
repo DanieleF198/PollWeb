@@ -181,19 +181,23 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
                 uDomanda.setString(4, domanda.getDescrizione());
                 uDomanda.setInt(5, domanda.getPosizione());
                 uDomanda.setString(6, domanda.getTipo());
-                uDomanda.setInt(7, domanda.getKey());
+                uDomanda.setObject(7, domanda.getOpzioni());
+                uDomanda.setObject(8, domanda.getRispostaCorretta());
+                uDomanda.setInt(9, domanda.getKey());
 
                 if (uDomanda.executeUpdate() == 0) {
                     throw new OptimisticLockException(domanda);
                 }
             }
             else { //insert
-                uDomanda.setInt(1, domanda.getIdSondaggio()); //TODO aggiungere i JSON
-                uDomanda.setString(2, domanda.getTitolo());
-                uDomanda.setBoolean(3, domanda.isObbligatoria());
-                uDomanda.setString(4, domanda.getDescrizione());
-                uDomanda.setInt(5, domanda.getPosizione());
-                uDomanda.setString(6, domanda.getTipo());
+                iDomanda.setInt(1, domanda.getIdSondaggio());
+                iDomanda.setString(2, domanda.getTitolo());
+                iDomanda.setBoolean(3, domanda.isObbligatoria());
+                iDomanda.setString(4, domanda.getDescrizione());
+                iDomanda.setInt(5, domanda.getPosizione());
+                iDomanda.setString(6, domanda.getTipo());
+                iDomanda.setObject(7, domanda.getOpzioni());
+                iDomanda.setObject(8, domanda.getRispostaCorretta());
                 
                 if (iDomanda.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database
