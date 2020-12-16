@@ -20,6 +20,8 @@ public interface DomandaDAO {
     
     Domanda getDomanda(int idSondaggio) throws DataException;
     
+    public Domanda getDomandaByIdSondaggio(int idSondaggio) throws DataException;
+    
     public List<Domanda> getDomande() throws DataException;
     
     public void storeDomanda(Domanda domanda) throws DataException;

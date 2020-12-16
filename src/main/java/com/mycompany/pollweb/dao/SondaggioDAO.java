@@ -20,6 +20,8 @@ public interface SondaggioDAO {
     
     Sondaggio getSondaggio(int idSondaggio) throws DataException;
     
+    public Sondaggio getSondaggioByIdUtente(int idUtente) throws DataException;
+    
     public List<Sondaggio> getSondaggi() throws DataException;
     
     public void storeSondaggio(Sondaggio sondaggio) throws DataException;
