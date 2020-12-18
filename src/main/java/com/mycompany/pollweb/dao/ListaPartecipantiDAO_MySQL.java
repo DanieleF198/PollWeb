@@ -43,8 +43,8 @@ public class ListaPartecipantiDAO_MySQL extends DAO implements ListaPartecipanti
             sListaPartecipantiByID = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idListaPartecipanti=?");
             sListaPartecipanti = connection.prepareStatement("SELECT * FROM ListaPartecipanti");
             
-            iListaPartecipanti = connection.prepareStatement("INSERT INTO ListaPartecipanti (idListaPartecipanti,idUtente,idSondaggio) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uListaPartecipanti = connection.prepareStatement("UPDATE ListaPartecipanti SET idListaPartecipanti=?,idUtente=?,idSondaggio=? WHERE idListaPartecipanti=?");
+            iListaPartecipanti = connection.prepareStatement("INSERT INTO ListaPartecipanti (idListaPartecipanti,idUtente,idSondaggio,email) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uListaPartecipanti = connection.prepareStatement("UPDATE ListaPartecipanti SET idListaPartecipanti=?,idUtente=?,idSondaggio=?,email=? WHERE idListaPartecipanti=?");
             dListaPartecipanti = connection.prepareStatement("DELETE FROM ListaPartecipanti WHERE idListaPartecipanti=?");
             
             
@@ -84,6 +84,7 @@ public class ListaPartecipantiDAO_MySQL extends DAO implements ListaPartecipanti
             lp.setKey(rs.getInt("idListaPartecipanti"));
             lp.setIdUtente(rs.getInt("idUtente"));
             lp.setIdSondaggio(rs.getInt("idSondaggio"));
+            lp.setEmail(rs.getString("email"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create ListaPartecipanti object form ResultSet", ex);
         }
@@ -138,18 +139,19 @@ public class ListaPartecipantiDAO_MySQL extends DAO implements ListaPartecipanti
                 if (listaPartecipanti instanceof DataItemProxy && !((DataItemProxy) listaPartecipanti).isModified()) {
                     return;
                 }
-                uListaPartecipanti.setInt(1, listaPartecipanti.getIdUtente()); //TODO aggiungere lista di domande
+                uListaPartecipanti.setInt(1, listaPartecipanti.getIdUtente());
                 uListaPartecipanti.setInt(2, listaPartecipanti.getIdSondaggio());      
-                uListaPartecipanti.setInt(3, listaPartecipanti.getKey());
+                uListaPartecipanti.setString(3, listaPartecipanti.getEmail());      
+                uListaPartecipanti.setInt(4, listaPartecipanti.getKey());
 
                 if (uListaPartecipanti.executeUpdate() == 0) {
                     throw new OptimisticLockException(listaPartecipanti);
                 }
             }
             else { //insert
-                iListaPartecipanti.setInt(1, listaPartecipanti.getIdUtente()); //TODO aggiungere lista di domande
+                iListaPartecipanti.setInt(1, listaPartecipanti.getIdUtente());
                 iListaPartecipanti.setInt(2, listaPartecipanti.getIdSondaggio());      
-                iListaPartecipanti.setInt(3, listaPartecipanti.getKey());
+                iListaPartecipanti.setString(3, listaPartecipanti.getEmail());  
                 
                 if (iListaPartecipanti.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

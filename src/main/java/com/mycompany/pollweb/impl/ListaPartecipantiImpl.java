@@ -16,6 +16,7 @@ public class ListaPartecipantiImpl extends DataItemImpl<Integer> implements List
     
     private int idUtente;
     private int idSondaggio;
+    private String email;
 
     public ListaPartecipantiImpl() {
         super();
@@ -24,7 +25,7 @@ public class ListaPartecipantiImpl extends DataItemImpl<Integer> implements List
     }
 
     @Override
-    public int getIdUtente() {
+    public int getIdUtente() { //getter
         return idUtente;
     }
 
@@ -34,13 +35,22 @@ public class ListaPartecipantiImpl extends DataItemImpl<Integer> implements List
     }
 
     @Override
-    public void setIdUtente(int idUtente) {
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
+    public void setIdUtente(int idUtente) { //setter
         this.idUtente = idUtente;
     }
 
     @Override
     public void setIdSondaggio(int idSondaggio) {
         this.idSondaggio = idSondaggio;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
     }
     
 }

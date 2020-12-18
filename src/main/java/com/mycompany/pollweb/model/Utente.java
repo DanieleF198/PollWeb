@@ -30,6 +30,10 @@ public interface Utente extends DataItem<Integer> {
 
     public String getEmail();
     
+    public String getCognome();
+    
+    public String getUsername();
+    
     public void setNome(String newNome);
     
     public void setPassword(String newPassword);
@@ -43,5 +47,9 @@ public interface Utente extends DataItem<Integer> {
     public void setEta(int eta);
 
     public void setEmail(String email);
+    
+    public void setCognome (String cognome);
+    
+    public void setUsername (String username);
             
 }

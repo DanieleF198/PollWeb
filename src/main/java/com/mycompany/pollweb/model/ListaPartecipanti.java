@@ -17,9 +17,13 @@ public interface ListaPartecipanti extends DataItem<Integer> {
     public int getIdUtente();
 
     public int getIdSondaggio();
+    
+    public String getEmail();
 
     public void setIdUtente(int utenteId);
 
     public void setIdSondaggio(int sondaggioId);
+    
+    public void setEmail(String newEmail);
     
 }
