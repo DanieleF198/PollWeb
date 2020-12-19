@@ -11,9 +11,29 @@
         <style>
             @media screen and (max-width: 991px){
                 .footer{
+                    position: fixed;
+                    bottom: 0;
+                    width: 100%;
                     z-index: 100;
                 }
             }
+            
+            .custom-margin-bottom{
+                margin-bottom:0%;
+            }
+            
+            @media screen and (max-width: 991px){
+                .custom-margin-bottom{
+                    margin-bottom:15%;
+                }
+            }
+            
+            @media screen and (max-width: 768px){
+                .custom-margin-bottom{
+                    margin-bottom:25%;
+                }
+            }
+                
         </style>
     </head>
     <body class="bg-light" onload="disable();">
@@ -269,7 +289,7 @@
                                     </div>
                                 </div>
                             </div> 
-                            <div class="row mt-3">
+                            <div class="row mt-3 custom-margin-bottom">
                                 <div class="col-lg-4 mb-2 custom-left">
                                     <button type="submit" name="prevQuestion" value="prevQuestionButton" class="btn btn-lg btn-warning custom-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
@@ -302,7 +322,7 @@
                 </div>
             </main>
             <@macros.footer />
-            <script>
+            <script> //aggiustare codice javascipt per casi errore (disabled rosso + alert)
                 function disable(){
                     document.getElementById('option2').disabled = true; 
                     document.getElementById('option3').disabled = true; 
