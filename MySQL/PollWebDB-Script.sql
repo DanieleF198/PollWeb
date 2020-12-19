@@ -17,17 +17,20 @@ CREATE TABLE Gruppo(
 );
 
 CREATE TABLE Utente (
-  idUtente int NOT NULL,
+  idUtente int NOT NULL AUTO_INCREMENT,
   idGruppo int NOT NULL,
   nome varchar(45) NOT NULL,
   cognome varchar(45) NOT NULL,
+  username varchar(45) NOT NULL,
   password varchar(45) NOT NULL,
+  email varchar(45) NOT NULL,
+  eta int NOT NULL,
   PRIMARY KEY (idUtente),
   FOREIGN KEY (idGruppo) REFERENCES Gruppo (idGruppo) on update cascade on delete cascade
   );
   
   CREATE TABLE Sondaggio(
-	idSondaggio int NOT NULL,
+	idSondaggio int NOT NULL AUTO_INCREMENT,
     idUtente int NOT NULL,
     testoApertura varchar(245),
     testoChiusura varchar(245),
@@ -41,16 +44,17 @@ CREATE TABLE Utente (
   );
   
   CREATE TABLE ListaPartecipanti(
-	idListaPartecipanti int NOT NULL,
+	idListaPartecipanti int NOT NULL AUTO_INCREMENT,
     idUtente int NOT NULL,
     idSondaggio int NOT NULL,
+    email varchar(45) NOT NULL,
     PRIMARY KEY (idListaPartecipanti),
     FOREIGN KEY (idUtente) REFERENCES Utente (idUtente) on update cascade on delete cascade,
     FOREIGN KEY (idSondaggio) REFERENCES Sondaggio (idSondaggio) on update cascade on delete cascade
   );
   
   CREATE TABLE Risposta(
-	idRisposta int NOT NULL,
+	idRisposta int NOT NULL AUTO_INCREMENT,
     idUtente int NOT NULL,
     dataCreazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     punteggio int,
@@ -60,19 +64,21 @@ CREATE TABLE Utente (
   );
   
   CREATE TABLE Domanda(
-	idDomanda int NOT NULL,
+	idDomanda int NOT NULL AUTO_INCREMENT,
     idSondaggio int NOT NULL,
     titolo varchar(45) NOT NULL,
     obbligatoria boolean NOT NULL,
     descrizione varchar(245) NOT NULL,
     posizione int NOT NULL,
+    opzioni JSON NOT NULL,
+    rispostaCorretta JSON,
     tipo varchar(45) NOT NULL,
     PRIMARY KEY (idDomanda),
     FOREIGN KEY (idSondaggio) REFERENCES Sondaggio (idSondaggio) on update cascade on delete cascade
   );
   
   CREATE TABLE RispostaDomanda(
-	idRisposta int NOT NULL,
+	idRisposta int NOT NULL AUTO_INCREMENT,
     idDomanda int NOT NULL,
     risposta varchar(245) NOT NULL,
     PRIMARY KEY (idRisposta, idDomanda),

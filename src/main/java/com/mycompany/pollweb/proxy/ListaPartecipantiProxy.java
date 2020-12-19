@@ -39,6 +39,11 @@ public class ListaPartecipantiProxy extends ListaPartecipantiImpl implements Dat
     public int getIdSondaggio() {
         return super.getIdSondaggio(); 
     }
+    
+    @Override
+    public String getEmail() {
+        return super.getEmail(); 
+    }
 
     @Override
     public void setIdUtente(int idUtente) {
@@ -49,6 +54,12 @@ public class ListaPartecipantiProxy extends ListaPartecipantiImpl implements Dat
     @Override
     public void setIdSondaggio(int idSondaggio) {
         super.setIdSondaggio(idSondaggio);
+        this.modified = true;
+    }
+    
+    @Override
+    public void setEmail(String newEmail) {
+        super.setEmail(newEmail);
         this.modified = true;
     }
     

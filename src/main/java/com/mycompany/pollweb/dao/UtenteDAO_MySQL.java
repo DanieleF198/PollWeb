@@ -10,7 +10,6 @@ import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.data.DataItemProxy;
 import com.mycompany.pollweb.data.DataLayer;
 import com.mycompany.pollweb.model.Utente;
-import com.mycompany.pollweb.proxy.GruppoProxy;
 import com.mycompany.pollweb.proxy.UtenteProxy;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,14 +42,13 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
         try {
             super.init();
 
-            //precompiliamo tutte le query utilizzate nella classe
             sUtenteByID = connection.prepareStatement("SELECT * FROM Utente WHERE idUtente=?");
             sUtenteByGruppo = connection.prepareStatement("SELECT * FROM Utente WHERE idGruppo=?");
             sUtenteByemail = connection.prepareStatement("SELECT * FROM Utente WHERE email=?");
             sUtenti = connection.prepareStatement("SELECT * FROM Utente");   
             
-            iUtente = connection.prepareStatement("INSERT INTO Utente (nome,idGruppo,cognome,password,email,eta) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uUtente = connection.prepareStatement("UPDATE Utente SET nome=?,idGruppo=?,cognome=?,password=?, email=?, eta=? WHERE idUtente=?");
+            iUtente = connection.prepareStatement("INSERT INTO Utente (idGruppo,nome,cognome,username,password,email,eta) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,password=?,username=?,email=?,eta=? WHERE idUtente=?");
             dUtente = connection.prepareStatement("DELETE FROM Utente WHERE idUtente=?");
 
             
@@ -94,6 +92,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             u.setPassword(rs.getString("password"));
             u.setIdGruppo(rs.getInt("idGruppo"));
             u.setEta(rs.getInt("eta"));
+            u.setCognome(rs.getString("cognome"));
+            u.setUsername(rs.getString("username"));
             u.setEmail(rs.getString("email"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Utente object form ResultSet", ex);
@@ -148,12 +148,14 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 if (utente instanceof DataItemProxy && !((DataItemProxy) utente).isModified()) {
                     return;
                 }
-                uUtente.setString(1, utente.getNome()); //TODO aggiungere List sondaggio e risposta
+                uUtente.setString(1, utente.getNome());
                 uUtente.setString(2, utente.getPassword());
                 uUtente.setInt(3, utente.getEta());
                 uUtente.setString(4, utente.getEmail());
                 uUtente.setInt(5, utente.getIdGruppo());
-                uUtente.setInt(6, utente.getKey());
+                uUtente.setString(6, utente.getCognome());
+                uUtente.setString(7, utente.getUsername());
+                uUtente.setInt(8, utente.getKey());
 
 
                 if (uUtente.executeUpdate() == 0) {
@@ -161,11 +163,13 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 }
             }
             else { //insert
-                iUtente.setString(1, utente.getNome()); //TODO aggiungere List sondaggio e risposta
+                iUtente.setString(1, utente.getNome());
                 iUtente.setString(2, utente.getPassword());
                 iUtente.setInt(3, utente.getEta());
                 iUtente.setString(4, utente.getEmail());
                 iUtente.setInt(5, utente.getIdGruppo());
+                iUtente.setString(6, utente.getCognome());
+                iUtente.setString(7, utente.getUsername());
                 
                 if (iUtente.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

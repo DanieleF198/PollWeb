@@ -46,6 +46,18 @@ public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
     }
     
     @Override
+    public void setCognome(String newCognome){
+        super.setNome(newCognome);
+	this.modified = true;
+    }
+    
+    @Override
+    public void setUsername(String newUsername){
+        super.setNome(newUsername);
+	this.modified = true;
+    }
+    
+    @Override
     public void setPassword(String newPassword){
         super.setPassword(newPassword);
 	this.modified = true;
