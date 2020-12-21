@@ -35,6 +35,6 @@ public class PollWebDataLayer extends DataLayer {
     }
       
     public UtenteDAO getUtenteDAO() {
-        return (UtenteDAO) getDAO(Gruppo.class);
+        return (UtenteDAO) getDAO(Utente.class);
     }
 }

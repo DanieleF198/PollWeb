@@ -47,13 +47,13 @@ public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
     
     @Override
     public void setCognome(String newCognome){
-        super.setNome(newCognome);
+        super.setCognome(newCognome);
 	this.modified = true;
     }
     
     @Override
     public void setUsername(String newUsername){
-        super.setNome(newUsername);
+        super.setUsername(newUsername);
 	this.modified = true;
     }
     

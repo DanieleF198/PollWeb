@@ -29,9 +29,11 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     public UtenteImpl (){
         super();
         this.nome = "";
+        this.cognome ="";
         this.password = "";
         this.eta = 0;
         this.email = "";
+        this.username = "";
     }
     
     

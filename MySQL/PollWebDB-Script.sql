@@ -89,5 +89,8 @@ CREATE TABLE Utente (
 INSERT INTO `pollwebdb`.`Gruppo`(`idGruppo`,`nomeGruppo`)VALUES('1','Utente');
 INSERT INTO `pollwebdb`.`Gruppo`(`idGruppo`,`nomeGruppo`)VALUES('2','Responsabile');
 INSERT INTO `pollwebdb`.`Gruppo`(`idGruppo`,`nomeGruppo`)VALUES('3','Admin');
+
+INSERT INTO `pollwebdb`.`Utente`(`idUtente`,`idGruppo`,`nome`,`cognome`,`username`,`password`,`email`,`eta`)VALUES('1','1','Arturito', 'benedito', 'artrito', 'password', 'arturitoBenedito@gmail.com', '26');
+INSERT INTO `pollwebdb`.`Utente`(`idUtente`,`idGruppo`,`nome`,`cognome`,`username`,`password`,`email`,`eta`)VALUES('2','2','Rinaldo', 'baualdo', 'zawardo', 'mudamuda', 'dioBrando@gmail.com', '21');
   
   

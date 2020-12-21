@@ -18,7 +18,9 @@ public interface UtenteDAO {
     
     public UtenteProxy createUtente();
     
-    Utente getUtente(int idUtente) throws DataException;
+    public Utente getUtente(int idUtente) throws DataException;
+    
+    public Utente getUtenteLogin(String username, String password) throws DataException;
     
     public List<Utente> getUtenti() throws DataException;
     

@@ -55,15 +55,15 @@
     </head>
     <body class="bg-light">
         <!-- Login form -->
-        <form class="form-signin">
+        <form method="post" action="login" class="form-signin">
             <div class="text-center">
                 <img class="mb-4" src="images/logoDDP.png" alt="" width="140" height="90">
             </div>
             <h1 class="h3 mb-3 font-weight-normal text-center">Effettua l'accesso</h1>
-            <label for="inputEmail" class="sr-only">Indirizzo e-mail</label>
-            <input type="email" id="inputEmail" class="form-control" placeholder="Indirizzo e-mail" required autofocus>
+            <label for="inputUsername" class="sr-only">Username</label>
+            <input type="text" id="inputUsername" name="inputUsername" class="form-control" placeholder="Indirizzo e-mail" required autofocus>
             <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
             <div>
                 <label class="checkbox mb-3">
                     <input type="checkbox" value="remember-me"/>
@@ -72,7 +72,7 @@
                 &nbspRicordami - 
                 <a href="#" class="text-info"> Password dimenticata?</a>
             </div>
-            <button class="btn btn-lg btn-warning btn-block" type="submit">Accedi!</button>
+            <button name="buttonLogin" value="login" class="btn btn-lg btn-warning btn-block" type="submit">Accedi!</button>
             <div class="mt-2 mb-3 text-center">
                 <a href="homepage" class="text-muted">Torna alla homepage</a>
             </div>

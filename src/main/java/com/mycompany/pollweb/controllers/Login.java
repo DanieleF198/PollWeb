@@ -5,13 +5,21 @@
  */
 package com.mycompany.pollweb.controllers;
 
+import com.mycompany.pollweb.dao.PollWebDataLayer;
+import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.result.HTMLResult;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +42,7 @@ public class Login extends BaseController {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
             action_default(request, response);
 
@@ -49,59 +57,59 @@ public class Login extends BaseController {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
-    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
+    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
        try {
-            TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("login.ftl", request, response);
+           TemplateResult res = new TemplateResult(getServletContext());
+            if(request.getParameter("buttonLogin") != null){
+                String username = request.getParameter("inputUsername");
+                String password = request.getParameter("inputPassword");
+                if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
+                    Utente utente = ((PollWebDataLayer)request.getAttribute("datalayer")).getUtenteDAO().getUtenteLogin(username, password);
+                    if(utente != null){
+                        if (username.equals(utente.getUsername())){
+                            response.sendRedirect("dashboard");
+                        }
+                        else{
+                            res.activate("homepage.ftl", request, response);
+                        }
+                    } else {
+                        res.activate("login.ftl", request, response);
+                    }
+                }
+            } else {
+                res.activate("login.ftl", request, response);
+            }
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("exception", new Exception("Login failed"));
+            action_error(request, response);
         }
     }
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
-        if (request.getAttribute("exception") != null) {
-            (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
+        //assumiamo che l'eccezione sia passata tramite gli attributi della request
+        //we assume that the exception has been passed using the request attributes
+        Exception exception = (Exception) request.getAttribute("exception");
+        String message;
+        if (exception != null && exception.getMessage() != null) {
+            message = exception.getMessage();
         } else {
-            (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
+            message = "Unknown error";
+        }
+        HTMLResult result = new HTMLResult(getServletContext());
+        result.setTitle("ERROR");
+        result.setBody("<p>" + message + "</p>");
+        try {
+            result.activate(request, response);
+        } catch (IOException ex) {
+            //if error page cannot be sent, try a standard HTTP error message
+            //se non possiamo inviare la pagina di errore, proviamo un messaggio di errore HTTP standard
+            try {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+            } catch (IOException ex1) {
+                //if ALSO this error status cannot be notified, write to the server log
+                //se ANCHE questo stato di errore non pu� essere notificato, scriviamo sul log del server
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ import com.mycompany.pollweb.data.DAO;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.data.DataItemProxy;
 import com.mycompany.pollweb.data.DataLayer;
+import com.mycompany.pollweb.data.OptimisticLockException;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.proxy.UtenteProxy;
 import java.sql.PreparedStatement;
@@ -17,7 +18,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.OptimisticLockException;
 
 /**
  *
@@ -27,6 +27,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     
     private PreparedStatement sUtenteByID;
     private PreparedStatement sUtenteByGruppo;
+    private PreparedStatement sUtenteLogin;
     private PreparedStatement sUtenteByemail;
     private PreparedStatement sUtenti;
     private PreparedStatement iUtente;
@@ -44,6 +45,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
 
             sUtenteByID = connection.prepareStatement("SELECT * FROM Utente WHERE idUtente=?");
             sUtenteByGruppo = connection.prepareStatement("SELECT * FROM Utente WHERE idGruppo=?");
+            sUtenteLogin = connection.prepareStatement("SELECT * FROM Utente WHERE username=? and password=?");
             sUtenteByemail = connection.prepareStatement("SELECT * FROM Utente WHERE email=?");
             sUtenti = connection.prepareStatement("SELECT * FROM Utente");   
             
@@ -65,6 +67,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             sUtenteByID.close();
             
             sUtenteByGruppo.close();
+            sUtenteLogin.close();
             sUtenteByemail.close();
             sUtenti.close();
             
@@ -122,6 +125,25 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 throw new DataException("Unable to load Utente by idUtente", ex);
             }
         }
+        return u;
+    }
+    
+    @Override
+    public Utente getUtenteLogin(String username, String password) throws DataException {
+        Utente u = null;
+        try {
+                sUtenteLogin.setString(1, username);
+                sUtenteLogin.setString(2, password);
+                try (ResultSet rs = sUtenteLogin.executeQuery()) {
+                    if (rs.next()) {
+                        u = createUtente(rs);
+                        //e lo mettiamo anche nella cache
+                        dataLayer.getCache().add(Utente.class, u);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Utente by idUtente", ex);
+            }
         return u;
     }
     
