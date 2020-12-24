@@ -16,8 +16,12 @@ import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.security.SecurityLayer;
+import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -29,7 +33,13 @@ public class Dashboard extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
          try {
-            action_default(request, response);
+             HttpSession s = checkSession(request);
+            if (s!= null) {
+                action_default(request, response);
+            } else {
+                action_redirect_login(request, response);
+            }
+            
 
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
@@ -45,7 +55,12 @@ public class Dashboard extends BaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
        try {
             TemplateResult res = new TemplateResult(getServletContext());
-            request.setAttribute("username", "PuppetUser"); //questo set è solo di prova, dovrà essere sostituito col valore effettivo caricato dinamicamente tramite il DAO
+            if(SecurityLayer.checkSession(request) == null){
+                request.setAttribute("username", "PuppetUser"); //questo set è solo di prova, dovrà essere sostituito col valore effettivo caricato dinamicamente tramite il DAO
+            } else {
+                HttpSession s = request.getSession(false);
+                request.setAttribute("username", (String)s.getAttribute("username"));
+            }
             res.activate("dashboard.ftl", request, response); 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,5 +74,14 @@ public class Dashboard extends BaseController {
             (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
         }
     }
-
+    
+        private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+        try {
+            request.setAttribute("urlrequest", request.getRequestURL());
+            RequestDispatcher rd = request.getRequestDispatcher("/login");
+            rd.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+    }
 }

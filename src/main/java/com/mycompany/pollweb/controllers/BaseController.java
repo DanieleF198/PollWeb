@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import com.mycompany.pollweb.dao.PollWebDataLayer;
 import com.mycompany.pollweb.result.FailureResult;
 import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
 import javax.sql.DataSource;
 
        
@@ -61,7 +62,7 @@ public abstract class BaseController extends HttpServlet {
                     (ex.getMessage() != null || ex.getCause() == null) ? ex.getMessage() : ex.getCause().getMessage(), request, response);
         }
     }
-
+    
     /**
      *
      * @param request

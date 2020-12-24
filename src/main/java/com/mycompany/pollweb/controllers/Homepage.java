@@ -18,6 +18,7 @@ import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.result.FailureResult;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 
 /**
  *
@@ -44,11 +45,11 @@ public class Homepage extends BaseController {
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
        try {
-            TemplateResult res = new TemplateResult(getServletContext());
+        TemplateResult res = new TemplateResult(getServletContext());
             res.activate("homepage.ftl", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    }
     }
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {

@@ -55,15 +55,21 @@ public class SecurityLayer {
                 long secondsfrombegin = (now.getTimeInMillis() - begin.getTimeInMillis()) / 1000;
                 //dopo tre ore la sessione scade
                 //after three hours the session is invalidated
-                if (secondsfrombegin > 3 * 60 * 60) {
-                    check = false;
-                } else if (last != null) {
-                    //secondi trascorsi dall'ultima azione
-                    //seconds from the last valid action
-                    long secondsfromlast = (now.getTimeInMillis() - last.getTimeInMillis()) / 1000;
-                    //dopo trenta minuti dall'ultima operazione la sessione è invalidata
-                    //after 30 minutes since the last action the session is invalidated                    
-                    if (secondsfromlast > 30 * 60) {
+                if (!((boolean)s.getAttribute("remember"))) { //non ha cliccato remember me
+                    if(secondsfrombegin > 3 * 60 * 60){
+                        check = false;
+                    } else if (last != null) {
+                        //secondi trascorsi dall'ultima azione
+                        //seconds from the last valid action
+                        long secondsfromlast = (now.getTimeInMillis() - last.getTimeInMillis()) / 1000;
+                        //dopo trenta minuti dall'ultima operazione la sessione è invalidata
+                        //after 30 minutes since the last action the session is invalidated                    
+                        if (secondsfromlast > 30 * 60) {
+                            check = false;
+                        }
+                    }
+                } else { // ha cliccato su ricordami
+                    if(secondsfrombegin > 365 * 24 * 60 * 60){ //sarà da testare (per ora mettiamo un anno)
                         check = false;
                     }
                 }
@@ -80,12 +86,13 @@ public class SecurityLayer {
         }
     }
 
-    public static HttpSession createSession(HttpServletRequest request, String username, int userid) {
+    public static HttpSession createSession(HttpServletRequest request, String username, int userid, boolean remember) {
         HttpSession s = request.getSession(true);
         s.setAttribute("username", username);
         s.setAttribute("ip", request.getRemoteHost());
         s.setAttribute("inizio-sessione", Calendar.getInstance());
         s.setAttribute("userid", userid);
+        s.setAttribute("remember", remember);
         return s;
     }
 
