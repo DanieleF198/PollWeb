@@ -9,6 +9,7 @@ import com.mycompany.pollweb.data.DataItemImpl;
 import java.util.ArrayList;
 import java.util.List;
 import com.mycompany.pollweb.model.Utente;
+import java.util.Date; //vediamo sql
 
 /**
  *
@@ -20,7 +21,7 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     private String cognome; //new
     private String username; //new
     private String password;
-    private int eta;
+    private Date dataNascita;
     private String email;
     private int idGruppo;
     private List <SondaggioImpl> sondaggi = new ArrayList<>();
@@ -31,8 +32,9 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
         this.nome = "";
         this.cognome ="";
         this.password = "";
-        this.eta = 0;
+        this.dataNascita = null;
         this.email = "";
+        this.idGruppo = 0;
         this.username = "";
     }
     
@@ -63,8 +65,8 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     }
 
     @Override
-    public int getEta() {
-        return eta;
+    public Date getDataNascita() {
+        return dataNascita;
     }
 
     @Override
@@ -108,8 +110,8 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     }
 
     @Override
-    public void setEta(int eta) {
-        this.eta = eta;
+    public void setDataNascita(Date dataNascita) {
+        this.dataNascita = dataNascita;
     }
 
     @Override

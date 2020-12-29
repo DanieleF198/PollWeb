@@ -68,10 +68,10 @@ public class Login extends BaseController {
     }
 
     private void action_login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
-       try {
-           if(SecurityLayer.checkSession(request) != null){ //controllo in più inutile ma per essere sicuri
-               response.sendRedirect("dashboard");
-           }else{
+        try{
+            if(SecurityLayer.checkSession(request) != null){ //controllo in più inutile ma per essere sicuri
+                response.sendRedirect("dashboard");
+            }else{
                 TemplateResult res = new TemplateResult(getServletContext());
                 if(request.getParameter("buttonLogin") != null){
                     String username = SecurityLayer.addSlashes(request.getParameter("inputUsername"));
@@ -107,7 +107,7 @@ public class Login extends BaseController {
                 } else {
                     res.activate("login.ftl", request, response);
                 }
-           }
+            }
         } catch (TemplateManagerException ex) {
             request.setAttribute("exception", new Exception("Login failed"));
             action_error(request, response);

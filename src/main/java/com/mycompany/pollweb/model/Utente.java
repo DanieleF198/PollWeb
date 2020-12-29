@@ -8,6 +8,7 @@ package com.mycompany.pollweb.model;
 import com.mycompany.pollweb.data.DataItem;
 import com.mycompany.pollweb.impl.RispostaImpl;
 import com.mycompany.pollweb.impl.SondaggioImpl;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public interface Utente extends DataItem<Integer> {
     
     public int getIdGruppo();
     
-    public int getEta();
+    public Date getDataNascita();
 
     public String getEmail();
     
@@ -44,7 +45,7 @@ public interface Utente extends DataItem<Integer> {
     
     public void setIdGruppo(int idGruppo);
 
-    public void setEta(int eta);
+    public void setDataNascita(Date dataNascita);
 
     public void setEmail(String email);
     

@@ -12,12 +12,15 @@ import com.mycompany.pollweb.data.DataLayer;
 import com.mycompany.pollweb.data.OptimisticLockException;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.proxy.UtenteProxy;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +31,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     private PreparedStatement sUtenteByID;
     private PreparedStatement sUtenteByGruppo;
     private PreparedStatement sUtenteLogin;
-    private PreparedStatement sUtenteByemail;
+    private PreparedStatement sUtenteExistByUsername;
+    private PreparedStatement sUtenteExistByEmail;
     private PreparedStatement sUtenti;
     private PreparedStatement iUtente;
     private PreparedStatement uUtente;
@@ -46,11 +50,12 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             sUtenteByID = connection.prepareStatement("SELECT * FROM Utente WHERE idUtente=?");
             sUtenteByGruppo = connection.prepareStatement("SELECT * FROM Utente WHERE idGruppo=?");
             sUtenteLogin = connection.prepareStatement("SELECT * FROM Utente WHERE username=? and password=?");
-            sUtenteByemail = connection.prepareStatement("SELECT * FROM Utente WHERE email=?");
+            sUtenteExistByUsername = connection.prepareStatement("SELECT * FROM Utente WHERE username=?");
+            sUtenteExistByEmail = connection.prepareStatement("SELECT * FROM Utente WHERE email=?");
             sUtenti = connection.prepareStatement("SELECT * FROM Utente");   
             
-            iUtente = connection.prepareStatement("INSERT INTO Utente (idGruppo,nome,cognome,username,password,email,eta) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,password=?,username=?,email=?,eta=? WHERE idUtente=?");
+            iUtente = connection.prepareStatement("INSERT INTO Utente (idGruppo,nome,cognome,username,password,email,dataNascita) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,password=?,username=?,email=?,dataNascita=? WHERE idUtente=?");
             dUtente = connection.prepareStatement("DELETE FROM Utente WHERE idUtente=?");
 
             
@@ -61,14 +66,14 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     
     @Override
     public void destroy() throws DataException {
-        //anche chiudere i PreparedStamenent � una buona pratica...
         try {
             
             sUtenteByID.close();
             
             sUtenteByGruppo.close();
             sUtenteLogin.close();
-            sUtenteByemail.close();
+            sUtenteExistByUsername.close();
+            sUtenteExistByEmail.close();
             sUtenti.close();
             
             iUtente.close();
@@ -94,7 +99,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             u.setNome(rs.getString("nome"));
             u.setPassword(rs.getString("password"));
             u.setIdGruppo(rs.getInt("idGruppo"));
-            u.setEta(rs.getInt("eta"));
+            u.setDataNascita(rs.getDate("dataNascita"));
             u.setCognome(rs.getString("cognome"));
             u.setUsername(rs.getString("username"));
             u.setEmail(rs.getString("email"));
@@ -148,6 +153,38 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     }
     
     @Override
+    public String checkIfExist(String username, String email) throws DataException {
+        String usernameExist = "";
+        String emailExist = "";
+        try {
+            sUtenteExistByUsername.setString(1, username);
+            sUtenteExistByEmail.setString(1, email);
+            try (ResultSet rs = sUtenteExistByUsername.executeQuery(); ResultSet rs2 = sUtenteExistByEmail.executeQuery()) {
+                    if (rs.next()) {
+                        usernameExist = "username";
+                    }
+                    if (rs2.next()) {
+                        emailExist = "email";
+                    }
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }  
+        if(!usernameExist.isEmpty() && !emailExist.isEmpty()){
+            return usernameExist.concat(emailExist);
+        }
+        else if(usernameExist.isEmpty()){
+            return emailExist;
+        }
+        else if(emailExist.isEmpty()){
+            return usernameExist;
+        }
+        else{
+            return "correct";
+        }
+    }
+    
+    @Override
     public List<Utente> getUtenti() throws DataException {
         List<Utente> result = new ArrayList();
 
@@ -172,7 +209,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 }
                 uUtente.setString(1, utente.getNome());
                 uUtente.setString(2, utente.getPassword());
-                uUtente.setInt(3, utente.getEta());
+                uUtente.setDate(3, (Date) utente.getDataNascita());
                 uUtente.setString(4, utente.getEmail());
                 uUtente.setInt(5, utente.getIdGruppo());
                 uUtente.setString(6, utente.getCognome());
@@ -187,7 +224,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             else { //insert
                 iUtente.setString(1, utente.getNome());
                 iUtente.setString(2, utente.getPassword());
-                iUtente.setInt(3, utente.getEta());
+                iUtente.setDate(3, (Date) utente.getDataNascita());
                 iUtente.setString(4, utente.getEmail());
                 iUtente.setInt(5, utente.getIdGruppo());
                 iUtente.setString(6, utente.getCognome());

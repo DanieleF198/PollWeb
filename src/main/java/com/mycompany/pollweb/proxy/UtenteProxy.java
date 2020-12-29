@@ -10,6 +10,7 @@ import com.mycompany.pollweb.data.DataLayer;
 import com.mycompany.pollweb.impl.RispostaImpl;
 import com.mycompany.pollweb.impl.SondaggioImpl;
 import com.mycompany.pollweb.impl.UtenteImpl;
+import java.util.Date;
 import java.util.List;
 
 
@@ -82,8 +83,8 @@ public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
     }
 
     @Override
-    public void setEta(int eta) {
-        super.setEta(eta);
+    public void setDataNascita(Date dataNascita) {
+        super.setDataNascita(dataNascita);
         this.modified = true;
     }
 
