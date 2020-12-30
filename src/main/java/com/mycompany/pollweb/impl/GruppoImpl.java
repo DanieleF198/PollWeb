@@ -15,11 +15,6 @@ import com.mycompany.pollweb.model.Gruppo;
 public class GruppoImpl extends DataItemImpl<Integer> implements Gruppo {
     
     private String nomeGruppo;
-
-    public GruppoImpl(String nomeGruppo) {
-        super();
-        this.nomeGruppo = nomeGruppo;
-    }
     
     public GruppoImpl() {
         super();
@@ -34,6 +29,20 @@ public class GruppoImpl extends DataItemImpl<Integer> implements Gruppo {
     @Override
     public void setNomeGruppo(String nomeGruppo) {
         this.nomeGruppo = nomeGruppo;
+    }
+
+    @Override
+    public String getNomeGruppoByID(int idGruppo) {
+        switch (idGruppo) {
+            case 1:
+                return "Utente base";
+            case 2:
+                return "Responsabile";
+            case 3:
+                return "Admin";
+            default:
+                return "error";
+        }
     }
     
 }

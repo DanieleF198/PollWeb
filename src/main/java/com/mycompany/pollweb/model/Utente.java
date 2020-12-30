@@ -52,5 +52,6 @@ public interface Utente extends DataItem<Integer> {
     public void setCognome (String cognome);
     
     public void setUsername (String username);
-            
+    
+    public int calculateAge ();         
 }

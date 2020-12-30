@@ -33,13 +33,13 @@
             <p class="h5 font-weight-normal text-center">Per questo motivo ti chiediamo di fornirci il tuo codice fiscale, per tutelare tutti da comportamenti scorretti.</p>
             <div class="mt-3"></div>
             <form class="needs-validation" novalidate>
-                <label for="CV">Codice Fiscale</label>
-                <input type="text" class="form-control" id="CV" placeholder="" value="" required> 
+                <label for="CF">Codice Fiscale</label>
+                <input type="text" class="form-control" name ="CF" id="CF" placeholder="" value="" required> 
                 <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
                     Il codice fiscale inserito non è valido.
                 </div>
                 <div class="mb-3"></div>
-                <button class="btn btn-lg btn-warning btn-block" type="submit">Manda la richiesta!</button>
+                <button name ="buttonSendRespRequest" value="sendRespRequest" class="btn btn-lg btn-warning btn-block" type="submit">Manda la richiesta!</button>
                 <div class="mt-2 mb-3 text-center">
                     <a href="dashboard" class="text-muted">Torna alla zona utente</a>
                 </div>

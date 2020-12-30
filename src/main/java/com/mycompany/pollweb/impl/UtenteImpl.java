@@ -9,6 +9,11 @@ import com.mycompany.pollweb.data.DataItemImpl;
 import java.util.ArrayList;
 import java.util.List;
 import com.mycompany.pollweb.model.Utente;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date; //vediamo sql
 
 /**
@@ -128,5 +133,12 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     public void setUsername(String username) {
         this.username = username;
     }
-    
+
+    @Override
+    public int calculateAge() {
+        LocalDate birthDate = Instant.ofEpochMilli(this.dataNascita.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate now = LocalDate.now();
+        Period period = Period.between(birthDate, now);
+        return period.getYears();
+    }
 }

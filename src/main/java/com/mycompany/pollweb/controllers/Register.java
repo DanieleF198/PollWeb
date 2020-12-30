@@ -90,11 +90,11 @@ public class Register extends BaseController {
     }
 
     private void action_register(HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateManagerException, DataException, ParseException {
-        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
         try{
             if(SecurityLayer.checkSession(request) != null){ //controllo in più inutile ma per essere sicuri
                 response.sendRedirect("dashboard");
             }else{
+                PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
                 TemplateResult res = new TemplateResult(getServletContext());
                 if(request.getParameter("buttonRegister") != null){
                     String firstName = SecurityLayer.addSlashes(request.getParameter("firstName")); //regex
@@ -253,13 +253,9 @@ public class Register extends BaseController {
                         newUtente.setPassword(password);
                         
                         dl.getUtenteDAO().storeUtente(newUtente);
-                        SecurityLayer.createSession(request, username, newUtente.getKey(), false);
-                        //store dell'account e creazione sessionamento (adesso non va in homepage ma dashboard)
-                        //controllare inoltre se funziona usando solo Utente, se non lo fa, controllare con UtenteImpl
-                        //SecurityLayer.createSession(request, username, utente.getKey(), false);
+                        SecurityLayer.createSession(request, newUtente, false);
                         response.sendRedirect("homepage");
-                    }
-                    else{
+                    }else{
                         request.setAttribute("error", "tutti i campi devono essere compilati");
                         res.activate("register.ftl", request, response); 
                     }

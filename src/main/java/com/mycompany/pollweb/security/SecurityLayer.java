@@ -1,5 +1,6 @@
 package com.mycompany.pollweb.security;
 
+import com.mycompany.pollweb.model.Utente;
 import java.io.IOException;
 import java.util.Calendar;
 import javax.servlet.ServletException;
@@ -86,12 +87,17 @@ public class SecurityLayer {
         }
     }
 
-    public static HttpSession createSession(HttpServletRequest request, String username, int userid, boolean remember) {
+    public static HttpSession createSession(HttpServletRequest request, Utente user, boolean remember) {
         HttpSession s = request.getSession(true);
-        s.setAttribute("username", username);
+        s.setAttribute("userid", user.getKey());
+        s.setAttribute("groupid", user.getIdGruppo());
+        s.setAttribute("username", user.getUsername());
+        s.setAttribute("email", user.getEmail());
+        s.setAttribute("nome", user.getNome());
+        s.setAttribute("cognome", user.getCognome());
+        s.setAttribute("eta", user.calculateAge());
         s.setAttribute("ip", request.getRemoteHost());
         s.setAttribute("inizio-sessione", Calendar.getInstance());
-        s.setAttribute("userid", userid);
         s.setAttribute("remember", remember);
         return s;
     }

@@ -14,7 +14,8 @@ import com.mycompany.pollweb.data.DataItem;
 public interface Gruppo extends DataItem<Integer> {
 
     public String getNomeGruppo();
-    
+      
     public void setNomeGruppo(String nomeGruppo);
 
+    public String getNomeGruppoByID(int idGruppo);
 }

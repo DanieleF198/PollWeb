@@ -84,9 +84,9 @@ public class Login extends BaseController {
                         if(utente != null){
                             if (username.equals(utente.getUsername())){
                                 if(request.getParameter("remember") == null){
-                                    SecurityLayer.createSession(request, username, utente.getKey(), false);
+                                    SecurityLayer.createSession(request, utente, false);
                                 }else{
-                                    SecurityLayer.createSession(request, username, utente.getKey(), true);
+                                    SecurityLayer.createSession(request, utente, true);
                                 }
                                 if(request.getParameter("referrer") != null){
                                     response.sendRedirect(request.getParameter("referrer"));

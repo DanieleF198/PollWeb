@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.impl.GruppoImpl;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
@@ -33,7 +34,7 @@ public class Dashboard extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
          try {
-             HttpSession s = checkSession(request);
+            HttpSession s = checkSession(request);
             if (s!= null) {
                 action_default(request, response);
             } else {
@@ -55,12 +56,14 @@ public class Dashboard extends BaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
        try {
             TemplateResult res = new TemplateResult(getServletContext());
-            if(SecurityLayer.checkSession(request) == null){
-                request.setAttribute("username", "PuppetUser"); //questo set è solo di prova, dovrà essere sostituito col valore effettivo caricato dinamicamente tramite il DAO
-            } else {
-                HttpSession s = request.getSession(false);
-                request.setAttribute("username", (String)s.getAttribute("username"));
-            }
+            HttpSession s = request.getSession(false);
+            GruppoImpl g = new GruppoImpl();
+            request.setAttribute("username", (String)s.getAttribute("username"));
+            request.setAttribute("email", (String)s.getAttribute("email"));
+            request.setAttribute("nome", (String)s.getAttribute("nome"));
+            request.setAttribute("cognome", (String)s.getAttribute("cognome"));
+            request.setAttribute("eta", (Integer)s.getAttribute("eta"));
+            request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
             res.activate("dashboard.ftl", request, response); 
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);

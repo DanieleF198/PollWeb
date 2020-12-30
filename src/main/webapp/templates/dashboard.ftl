@@ -27,7 +27,9 @@
                                 <div class="col-lg-12">
                                     <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
                                     <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, e se sei abilitato alla creazione dei sondaggi, gestire i tuoi sondaggi.</p>
-                                    <p>Non sei ancora abilitato alla creazione di sondaggi? <a href="sendRespRequest" class="text-muted">clicca qui</a> per mandare la richiesta, richieder&#224; solo l'aggiunta del tuo codice fiscale!</p>
+                                    <#if gruppo?? && gruppo=="Utente base">
+                                        <p>Non sei ancora abilitato alla creazione di sondaggi? <a href="sendRespRequest" class="text-muted">clicca qui</a> per mandare la richiesta, richieder&#224; solo l'aggiunta del tuo codice fiscale!</p>
+                                    </#if>
                                     <p><b>I tuoi dati personali:</b></p>
                                     <div class="row">
                                         <div class="col-lg-3">
@@ -36,19 +38,19 @@
                                                     <p class="text-left"><b>Nome: </b></p>
                                                 </div>
                                                 <div class="col-lg-8">
-                                                    <p class="text-left">nome</p>
+                                                    <p class="text-left">${nome}</p>
                                                 </div>
                                                 <div class="col-lg-4">
                                                     <p class="text-left"><b>Cognome: </b></p>
                                                 </div>
                                                 <div class="col-lg-8">
-                                                    <p class="text-left">cognome</p>
+                                                    <p class="text-left">${cognome}</p>
                                                 </div>
                                                 <div class="col-lg-4">
                                                     <p class="text-left"><b>Et&#224;: </b></p>
                                                 </div>
                                                 <div class="col-lg-8">
-                                                    <p class="text-left">et&#224;</p>
+                                                    <p class="text-left">${eta}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -58,19 +60,19 @@
                                                     <p class="text-left"><b>Email: </b></p>
                                                 </div>
                                                 <div class="col-lg-9">
-                                                    <p class="text-left">indirizzo.mail@prova.it</p>
+                                                    <p class="text-left">${email}</p>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <p class="text-left"><b>Username: </b></p>
                                                 </div>
                                                 <div class="col-lg-9">
-                                                    <p class="text-left">Username</p>
+                                                    <p class="text-left">${username}</p>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <p class="text-left"><b>tipologia: </b></p>
                                                 </div>
                                                 <div class="col-lg-9">
-                                                    <p class="text-left">tipologia</p>
+                                                    <p class="text-left">${gruppo}</p>
                                                 </div>
                                             </div>
                                         </div>
