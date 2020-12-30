@@ -28,7 +28,6 @@ public class PollWebDataLayer extends DataLayer {
     
     @Override
     public void init() throws DataException {
-        //registriamo i nostri dao
         registerDAO(Gruppo.class, new GruppoDAO_MySQL(this));
         registerDAO(Utente.class, new UtenteDAO_MySQL(this));
         registerDAO(Domanda.class, new UtenteDAO_MySQL(this));

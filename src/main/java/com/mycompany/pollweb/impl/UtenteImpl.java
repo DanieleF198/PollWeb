@@ -34,7 +34,7 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
         this.password = "";
         this.dataNascita = null;
         this.email = "";
-        this.idGruppo = 0;
+        this.idGruppo = 1;
         this.username = "";
     }
     

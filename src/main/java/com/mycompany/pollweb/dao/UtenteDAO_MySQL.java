@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -54,8 +55,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             sUtenteExistByEmail = connection.prepareStatement("SELECT * FROM Utente WHERE email=?");
             sUtenti = connection.prepareStatement("SELECT * FROM Utente");   
             
-            iUtente = connection.prepareStatement("INSERT INTO Utente (idGruppo,nome,cognome,username,password,email,dataNascita) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,password=?,username=?,email=?,dataNascita=? WHERE idUtente=?");
+            iUtente = connection.prepareStatement("INSERT INTO Utente (idGruppo,nome,cognome,dataNascita,username,password,email) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,dataNascita=?,username=?,password=?,email=? WHERE idUtente=?");
             dUtente = connection.prepareStatement("DELETE FROM Utente WHERE idUtente=?");
 
             
@@ -96,12 +97,12 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
         UtenteProxy u = createUtente();
         try {
             u.setKey(rs.getInt("idUtente"));
-            u.setNome(rs.getString("nome"));
-            u.setPassword(rs.getString("password"));
             u.setIdGruppo(rs.getInt("idGruppo"));
-            u.setDataNascita(rs.getDate("dataNascita"));
+            u.setNome(rs.getString("nome"));
             u.setCognome(rs.getString("cognome"));
+            u.setDataNascita(rs.getDate("dataNascita"));
             u.setUsername(rs.getString("username"));
+            u.setPassword(rs.getString("password"));
             u.setEmail(rs.getString("email"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Utente object form ResultSet", ex);
@@ -207,13 +208,13 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 if (utente instanceof DataItemProxy && !((DataItemProxy) utente).isModified()) {
                     return;
                 }
-                uUtente.setString(1, utente.getNome());
-                uUtente.setString(2, utente.getPassword());
-                uUtente.setDate(3, (Date) utente.getDataNascita());
-                uUtente.setString(4, utente.getEmail());
-                uUtente.setInt(5, utente.getIdGruppo());
-                uUtente.setString(6, utente.getCognome());
-                uUtente.setString(7, utente.getUsername());
+                uUtente.setInt(1, utente.getIdGruppo());
+                uUtente.setString(2, utente.getNome());
+                uUtente.setString(3, utente.getCognome());
+                uUtente.setDate(4, (Date) utente.getDataNascita());
+                uUtente.setString(5, utente.getUsername());
+                uUtente.setString(6, utente.getPassword());
+                uUtente.setString(7, utente.getEmail());
                 uUtente.setInt(8, utente.getKey());
 
 
@@ -222,13 +223,18 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 }
             }
             else { //insert
-                iUtente.setString(1, utente.getNome());
-                iUtente.setString(2, utente.getPassword());
-                iUtente.setDate(3, (Date) utente.getDataNascita());
-                iUtente.setString(4, utente.getEmail());
-                iUtente.setInt(5, utente.getIdGruppo());
-                iUtente.setString(6, utente.getCognome());
-                iUtente.setString(7, utente.getUsername());
+                
+                java.sql.Date sqlDate;
+                sqlDate = new java.sql.Date( utente.getDataNascita().getTime() );
+                
+                
+                iUtente.setInt(1, utente.getIdGruppo());
+                iUtente.setString(2, utente.getNome());
+                iUtente.setString(3, utente.getCognome());
+                iUtente.setDate(4, sqlDate);
+                iUtente.setString(5, utente.getUsername());
+                iUtente.setString(6, utente.getPassword());
+                iUtente.setString(7, utente.getEmail());
                 
                 if (iUtente.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

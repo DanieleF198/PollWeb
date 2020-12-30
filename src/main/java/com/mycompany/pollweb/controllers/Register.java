@@ -8,6 +8,7 @@ package com.mycompany.pollweb.controllers;
 import com.mycompany.pollweb.dao.PollWebDataLayer;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.model.Utente;
+import com.mycompany.pollweb.proxy.UtenteProxy;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
@@ -89,6 +90,7 @@ public class Register extends BaseController {
     }
 
     private void action_register(HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateManagerException, DataException, ParseException {
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
         try{
             if(SecurityLayer.checkSession(request) != null){ //controllo in più inutile ma per essere sicuri
                 response.sendRedirect("dashboard");
@@ -240,6 +242,18 @@ public class Register extends BaseController {
                             res.activate("register.ftl", request, response);
                             return;
                         }
+                        
+                        Utente newUtente = dl.getUtenteDAO().createUtente();
+                        
+                        newUtente.setNome(firstName);
+                        newUtente.setCognome(lastName);
+                        newUtente.setDataNascita(birthDateTemp);
+                        newUtente.setEmail(email);
+                        newUtente.setUsername(username);
+                        newUtente.setPassword(password);
+                        
+                        dl.getUtenteDAO().storeUtente(newUtente);
+                        SecurityLayer.createSession(request, username, newUtente.getKey(), false);
                         //store dell'account e creazione sessionamento (adesso non va in homepage ma dashboard)
                         //controllare inoltre se funziona usando solo Utente, se non lo fa, controllare con UtenteImpl
                         //SecurityLayer.createSession(request, username, utente.getKey(), false);
