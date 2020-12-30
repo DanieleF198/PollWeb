@@ -18,13 +18,13 @@ CREATE TABLE Gruppo(
 
 CREATE TABLE Utente (
   idUtente int NOT NULL AUTO_INCREMENT,
-  idGruppo int NOT NULL,
+  idGruppo int default 1,
   nome varchar(45) NOT NULL,
   cognome varchar(45) NOT NULL,
+  dataNascita datetime NOT NULL,
   username varchar(45) NOT NULL,
   password varchar(45) NOT NULL,
   email varchar(45) NOT NULL,
-  eta int NOT NULL,
   PRIMARY KEY (idUtente),
   FOREIGN KEY (idGruppo) REFERENCES Gruppo (idGruppo) on update cascade on delete cascade
   );
@@ -90,7 +90,7 @@ INSERT INTO `pollwebdb`.`Gruppo`(`idGruppo`,`nomeGruppo`)VALUES('1','Utente');
 INSERT INTO `pollwebdb`.`Gruppo`(`idGruppo`,`nomeGruppo`)VALUES('2','Responsabile');
 INSERT INTO `pollwebdb`.`Gruppo`(`idGruppo`,`nomeGruppo`)VALUES('3','Admin');
 
-INSERT INTO `pollwebdb`.`Utente`(`idUtente`,`idGruppo`,`nome`,`cognome`,`username`,`password`,`email`,`eta`)VALUES('1','1','Arturito', 'benedito', 'artrito', 'password', 'arturitoBenedito@gmail.com', '26');
-INSERT INTO `pollwebdb`.`Utente`(`idUtente`,`idGruppo`,`nome`,`cognome`,`username`,`password`,`email`,`eta`)VALUES('2','2','Rinaldo', 'baualdo', 'zawardo', 'mudamuda', 'dioBrando@gmail.com', '21');
+INSERT INTO `pollwebdb`.`Utente`(`idUtente`,`idGruppo`,`nome`,`cognome`,`dataNascita`,`username`,`password`,`email`)VALUES('1','1','Arturito', 'benedito', '2000-12-12', 'artrito', 'password', 'arturitoBenedito@gmail.com');
+INSERT INTO `pollwebdb`.`Utente`(`idUtente`,`idGruppo`,`nome`,`cognome`,`dataNascita`,`username`,`password`,`email`)VALUES('2','2','Rinaldo', 'baualdo', '1999-12-12', 'zawardo', 'mudamuda', 'dioBrando@gmail.com');
   
   
