@@ -181,12 +181,16 @@
                     <a class="nav-link" href="#">sondaggio d'esempio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/PollWeb/dashboard">Zona utente (template)</a>
+                    <a class="nav-link" href="/PollWeb/dashboard">Zona utente</a>
                 </li>
             </ul>
             <div class="row ml-1 mr-2">
-                <a href="/PollWeb/login" class="btn btn-warning">accedi</a>
-                <a href="/PollWeb/register" class="btn btn-outline-dark ml-2">registrati</a>
+                <#if sessione?? && sessione == "disattiva">
+                    <a href="/PollWeb/login" class="btn btn-warning">accedi</a>
+                    <a href="/PollWeb/register" class="btn btn-outline-dark ml-2">registrati</a>
+                <#else>
+                    <a href="/PollWeb/logout" class="btn btn-warning">logout</a>
+                </#if>
             </div>
         </div>
     </nav>

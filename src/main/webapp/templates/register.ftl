@@ -76,6 +76,9 @@
                 </div>
                 <div class="mb-4"></div>
                 <button name ="buttonRegister" value="register" class="btn btn-warning btn-lg btn-block" type="submit">Unisciti alla community</button>
+                <div class="mt-2 mb-3 text-center">
+                    <a href="homepage" class="text-muted">Torna alla homepage</a>
+                </div>
             </form>
         </div>
         <!-- End register form -->

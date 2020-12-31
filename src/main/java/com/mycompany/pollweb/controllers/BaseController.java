@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import java.sql.SQLException;
 import com.mycompany.pollweb.dao.PollWebDataLayer;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.security.SecurityLayer;
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.sql.DataSource;
@@ -55,6 +56,11 @@ public abstract class BaseController extends HttpServlet {
         try (PollWebDataLayer datalayer = new PollWebDataLayer(ds)) {
             datalayer.init();
             request.setAttribute("datalayer", datalayer);
+            if(SecurityLayer.checkSession(request) != null){ //l'utente è già in sessione  
+                request.setAttribute("sessione", "attiva");
+            }else{
+                request.setAttribute("sessione", "disattiva");
+            }
             processRequest(request, response);
         } catch (Exception ex) {
             ex.printStackTrace(); //for debugging only

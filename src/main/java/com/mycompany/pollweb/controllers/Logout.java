@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
-import com.mycompany.pollweb.impl.GruppoImpl;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
@@ -29,18 +28,15 @@ import javax.servlet.http.HttpSession;
  * @author joker
  */
 
-public class Dashboard extends BaseController {
+public class Logout extends BaseController {
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
          try {
-            HttpSession s = checkSession(request);
-            if (s!= null) {
-                action_default(request, response);
-            } else {
-                action_redirect_login(request, response);
+            if(!(SecurityLayer.checkSession(request) != null)){ //l'utente è già in sessione  
+                response.sendRedirect("homepage");
             }
-            
+            action_default(request, response);
 
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
@@ -54,24 +50,8 @@ public class Dashboard extends BaseController {
     }
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
-       try {
-            if(!(SecurityLayer.checkSession(request) != null)){ //controllo in più per essere sicuri
-                action_redirect_login(request,response);
-            }else{
-                TemplateResult res = new TemplateResult(getServletContext());
-                HttpSession s = request.getSession(false);
-                GruppoImpl g = new GruppoImpl();
-                request.setAttribute("username", (String)s.getAttribute("username"));
-                request.setAttribute("email", (String)s.getAttribute("email"));
-                request.setAttribute("nome", (String)s.getAttribute("nome"));
-                request.setAttribute("cognome", (String)s.getAttribute("cognome"));
-                request.setAttribute("eta", (Integer)s.getAttribute("eta"));
-                request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
-                res.activate("dashboard.ftl", request, response); 
-            }
-        } catch (TemplateManagerException ex) {
-            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        SecurityLayer.disposeSession(request);
+        response.sendRedirect("homepage");
     }
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
@@ -81,14 +61,5 @@ public class Dashboard extends BaseController {
             (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
         }
     }
-    
-        private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
-        try {
-            request.setAttribute("urlrequest", request.getRequestURL());
-            RequestDispatcher rd = request.getRequestDispatcher("/login");
-            rd.forward(request, response);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        }
-    }
+
 }

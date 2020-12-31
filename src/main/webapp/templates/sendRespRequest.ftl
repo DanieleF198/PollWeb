@@ -31,8 +31,13 @@
             <p class="h3 mb-3 font-weight-normal text-center">Quindi vuoi diventare responsabile?</p>
             <p class="h5 font-weight-normal text-center">Da grandi poteri, derivano grandi responsabilit&#224;... Ma la responsabilit&#224; &#232; anche nostra che ti offriamo questo servizio.</p>
             <p class="h5 font-weight-normal text-center">Per questo motivo ti chiediamo di fornirci il tuo codice fiscale, per tutelare tutti da comportamenti scorretti.</p>
+            <#if error?? && error!="">
+                <div>
+                    <p class="text-danger d-flex justify-content-center">${error}</p>
+                </div>
+            </#if>
             <div class="mt-3"></div>
-            <form class="needs-validation" novalidate>
+            <form method="post" action="sendRespRequest" class="needs-validation" novalidate>
                 <label for="CF">Codice Fiscale</label>
                 <input type="text" class="form-control" name ="CF" id="CF" placeholder="" value="" required> 
                 <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->

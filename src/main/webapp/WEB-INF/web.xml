@@ -13,6 +13,10 @@
         <servlet-class>com.mycompany.pollweb.controllers.Register</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>com.mycompany.pollweb.controllers.Logout</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>PublicPolls</servlet-name>
         <servlet-class>com.mycompany.pollweb.controllers.PublicPolls</servlet-class>
     </servlet>
@@ -55,6 +59,10 @@
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PublicPolls</servlet-name>
