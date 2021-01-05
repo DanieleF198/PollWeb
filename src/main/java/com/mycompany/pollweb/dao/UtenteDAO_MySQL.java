@@ -135,6 +135,20 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     }
     
     @Override
+    public List<Utente> getUtenti() throws DataException {
+        List<Utente> result = new ArrayList();
+
+        try (ResultSet rs = sUtenti.executeQuery()) {
+            while (rs.next()) {
+                result.add((Utente) getUtente(rs.getInt("idUtente")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Utenti", ex);
+        }
+        return result;
+    }
+    
+    @Override
     public Utente getUtenteLogin(String username, String password) throws DataException {
         Utente u = null;
         try {
@@ -186,20 +200,6 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     }
     
     @Override
-    public List<Utente> getUtenti() throws DataException {
-        List<Utente> result = new ArrayList();
-
-        try (ResultSet rs = sUtenti.executeQuery()) {
-            while (rs.next()) {
-                result.add((Utente) getUtente(rs.getInt("idUtente")));
-            }
-        } catch (SQLException ex) {
-            throw new DataException("Unable to load Utenti", ex);
-        }
-        return result;
-    }
-    
-    @Override
     public void storeUtente (Utente utente) throws DataException {
         try {
             if (utente.getKey() != null && utente.getKey() > 0) { //update
@@ -225,6 +225,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 if (uUtente.executeUpdate() == 0) {
                     throw new OptimisticLockException(utente);
                 }
+                
+                dataLayer.getCache().add(Utente.class, utente); //salviamo nella cache l'utente modificato così che db e cache siano allineati
             }
             else { //insert
                 
