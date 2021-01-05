@@ -8,6 +8,7 @@ package com.mycompany.pollweb.impl;
 import com.mycompany.pollweb.data.DataItemImpl;
 import java.util.Date;
 import com.mycompany.pollweb.model.Risposta;
+import com.mycompany.pollweb.model.Utente;
 
 /**
  *
@@ -16,12 +17,14 @@ import com.mycompany.pollweb.model.Risposta;
 public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     
     private int idUtente;
+    private Utente utente;
     private int punteggio;
     private Date data;
     private String nomeUtenteRisposta;
 
     public RispostaImpl() {
         super();
+        this.utente = null;
         this.punteggio = 0;
         this.data = null;
         this.nomeUtenteRisposta = "";
@@ -30,6 +33,11 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     @Override
     public int getIdUtente() {
         return idUtente;
+    }
+    
+    @Override
+    public Utente getUtente() {
+        return utente;
     }
 
     @Override
@@ -50,6 +58,11 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     @Override
     public void setIdUtente(int idUtente) {
         this.idUtente = idUtente;
+    }
+    
+    @Override
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 
     @Override

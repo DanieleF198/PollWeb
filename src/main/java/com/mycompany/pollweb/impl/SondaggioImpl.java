@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import com.mycompany.pollweb.model.Sondaggio;
+import com.mycompany.pollweb.model.Utente;
 
 /**
  *
@@ -18,6 +19,7 @@ import com.mycompany.pollweb.model.Sondaggio;
 public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     
     private int idUtente;
+    private Utente utente;
     private boolean quiz;
     private int stato; //0 da fare - 1 fatto - 2 confermato
     private boolean visibilita;
@@ -30,6 +32,7 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     public SondaggioImpl() {
         super();
         this.idUtente = 0;
+        this.utente = null;
         this.quiz = false;
         this.stato = 0;
         this.visibilita = false;
@@ -52,6 +55,11 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     @Override
     public int getIdUtente() {
         return idUtente;
+    }
+    
+    @Override
+    public Utente getUtente() {
+        return utente;
     }
 
     @Override
@@ -97,6 +105,11 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     @Override
     public void setIdUtente(int idUtente) {
         this.idUtente = idUtente;
+    }
+    
+    @Override
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 
     @Override

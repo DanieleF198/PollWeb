@@ -35,6 +35,8 @@ public interface Utente extends DataItem<Integer> {
     
     public String getUsername();
     
+    public Gruppo getGruppo();
+    
     public void setNome(String newNome);
     
     public void setPassword(String newPassword);
@@ -52,6 +54,8 @@ public interface Utente extends DataItem<Integer> {
     public void setCognome (String cognome);
     
     public void setUsername (String username);
+    
+    public void setGruppo (Gruppo gruppo);
     
     public int calculateAge ();         
 }

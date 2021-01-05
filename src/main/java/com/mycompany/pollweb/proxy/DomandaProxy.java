@@ -5,9 +5,14 @@
  */
 package com.mycompany.pollweb.proxy;
 
+import com.mycompany.pollweb.dao.SondaggioDAO;
+import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.data.DataItemProxy;
 import com.mycompany.pollweb.data.DataLayer;
 import com.mycompany.pollweb.impl.DomandaImpl;
+import com.mycompany.pollweb.model.Sondaggio;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONObject;
 
 /**
@@ -18,11 +23,33 @@ public class DomandaProxy extends DomandaImpl implements DataItemProxy {
     
     protected boolean modified;
     protected DataLayer dataLayer;
+    protected int idSondaggio;
     
     public DomandaProxy(DataLayer d) {
         super();
         this.modified = false;
         this.dataLayer = d;
+        this.idSondaggio = 0;
+    }
+    
+    @Override
+    public Sondaggio getSondaggio() {
+        //notare come il Gruppo in relazione venga caricato solo su richiesta
+        if (super.getSondaggio() == null && idSondaggio > 0) {
+            try {
+                super.setSondaggio(((SondaggioDAO) dataLayer.getDAO(Sondaggio.class)).getSondaggio(idSondaggio));
+            } catch (DataException ex) {
+                Logger.getLogger(GruppoProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return super.getSondaggio();
+    }
+    
+    @Override
+    public void setSondaggio(Sondaggio sondaggio) {
+        super.setSondaggio(sondaggio);
+        this.idSondaggio = sondaggio.getKey();
+        this.modified = true;
     }
     
     @Override

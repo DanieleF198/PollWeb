@@ -16,6 +16,8 @@ public interface Domanda extends DataItem<Integer> {
     
     public int getIdSondaggio();
     
+    public Sondaggio getSondaggio();
+    
     String getTitolo();
     
     String getDescrizione();
@@ -31,6 +33,8 @@ public interface Domanda extends DataItem<Integer> {
     public boolean isObbligatoria();
     
     public void setIdSondaggio(int sondaggioId);
+    
+    public void setSondaggio(Sondaggio sondaggio);
 
     void setTitolo(String titolo);
 

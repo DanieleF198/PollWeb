@@ -5,13 +5,18 @@
  */
 package com.mycompany.pollweb.proxy;
 
+import com.mycompany.pollweb.dao.GruppoDAO;
+import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.data.DataItemProxy;
 import com.mycompany.pollweb.data.DataLayer;
 import com.mycompany.pollweb.impl.RispostaImpl;
 import com.mycompany.pollweb.impl.SondaggioImpl;
 import com.mycompany.pollweb.impl.UtenteImpl;
+import com.mycompany.pollweb.model.Gruppo;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -22,17 +27,40 @@ public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
     
     protected boolean modified;
     protected DataLayer dataLayer;
+    protected int idGruppo = 0;
     
     public UtenteProxy(DataLayer d) {
         super();
         this.modified = false;
         this.dataLayer = d;
+        this.idGruppo = 0;
     }
     
     @Override
     public int getIdGruppo(){
         return super.getIdGruppo(); 
     }
+    
+    @Override
+    public Gruppo getGruppo() {
+        //notare come il Gruppo in relazione venga caricato solo su richiesta
+        if (super.getGruppo() == null && idGruppo > 0) {
+            try {
+                super.setGruppo(((GruppoDAO) dataLayer.getDAO(Gruppo.class)).getGruppo(idGruppo));
+            } catch (DataException ex) {
+                Logger.getLogger(GruppoProxy.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return super.getGruppo();
+    }
+    
+    @Override
+    public void setGruppo(Gruppo gruppo) {
+        super.setGruppo(gruppo);
+        this.idGruppo = gruppo.getKey();
+        this.modified = true;
+    }
+
     
     @Override
     public void setKey(Integer key) {

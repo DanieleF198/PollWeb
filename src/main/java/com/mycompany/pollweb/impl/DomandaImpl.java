@@ -7,6 +7,7 @@ package com.mycompany.pollweb.impl;
 
 import com.mycompany.pollweb.data.DataItemImpl;
 import com.mycompany.pollweb.model.Domanda;
+import com.mycompany.pollweb.model.Sondaggio;
 import org.json.JSONObject;
 
 
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     
     private int idSodnaggio;
+    private Sondaggio sondaggio;
     private String titolo; 
     private String descrizione;
     private String tipo;
@@ -29,6 +31,7 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     public DomandaImpl() {
         super();
         this.idSodnaggio = 0;
+        this.sondaggio = null;
         this.titolo = "";
         this.descrizione = "";
         this.tipo = "";
@@ -41,6 +44,11 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     @Override
     public int getIdSondaggio() {
         return idSodnaggio;
+    }
+    
+    @Override
+    public Sondaggio getSondaggio() {
+        return sondaggio;
     }
 
     @Override
@@ -79,6 +87,16 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     }
 
     @Override
+    public void setIdSondaggio(int idSodnaggio) {
+        this.idSodnaggio = idSodnaggio;
+    }
+    
+    @Override
+     public void setSondaggio(Sondaggio sondaggio) {
+        this.sondaggio = sondaggio;
+    }
+
+    @Override
     public void setTitolo(String titolo) {
         this.titolo = titolo;
     }
@@ -111,11 +129,6 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     @Override
     public void setObbligatoria(boolean obbligatoria) {
         this.obbligatoria = obbligatoria;
-    }
-
-    @Override
-    public void setIdSondaggio(int sondaggioId) {
-        this.idSodnaggio = sondaggioId;
     }
     
 }

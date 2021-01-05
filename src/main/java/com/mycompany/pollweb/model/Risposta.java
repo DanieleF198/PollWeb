@@ -18,6 +18,8 @@ public interface Risposta extends DataItem<Integer> {
     
     public int getIdUtente();
     
+    public Utente getUtente();
+    
     public int getPunteggio();
 
     public Date getData();
@@ -25,6 +27,8 @@ public interface Risposta extends DataItem<Integer> {
     public String getNomeUtenteRisposta();
 
     public void setIdUtente(int userId);
+    
+    public void setUtente(Utente utente);
 
     public void setPunteggio(int punteggio);
 

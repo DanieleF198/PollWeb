@@ -6,6 +6,7 @@
 package com.mycompany.pollweb.impl;
 
 import com.mycompany.pollweb.data.DataItemImpl;
+import com.mycompany.pollweb.model.Gruppo;
 import java.util.ArrayList;
 import java.util.List;
 import com.mycompany.pollweb.model.Utente;
@@ -23,11 +24,12 @@ import java.util.Date; //vediamo sql
 public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     
     private String nome; 
-    private String cognome; //new
-    private String username; //new
+    private String cognome;
+    private String username;
     private String password;
     private Date dataNascita;
     private String email;
+    private Gruppo gruppo;
     private int idGruppo;
     private List <SondaggioImpl> sondaggi = new ArrayList<>();
     private List <RispostaImpl> risposte = new ArrayList<>();
@@ -90,6 +92,11 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     }
     
     @Override
+    public Gruppo getGruppo() {
+        return gruppo;
+    }
+    
+    @Override
     public void setNome(String newNome){ //setter
 	this.nome = newNome;
     }
@@ -97,6 +104,11 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     @Override
     public void setPassword(String newPassword){
 	this.password = newPassword;
+    }
+    
+    @Override
+    public void setGruppo(Gruppo newGruppo){
+	this.gruppo = newGruppo;
     }
     
     @Override

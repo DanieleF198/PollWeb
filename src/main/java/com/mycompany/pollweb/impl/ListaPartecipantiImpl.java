@@ -7,6 +7,8 @@ package com.mycompany.pollweb.impl;
 
 import com.mycompany.pollweb.data.DataItemImpl;
 import com.mycompany.pollweb.model.ListaPartecipanti;
+import com.mycompany.pollweb.model.Sondaggio;
+import com.mycompany.pollweb.model.Utente;
 
 /**
  *
@@ -15,13 +17,17 @@ import com.mycompany.pollweb.model.ListaPartecipanti;
 public class ListaPartecipantiImpl extends DataItemImpl<Integer> implements ListaPartecipanti  {
     
     private int idUtente;
+    private Utente utente;
     private int idSondaggio;
+    private Sondaggio sondaggio;
     private String email;
 
     public ListaPartecipantiImpl() {
         super();
         this.idUtente = 0;
+        this.utente = null;
         this.idSondaggio = 0;
+        this.sondaggio = null;
     }
 
     @Override
@@ -32,6 +38,22 @@ public class ListaPartecipantiImpl extends DataItemImpl<Integer> implements List
     @Override
     public int getIdSondaggio() {
         return idSondaggio;
+    }
+
+    public Utente getUtente() {
+        return utente;
+    }
+
+    public void setUtente(Utente utente) {
+        this.utente = utente;
+    }
+
+    public Sondaggio getSondaggio() {
+        return sondaggio;
+    }
+
+    public void setSondaggio(Sondaggio sondaggio) {
+        this.sondaggio = sondaggio;
     }
 
     @Override
@@ -49,8 +71,11 @@ public class ListaPartecipantiImpl extends DataItemImpl<Integer> implements List
         this.idSondaggio = idSondaggio;
     }
     
+    @Override
     public void setEmail(String email) {
         this.email = email;
     }
+
+    
     
 }

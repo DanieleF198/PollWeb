@@ -27,9 +27,9 @@
                                 <div class="col-lg-12">
                                     <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
                                     <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, e se sei abilitato alla creazione dei sondaggi, gestire i tuoi sondaggi.</p>
-                                    <#if gruppo?? && gruppo=="Utente base">
+                                    
                                         <p>Non sei ancora abilitato alla creazione di sondaggi? <a href="sendRespRequest" class="text-muted">clicca qui</a> per mandare la richiesta, richieder&#224; solo l'aggiunta del tuo codice fiscale!</p>
-                                    </#if>
+                                    
                                     <p><b>I tuoi dati personali:</b></p>
                                     <div class="row">
                                         <div class="col-lg-3">

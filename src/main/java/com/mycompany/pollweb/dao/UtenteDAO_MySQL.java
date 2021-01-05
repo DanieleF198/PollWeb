@@ -208,10 +208,14 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 if (utente instanceof DataItemProxy && !((DataItemProxy) utente).isModified()) {
                     return;
                 }
+                
+                java.sql.Date sqlDate;
+                sqlDate = new java.sql.Date( utente.getDataNascita().getTime() );
+                
                 uUtente.setInt(1, utente.getIdGruppo());
                 uUtente.setString(2, utente.getNome());
                 uUtente.setString(3, utente.getCognome());
-                uUtente.setDate(4, (Date) utente.getDataNascita());
+                uUtente.setDate(4, sqlDate);
                 uUtente.setString(5, utente.getUsername());
                 uUtente.setString(6, utente.getPassword());
                 uUtente.setString(7, utente.getEmail());
