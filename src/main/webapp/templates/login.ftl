@@ -7,7 +7,15 @@
         <title>${title}</title>
         <meta charset="${charset}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css" bootstrapPath="css/bootstrap.css"/>
+        <#if urlMakerPoll??>
+            <#if urlMakerPoll =="no">
+                <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css" bootstrapPath="css/bootstrap.css"/>
+            <#else>
+                <@macros.style imagePath="../images/favicon.ico" stylePath="../css/style.css" bootstrapPath="../css/bootstrap.css"/>
+            </#if>
+        <#else>
+            <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css" bootstrapPath="css/bootstrap.css"/>
+        </#if>
         <style>
             .footer {
                 position: absolute;
@@ -24,9 +32,25 @@
     </head>
     <body class="bg-light">
         <!-- Login form -->
-        <form method="post" action="login" class="form-signin">
+        <#if urlMakerPoll??>
+            <#if urlMakerPoll =="no">
+                <form method="post" action="login" class="form-signin">
+            <#else>
+                <form method="post" action="../login" class="form-signin">
+            </#if>
+        <#else>
+            <form method="post" action="login" class="form-signin">   
+        </#if>
             <div class="text-center">
-                <img class="mb-4" src="images/logoDDP.png" alt="" width="140" height="90">
+                <#if urlMakerPoll??>
+                    <#if urlMakerPoll =="no">
+                        <img class="mb-4" src="images/logoDDP.png" alt="" width="140" height="90">
+                    <#else>
+                        <img class="mb-4" src="../images/logoDDP.png" alt="" width="140" height="90">
+                    </#if>
+                <#else>
+                    <img class="mb-4" src="images/logoDDP.png" alt="" width="140" height="90">
+                </#if>
             </div>
             <h1 class="h3 mb-3 font-weight-normal text-center">Effettua l'accesso</h1>
             <#if error?? && error=="Credenziali errate">
@@ -48,13 +72,29 @@
             </div>
             <#if referrer??>
                 <input type="hidden" name="referrer" value="${referrer}">
-            </#if>
+            </#if>   
             <button name="buttonLogin" value="login" class="btn btn-lg btn-warning btn-block" type="submit">Accedi!</button>
             <div class="mt-2 mb-3 text-center">
-                <a href="homepage" class="text-muted">Torna alla homepage</a>
+                <#if urlMakerPoll??>
+                    <#if urlMakerPoll =="no">
+                        <a href="homepage" class="text-muted">Torna alla homepage</a>
+                    <#else>
+                        <a href="../homepage" class="text-muted">Torna alla homepage</a>
+                    </#if>
+                <#else>
+                    <a href="homepage" class="text-muted">Torna alla homepage</a>
+                </#if>
             </div>
             <div class="mt-2 mb-3 text-center">
-                <a href="register" class="text-muted">Non hai un account? registrati</a>
+                <#if urlMakerPoll??>
+                    <#if urlMakerPoll =="no">
+                        <a href="register" class="text-muted">Non hai un account? registrati</a>
+                    <#else>
+                        <a href="../register" class="text-muted">Non hai un account? registrati</a>
+                    </#if>
+                <#else>
+                    <a href="register" class="text-muted">Non hai un account? registrati</a>
+                </#if>
             </div>
         </form>
         <!-- End login form -->

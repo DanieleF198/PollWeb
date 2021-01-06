@@ -56,6 +56,11 @@ public class Login extends BaseController {
                 TemplateResult res = new TemplateResult(getServletContext());
                 if(request.getAttribute("urlrequest") != null){
                     String referrer = request.getAttribute("urlrequest").toString();
+                    if(referrer.contains("makerPoll")){
+                        request.setAttribute("urlMakerPoll", "yes");
+                    } else {
+                        request.setAttribute("urlMakerPoll", "no");
+                    }
                     request.setAttribute("referrer", referrer);
                 }
                 res.activate("login.ftl", request, response);
@@ -101,6 +106,9 @@ public class Login extends BaseController {
                                 String referrer = request.getParameter("referrer");
                                 request.setAttribute("referrer", referrer);
                             }
+                            //è vero che deriviamo da li, ma essendo che in caso di errori ritorniamo in pollweb/login (e non pollweb/pollMaker/login non serve più).
+                            //non abbiamo optato per sendRedirect per non perderci il referrer.
+                            request.setAttribute("urlMakerPoll", "no"); 
                             res.activate("login.ftl", request, response);
                         }
                     }

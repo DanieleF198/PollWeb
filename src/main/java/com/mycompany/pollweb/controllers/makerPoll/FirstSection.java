@@ -7,6 +7,7 @@ package com.mycompany.pollweb.controllers.makerPoll;
 
 import com.mycompany.pollweb.controllers.BaseController;
 import com.mycompany.pollweb.controllers.Homepage;
+import com.mycompany.pollweb.dao.PollWebDataLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -17,9 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
+import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -31,11 +36,15 @@ public class FirstSection extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
          try {
-             
-            if (request.getParameter("questionsMarker") != null) {
-                action_questions(request, response);
+            HttpSession s = checkSession(request);
+            if (s!= null) {
+                if (request.getParameter("questionsMaker") != null) {
+                    action_questions(request, response);
+                } else {
+                    action_default(request, response);
+                }
             } else {
-                action_default(request, response);
+                action_redirect_login(request, response);
             }
             
         } catch (IOException ex) {
@@ -52,6 +61,26 @@ public class FirstSection extends BaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
        try {
             TemplateResult res = new TemplateResult(getServletContext());
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+            HttpSession s = checkSession(request);
+            if (s!= null) {
+                Utente user = dl.getUtenteDAO().createUtente();
+                int idGruppo = (int) s.getAttribute("groupid");
+                switch (idGruppo) {
+                    case 1:
+                        request.setAttribute("group", "base");
+                        break;
+                    case 2:
+                        request.setAttribute("group", "responsabile");
+                        break;
+                    case 3:
+                        request.setAttribute("group", "admin");
+                        break;
+                    default:
+                        action_error(request, response);
+                        break;
+                }
+            }
             res.activate("MakerPoll/firstSection.ftl", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(FirstSection.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,6 +96,16 @@ public class FirstSection extends BaseController {
             (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
         } else {
             (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
+        }
+    }
+    
+    private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+        try {
+            request.setAttribute("urlrequest", request.getRequestURL());
+            RequestDispatcher rd = request.getRequestDispatcher("/login");
+            rd.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
         }
     }
 

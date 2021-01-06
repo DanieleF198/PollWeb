@@ -22,7 +22,11 @@
                                 <h1>Quack, Duck, Poll!</h1>
                                 <h2>Uno spazio confortevole dove creare sondaggi in base alle tue esigenze</h2>
                                 <div class="pt-3">
-                                    <a href="register" class="btn btn-warning">Comincia adesso!</a>
+                                    <#if sessioned?? && sessioned=="no">
+                                        <a href="register" class="btn btn-warning">Comincia adesso!</a>
+                                    <#else>
+                                        <a href="/PollWeb/makerPoll/firsSection" class="btn btn-warning">Comincia adesso!</a>
+                                    </#if>
                                 </div>
                             </div>
                             <div class="col-lg-7 pr-5">
@@ -115,10 +119,17 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-12">
-                                <p class="h3 text-center mb-5">Noi non ti chiediamo nulla, quindi non hai nulla da perdere.</p>
-                                <div class="form-inline">
-                                    <a href="register" class="btn btn-warning btn-lg btn-block">Unisciti a noi</a>
-                                </div>
+                                <#if sessioned?? && sessioned=="no">
+                                    <p class="h3 text-center mb-5">Noi non ti chiediamo nulla, quindi non hai nulla da perdere.</p>
+                                    <div class="form-inline">
+                                        <a href="register" class="btn btn-warning btn-lg btn-block">Unisciti a noi</a>
+                                    </div>
+                                <#else>
+                                    <p class="h3 text-center mb-5">Grazie di esserti unito alla community, ora &#232; tempo di sondaggi!</p>
+                                    <div class="form-inline">
+                                        <a href="/PollWeb/makerPoll/firsSection" class="btn btn-warning btn-lg btn-block">Unisciti a noi</a>
+                                    </div>
+                                </#if>
                             </div>
                         </div>
                     </div>

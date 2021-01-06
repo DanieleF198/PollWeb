@@ -16,9 +16,11 @@ import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.result.FailureResult;
+import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -30,6 +32,12 @@ public class Homepage extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
          try {
+            HttpSession s = checkSession(request);
+            if (s!= null) {
+                request.setAttribute("sessioned", "yes");
+            } else {
+                request.setAttribute("sessioned", "no");
+            }
             action_default(request, response);
 
         } catch (IOException ex) {

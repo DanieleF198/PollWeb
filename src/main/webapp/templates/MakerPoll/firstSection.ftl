@@ -36,8 +36,8 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12 mb-3">
-                                    <label class="h5" for="description">Messaggio di completamento (facoltativo)</label>
-                                    <textarea rows="3" class="form-control" id="description" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito (min. x caratteri) apparir&#224; il messaggio di default" value=""></textarea>
+                                    <label class="h5" for="finalMessage">Messaggio di completamento (facoltativo)</label>
+                                    <textarea rows="3" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito (min. x caratteri) apparir&#224; il messaggio di default" value=""></textarea>
                                 </div>
                             </div>
                             <div class="border-bottom mb-3"></div>
@@ -55,11 +55,19 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div>
+                                        <#if group?? && group=="base">
                                         <label class="checkbox mb-3">
+                                            <input type="checkbox" disabled value="private"/>
+                                            <span class="warning"></span>
+                                        </label>
+                                        &nbspSondaggio privato
+                                        <#else>
+                                            <label class="checkbox mb-3">
                                             <input type="checkbox" value="private"/>
                                             <span class="warning"></span>
                                         </label>
                                         &nbspSondaggio privato
+                                        </#if>
                                     </div>
                                     <br>
                                     <p>In caso di sondaggio privato nella sezione finale ti verr&#224; chiesto di caricare un file .csv contenente le email delle persone che intendi invitare.</p>
