@@ -209,13 +209,12 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                     return;
                 }
                 
-                java.sql.Date sqlDate;
-                sqlDate = new java.sql.Date( utente.getDataNascita().getTime() );
+                java.sql.Date sqlNascita = new java.sql.Date( utente.getDataNascita().getTime() ); 
                 
                 uUtente.setInt(1, utente.getIdGruppo());
                 uUtente.setString(2, utente.getNome());
                 uUtente.setString(3, utente.getCognome());
-                uUtente.setDate(4, sqlDate);
+                uUtente.setDate(4, sqlNascita);
                 uUtente.setString(5, utente.getUsername());
                 uUtente.setString(6, utente.getPassword());
                 uUtente.setString(7, utente.getEmail());

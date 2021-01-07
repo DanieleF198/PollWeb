@@ -59,7 +59,11 @@ public class SondaggioProxy extends SondaggioImpl implements DataItemProxy   {
         this.modified = true;
     }
     
-    
+    @Override
+    public void setTitolo(String titolo){
+        super.setTitolo(titolo);
+        this.modified = true;
+    }
     
     @Override
     public void setKey(Integer key) {

@@ -46,8 +46,8 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggioByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
             sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio");
             
-            iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idSondaggio,idUtente,testoApertura,testoChiusura,stato,quiz,visibilita,dataCreazione,dataChiusura) VALUES(?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idSondaggio=?,idUtente=?,testoApertura=?,testoChiusura=?,stato=?,quiz=?,visibilita=?,dataCreazione=?,dataChiusura=? WHERE idSondaggio=?");
+            iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,stato,quiz,visibilita,dataCreazione,dataChiusura) VALUES(?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,stato=?,quiz=?,visibilita=?,dataCreazione=?,dataChiusura=? WHERE idSondaggio=?");
             dSondaggio = connection.prepareStatement("DELETE FROM Sondaggio WHERE idSondaggio=?");
             
             
@@ -85,13 +85,13 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     private SondaggioProxy createSondaggio(ResultSet rs) throws DataException {
         SondaggioProxy s = createSondaggio();
         try {
-            s.setKey(rs.getInt("idSondaggio"));
             s.setIdUtente(rs.getInt("idUtente"));
-            s.setQuiz(rs.getBoolean("quiz"));
-            s.setStato(rs.getInt("stato"));
-            s.setVisibilita(rs.getBoolean("visibilita"));
+            s.setTitolo(rs.getString("titolo"));
             s.setTestoApertura(rs.getString("testoApertura"));
             s.setTestoChiusura(rs.getString("testoChiusura"));
+            s.setStato(rs.getInt("stato"));
+            s.setQuiz(rs.getBoolean("quiz"));
+            s.setVisibilita(rs.getBoolean("visibilita"));
             s.setCreazione(rs.getDate("dataCreazione"));
             s.setScadenza(rs.getDate("dataScadenza"));
         } catch (SQLException ex) {
@@ -171,29 +171,38 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 if (sondaggio instanceof DataItemProxy && !((DataItemProxy) sondaggio).isModified()) {
                     return;
                 }
-                uSondaggio.setString(1, sondaggio.getTestoApertura()); //TODO aggiungere lista di domande
-                uSondaggio.setString(2, sondaggio.getTestoChiusura());
-                uSondaggio.setInt(3, sondaggio.getIdUtente());
-                uSondaggio.setBoolean(4, sondaggio.isQuiz());
+                java.sql.Date sqlCreazione = new java.sql.Date( sondaggio.getCreazione().getTime() );
+                java.sql.Date sqlScadenza = new java.sql.Date( sondaggio.getScadenza().getTime() );
+            
+                uSondaggio.setInt(1, sondaggio.getIdUtente()); //update
+                uSondaggio.setString(2, sondaggio.getTitolo());
+                uSondaggio.setString(3, sondaggio.getTestoApertura());
+                uSondaggio.setString(4, sondaggio.getTestoChiusura());
                 uSondaggio.setInt(5, sondaggio.getStato());
-                uSondaggio.setBoolean(6, sondaggio.isVisibilita());
-                uSondaggio.setDate(7, (Date) sondaggio.getCreazione());
-                uSondaggio.setDate(8, (Date) sondaggio.getScadenza());
-                uSondaggio.setInt(9, sondaggio.getKey());
+                uSondaggio.setBoolean(6, sondaggio.isQuiz());
+                uSondaggio.setBoolean(7, sondaggio.isVisibilita());
+                uSondaggio.setDate(8, sqlCreazione);
+                uSondaggio.setDate(9, sqlScadenza);
+                uSondaggio.setInt(10, sondaggio.getKey());
 
                 if (uSondaggio.executeUpdate() == 0) {
                     throw new OptimisticLockException(sondaggio);
                 }
             }
-            else { //insert
-                iSondaggio.setString(1, sondaggio.getTestoApertura()); //TODO aggiungere lista di domande
-                iSondaggio.setString(2, sondaggio.getTestoChiusura());
-                iSondaggio.setInt(3, sondaggio.getIdUtente());
-                iSondaggio.setBoolean(4, sondaggio.isQuiz());
+            else {
+                
+                java.sql.Date sqlCreazione = new java.sql.Date( sondaggio.getCreazione().getTime() );
+                java.sql.Date sqlScadenza = new java.sql.Date( sondaggio.getScadenza().getTime() );
+                
+                iSondaggio.setInt(1, sondaggio.getIdUtente()); //insert
+                iSondaggio.setString(2, sondaggio.getTitolo());
+                iSondaggio.setString(3, sondaggio.getTestoApertura());
+                iSondaggio.setString(4, sondaggio.getTestoChiusura());
                 iSondaggio.setInt(5, sondaggio.getStato());
-                iSondaggio.setBoolean(6, sondaggio.isVisibilita());
-                iSondaggio.setDate(7, (Date) sondaggio.getCreazione());
-                iSondaggio.setDate(8, (Date) sondaggio.getScadenza());
+                iSondaggio.setBoolean(6, sondaggio.isQuiz());
+                iSondaggio.setBoolean(7, sondaggio.isVisibilita());
+                iSondaggio.setDate(8, sqlCreazione);
+                iSondaggio.setDate(9, sqlScadenza);
                 
                 if (iSondaggio.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

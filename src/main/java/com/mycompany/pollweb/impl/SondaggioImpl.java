@@ -20,6 +20,7 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     
     private int idUtente;
     private Utente utente;
+    private String titolo;
     private boolean quiz;
     private int stato; //0 da fare - 1 fatto - 2 confermato
     private boolean visibilita;
@@ -33,6 +34,7 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
         super();
         this.idUtente = 0;
         this.utente = null;
+        this.titolo = null;
         this.quiz = false;
         this.stato = 0;
         this.visibilita = false;
@@ -85,6 +87,16 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     @Override
     public int getStato() {
         return stato;
+    }
+
+    @Override
+    public String getTitolo() {
+        return titolo;
+    }
+    
+    @Override
+    public void setTitolo(String titolo) {
+        this.titolo = titolo;
     }
 
     @Override

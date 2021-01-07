@@ -24,6 +24,8 @@ public interface Sondaggio extends DataItem<Integer> {
     
     public Utente getUtente();
     
+    public String getTitolo();
+    
     public Date getCreazione ();
     
     public Date getScadenza();
@@ -43,6 +45,8 @@ public interface Sondaggio extends DataItem<Integer> {
     public void setIdUtente(int idUtente);
     
     public void setUtente(Utente utente);
+    
+    public void setTitolo (String titolo);
 
     public void setCreazione(Date creazione);
 
