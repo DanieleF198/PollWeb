@@ -32,13 +32,14 @@ CREATE TABLE Utente (
   CREATE TABLE Sondaggio(
 	idSondaggio int NOT NULL AUTO_INCREMENT,
     idUtente int NOT NULL,
+    titolo varchar(128) NOT NULL,
     testoApertura varchar(245),
     testoChiusura varchar(245),
     stato int NOT NULL,
     quiz boolean NOT NULL,
     visibilita boolean NOT NULL,
     dataCreazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, /*non che serva not null ma ce lo metto uguale*/
-    dataChiusura TIMESTAMP,
+    dataChiusura datetime,
 	PRIMARY KEY (idSondaggio),
     FOREIGN KEY (idUtente) REFERENCES Utente (idUtente) on update cascade on delete cascade
   );
