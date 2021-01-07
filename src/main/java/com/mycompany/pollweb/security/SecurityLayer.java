@@ -99,6 +99,7 @@ public class SecurityLayer {
         s.setAttribute("ip", request.getRemoteHost());
         s.setAttribute("inizio-sessione", Calendar.getInstance());
         s.setAttribute("remember", remember);
+        s.setAttribute("sondaggio-in-creazione", 0);
         return s;
     }
 

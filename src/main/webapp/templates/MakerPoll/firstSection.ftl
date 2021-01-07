@@ -22,7 +22,7 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="title">Titolo</label>
-                                    <input type="text" class="form-control" id="title" placeholder="" value="" required> 
+                                    <input type="text" class="form-control" id="title" placeholder="" value=""  maxlength="128" required> 
                                     <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
                                         Il titolo inserito non è valido.
                                     </div>
@@ -31,7 +31,7 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12 mb-3">
                                     <label class="h5" for="description">Descrizione (facoltativa)</label>
-                                    <textarea rows="5" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione" value=""></textarea>
+                                    <textarea rows="5" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione" value="" maxlength="2048"></textarea>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -56,7 +56,7 @@
                                 <div class="col-lg-12">
                                     <div>
                                         <#if group?? && group=="base">
-                                        <label class="checkbox mb-3">
+                                        <label class="checkbox-disabled mb-3">
                                             <input type="checkbox" disabled value="private"/>
                                             <span class="warning"></span>
                                         </label>
@@ -121,7 +121,7 @@
                                     <p>In questo caso, oltre a non poter usare domande a risposta aperta, ti verr&#224; chiesto di (in maniera x) segnalarci le risposte corrette</p>
                                 </div>
                             </div>
-                            <button class="btn btn-lg btn-warning" type="submit">Inizia con le domande</button>
+                            <button name ="buttonFirstSection" value="firstSection" class="btn btn-lg btn-warning" type="submit">Inizia con le domande</button>
                         </form>
                     </div>
                     <!-- End general information -->

@@ -20,6 +20,7 @@ import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +39,7 @@ public class FirstSection extends BaseController {
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
-                if (request.getParameter("questionsMaker") != null) {
+                if (request.getParameter("questionsMaker") != null && "POST".equals(request.getMethod())) {
                     action_questions(request, response);
                 } else {
                     action_default(request, response);
@@ -88,7 +89,21 @@ public class FirstSection extends BaseController {
     }
     
     private void action_questions(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        response.sendRedirect("QuestionsMaker"); //ATTENZIONE, per ora fa solo un redirect, ma quando implementeremo effettivamente vanno considerati i casi di errore 
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        TemplateResult res = new TemplateResult(getServletContext());
+        if(request.getParameter("buttonFirstSection") != null){
+            String title = SecurityLayer.addSlashes(request.getParameter("title"));
+            title = SecurityLayer.stripSlashes(title);
+            String description = SecurityLayer.addSlashes(request.getParameter("description"));
+            description = SecurityLayer.stripSlashes(description);
+            String finalMessage = SecurityLayer.addSlashes(request.getParameter("finalMessage"));
+            finalMessage = SecurityLayer.stripSlashes(finalMessage);
+            String date = SecurityLayer.addSlashes(request.getParameter("expiration"));
+            date = SecurityLayer.stripSlashes(date);
+            if (title != null && description != null && finalMessage != null && date != null && !title.isEmpty() && !description.isEmpty() && !finalMessage.isEmpty() && !date.isEmpty()){
+                // TO DO
+            }
+        }
     }
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {

@@ -11,16 +11,31 @@
     <style>
         .carousel-control-prev{
             margin-left: -100px
-            }
+        }
         
         .carousel-control-next{
             margin-right: -100px
-            }
+        }
         
         .variable-height{
                 height: 230px    
-            }
-       
+        }
+        
+        .card-body{
+            overflow: auto;
+            
+        }
+        
+        .card-body::-webkit-scrollbar {
+            width: 0px;
+            background: transparent; 
+        }
+            
+        .space{
+            background-color: white;
+            height: 15px;
+            z-index: 50;
+        }
         @media screen and (max-width: 1200px){
             .carousel-control-prev {
                 margin-left: -85px
@@ -31,7 +46,7 @@
             }
             
             .variable-height{
-                height: 230px    
+                height: 240px    
             }
         }
         
@@ -246,9 +261,10 @@
                                 <div class="col-lg-4 mb-3 variable-height">
                                     <div class="card h-100">
                                         <div class="card-body">
-                                            <h5 class="card-title">Card title</h5>
-                                            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                                            <h5 class="card-title">parliamo di cose serie, ma non di cose troppo serie, usando parole lunghe come supercalifragilistichespiralidoso. Ciao ciao ciao.</h5>
+                                            <p class="card-text">parliamo di cose serie, ma non di cose troppo serie, usando parole lunghe come supercalifragilistichespiralidoso. parliamo di cose serie, ma non di cose troppo serie, usando parole lunghe come supercalifragilistichespiralidoso. parliamo di cose serie, ma non di cose troppo serie, usando parole lunghe come supercalifragilistichespiralidoso.</p>  
                                         </div>
+                                        <div class="space"></div>
                                         <div class="card-footer bg-warning">
                                             <small class="text-black">Last updated 3 mins ago</small>
                                         </div>

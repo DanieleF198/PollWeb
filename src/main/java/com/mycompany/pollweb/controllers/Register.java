@@ -97,11 +97,11 @@ public class Register extends BaseController {
                 PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
                 TemplateResult res = new TemplateResult(getServletContext());
                 if(request.getParameter("buttonRegister") != null){
-                    String firstName = SecurityLayer.addSlashes(request.getParameter("firstName")); //regex
+                    String firstName = SecurityLayer.addSlashes(request.getParameter("firstName"));
                     firstName = SecurityLayer.stripSlashes(firstName);
-                    String lastName = SecurityLayer.addSlashes(request.getParameter("lastName")); //regex
+                    String lastName = SecurityLayer.addSlashes(request.getParameter("lastName"));
                     lastName = SecurityLayer.stripSlashes(lastName);
-                    String date = SecurityLayer.addSlashes(request.getParameter("date")); //now - date -> eta > 18
+                    String date = SecurityLayer.addSlashes(request.getParameter("date"));
                     date = SecurityLayer.stripSlashes(date);
                     String username = SecurityLayer.addSlashes(request.getParameter("username"));
                     username = SecurityLayer.stripSlashes(username);
