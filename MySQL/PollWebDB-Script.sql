@@ -35,11 +35,13 @@ CREATE TABLE Utente (
     titolo varchar(128) NOT NULL,
     testoApertura varchar(245),
     testoChiusura varchar(245),
-    stato int NOT NULL,
+    completo boolean NOT NULL,
     quiz boolean NOT NULL,
     visibilita boolean NOT NULL,
     dataCreazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, /*non che serva not null ma ce lo metto uguale*/
     dataChiusura datetime,
+    privato boolean NOT NULL,
+    modificabile boolean NOT NULL,
 	PRIMARY KEY (idSondaggio),
     FOREIGN KEY (idUtente) REFERENCES Utente (idUtente) on update cascade on delete cascade
   );

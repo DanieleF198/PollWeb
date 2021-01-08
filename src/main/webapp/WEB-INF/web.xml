@@ -86,7 +86,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>FirstSection</servlet-name>
-        <url-pattern>/makerPoll/firsSection</url-pattern>
+        <url-pattern>/makerPoll/firstSection</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>QuestionsMaker</servlet-name>

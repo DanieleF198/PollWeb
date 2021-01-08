@@ -22,8 +22,10 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     private Utente utente;
     private String titolo;
     private boolean quiz;
-    private int stato; //0 da fare - 1 fatto - 2 confermato
-    private boolean visibilita;
+    private boolean completo; //true= completo, false= non completo
+    private boolean visibilita; //true= attivato, false= non attivato
+    private boolean privato; //true= privato, false= pubblico
+    private boolean modificabile;
     private List <DomandaImpl> domande = new ArrayList<>();
     private String testoApertura;
     private String testoChiusura;
@@ -36,8 +38,10 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
         this.utente = null;
         this.titolo = null;
         this.quiz = false;
-        this.stato = 0;
+        this.completo = false;
+        this.privato = false;
         this.visibilita = false;
+        this.modificabile = false;
         this.creazione = null;
         this.scadenza = null;
         this.testoApertura = "";
@@ -85,8 +89,28 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     }
 
     @Override
-    public int getStato() {
-        return stato;
+    public boolean isCompleto() {
+        return completo;
+    }
+
+    @Override
+    public boolean isPrivato() {
+        return privato;
+    }
+
+    @Override
+    public boolean isModificabile() {
+        return modificabile;
+    }
+
+    @Override
+    public void setModificabile(boolean modificabile) {
+        this.modificabile = modificabile;
+    }
+
+    @Override
+    public void setPrivato(boolean privato) {
+        this.privato = privato;
     }
 
     @Override
@@ -145,8 +169,8 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     }
 
     @Override
-    public void setStato(int stato) {
-        this.stato = stato;
+    public void setCompleto(boolean completo) {
+        this.completo = completo;
     }
 
     @Override

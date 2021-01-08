@@ -114,8 +114,8 @@ public class SondaggioProxy extends SondaggioImpl implements DataItemProxy   {
     }
 
     @Override
-    public void setStato(int stato) {
-        super.setStato(stato);
+    public void setCompleto(boolean completo) {
+        super.setCompleto(completo);
         this.modified = true;
     }
 
@@ -124,7 +124,18 @@ public class SondaggioProxy extends SondaggioImpl implements DataItemProxy   {
         super.setVisibilita(visibilita);
         this.modified = true;
     }
-
+    
+    @Override
+    public void setPrivato(boolean privato) {
+        super.setPrivato(privato);
+        this.modified = true;
+    }
+    
+    @Override
+    public void setModificabile(boolean modificabile){
+        super.setModificabile(modificabile);
+        this.modified = true;
+    }
     
     
     //METODI ESCLUSIVI DEL PROXY

@@ -190,7 +190,7 @@
                     <a class="nav-link" href="/PollWeb/publicPolls">sondaggi pubblici</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/PollWeb/makerPoll/firsSection">crea sondaggio</a>
+                    <a class="nav-link" href="/PollWeb/makerPoll/firstSection">crea sondaggio</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">sondaggio d'esempio</a>

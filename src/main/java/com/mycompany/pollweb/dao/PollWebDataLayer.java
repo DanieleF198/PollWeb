@@ -30,10 +30,10 @@ public class PollWebDataLayer extends DataLayer {
     public void init() throws DataException {
         registerDAO(Gruppo.class, new GruppoDAO_MySQL(this));
         registerDAO(Utente.class, new UtenteDAO_MySQL(this));
-        registerDAO(Domanda.class, new UtenteDAO_MySQL(this));
-        registerDAO(ListaPartecipanti.class, new UtenteDAO_MySQL(this));
-        registerDAO(Sondaggio.class, new UtenteDAO_MySQL(this));
-        registerDAO(Risposta.class, new UtenteDAO_MySQL(this));
+        registerDAO(Domanda.class, new DomandaDAO_MySQL(this));
+        registerDAO(ListaPartecipanti.class, new ListaPartecipantiDAO_MySQL(this));
+        registerDAO(Sondaggio.class, new SondaggioDAO_MySQL(this));
+        registerDAO(Risposta.class, new RispostaDAO_MySQL(this));
     }
     
     //helpers 

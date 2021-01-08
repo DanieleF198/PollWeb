@@ -18,11 +18,16 @@
                     <!-- General information -->
                     <div class="container">
                         <h1 class="h3 mb-3 font-weight-normal">Creazione sondaggio - informazioni generali</h1>
-                        <form method="post" action="questionsMaker" class="needs-validation" novalidate>
+                        <#if error?? && error!="">
+                            <div>
+                                <p class="text-danger">${error}</p>
+                            </div>
+                        </#if>
+                        <form method="post" action="firstSection" class="needs-validation" novalidate>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="title">Titolo</label>
-                                    <input type="text" class="form-control" id="title" placeholder="" value=""  maxlength="128" required> 
+                                    <input type="text" name="title" class="form-control" id="title" placeholder="almeno 3 caratteri" maxlength="128" required> 
                                     <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
                                         Il titolo inserito non è valido.
                                     </div>
@@ -31,13 +36,13 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12 mb-3">
                                     <label class="h5" for="description">Descrizione (facoltativa)</label>
-                                    <textarea rows="5" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione" value="" maxlength="2048"></textarea>
+                                    <textarea rows="5" name="description" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione. Sono consentiti al massimo 2048 caratteri" value="" maxlength="2048"></textarea>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12 mb-3">
                                     <label class="h5" for="finalMessage">Messaggio di completamento (facoltativo)</label>
-                                    <textarea rows="3" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito (min. x caratteri) apparir&#224; il messaggio di default" value=""></textarea>
+                                    <textarea rows="3" name="finalMessage" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito apparir&#224; il messaggio di default. Sono consentiti al massimo 1024 caratteri" value="" maxlength="1024"></textarea>
                                 </div>
                             </div>
                             <div class="border-bottom mb-3"></div>
@@ -57,13 +62,13 @@
                                     <div>
                                         <#if group?? && group=="base">
                                         <label class="checkbox-disabled mb-3">
-                                            <input type="checkbox" disabled value="private"/>
+                                            <input type="checkbox" name="private" disabled value="private"/>
                                             <span class="warning"></span>
                                         </label>
                                         &nbspSondaggio privato
                                         <#else>
                                             <label class="checkbox mb-3">
-                                            <input type="checkbox" value="private"/>
+                                            <input type="checkbox" name="private" value="private"/>
                                             <span class="warning"></span>
                                         </label>
                                         &nbspSondaggio privato
@@ -82,7 +87,7 @@
                                 <div class="col-lg-12">
                                     <div>
                                         <label class="checkbox mb-3">
-                                            <input type="checkbox" value="private"/>
+                                            <input type="checkbox" name="modificable" value="modificable"/>
                                             <span class="warning"></span>
                                         </label>
                                         &nbspSondaggio modificabile
@@ -95,7 +100,7 @@
                                 <div class="col-lg-12 mb-2">
                                     <label for="expiration"><b>Data di scadenza (facoltativo)</b></label>
                                     <div class="mb-2" style="width: 180px">
-                                        <input type="date" class="form-control" id="expiration" placeholder="" value="">
+                                        <input type="date" name="expiration" class="form-control" id="expiration" placeholder="" value="">
                                         <div class="invalid-feedback">
                                             La data inserita non è valida
                                         </div>
@@ -112,7 +117,7 @@
                                 <div class="col-lg-12">
                                     <div>
                                         <label class="checkbox mb-3">
-                                            <input type="checkbox" value="quiz"/>
+                                            <input type="checkbox" name="quiz" value="quiz"/>
                                             <span class="warning"></span>
                                         </label>
                                         &nbspRendi il sondaggio un quiz!
