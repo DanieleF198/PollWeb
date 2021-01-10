@@ -18,7 +18,7 @@ public interface SondaggioDAO {
     
     public SondaggioProxy createSondaggio();
     
-    Sondaggio getSondaggio(int idSondaggio) throws DataException;
+    public Sondaggio getSondaggio(int idSondaggio) throws DataException;
     
     public Sondaggio getSondaggioByIdUtente(int idUtente) throws DataException;
     

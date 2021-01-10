@@ -18,7 +18,7 @@ public interface DomandaDAO {
     
     public DomandaProxy createDomanda();
     
-    Domanda getDomanda(int idSondaggio) throws DataException;
+    public Domanda getDomanda(int idSondaggio) throws DataException;
     
     public Domanda getDomandaByIdSondaggio(int idSondaggio) throws DataException;
     

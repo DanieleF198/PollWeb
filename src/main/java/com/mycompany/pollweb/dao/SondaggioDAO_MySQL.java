@@ -93,7 +93,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             s.setQuiz(rs.getBoolean("quiz"));
             s.setVisibilita(rs.getBoolean("visibilita"));
             s.setCreazione(rs.getDate("dataCreazione"));
-            s.setScadenza(rs.getDate("dataScadenza"));
+            s.setScadenza(rs.getDate("dataChiusura"));
             s.setPrivato(rs.getBoolean("privato"));
             s.setPrivato(rs.getBoolean("modificabile"));
         } catch (SQLException ex) {
@@ -174,17 +174,32 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                     return;
                 }
                 java.sql.Date sqlCreazione = new java.sql.Date( sondaggio.getCreazione().getTime() );
-                java.sql.Date sqlScadenza = new java.sql.Date( sondaggio.getScadenza().getTime() );
+                if(sondaggio.getScadenza() != null){
+                    java.sql.Date sqlScadenza = new java.sql.Date( sondaggio.getScadenza().getTime() );
+                    uSondaggio.setDate(9, sqlScadenza);
+                }
+                else{
+                    uSondaggio.setDate(9, null);
+                }
             
                 uSondaggio.setInt(1, sondaggio.getIdUtente()); //update
                 uSondaggio.setString(2, sondaggio.getTitolo());
-                uSondaggio.setString(3, sondaggio.getTestoApertura());
-                uSondaggio.setString(4, sondaggio.getTestoChiusura());
+                if(!sondaggio.getTestoApertura().isEmpty()){
+                    uSondaggio.setString(3, sondaggio.getTestoApertura());
+                }
+                else{
+                    uSondaggio.setString(3, null);
+                }
+                if(!sondaggio.getTestoChiusura().isEmpty()){
+                    uSondaggio.setString(4, sondaggio.getTestoChiusura());
+                }
+                else{
+                    uSondaggio.setString(4, null);
+                }
                 uSondaggio.setBoolean(5, sondaggio.isCompleto());
                 uSondaggio.setBoolean(6, sondaggio.isQuiz());
                 uSondaggio.setBoolean(7, sondaggio.isVisibilita());
                 uSondaggio.setDate(8, sqlCreazione);
-                uSondaggio.setDate(9, sqlScadenza);
                 uSondaggio.setBoolean(10, sondaggio.isPrivato());
                 uSondaggio.setBoolean(11, sondaggio.isModificabile());
                 uSondaggio.setInt(12, sondaggio.getKey());
