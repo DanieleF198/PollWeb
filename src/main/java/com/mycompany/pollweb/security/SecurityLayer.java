@@ -100,6 +100,7 @@ public class SecurityLayer {
         s.setAttribute("inizio-sessione", Calendar.getInstance());
         s.setAttribute("remember", remember);
         s.setAttribute("sondaggio-in-creazione", 0);
+        s.setAttribute("continue", "no");
         return s;
     }
 

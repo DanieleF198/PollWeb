@@ -27,7 +27,15 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="title">Titolo</label>
-                                    <input type="text" name="title" class="form-control" id="title" placeholder="almeno 3 caratteri" maxlength="128" required> 
+                                    <#if sondaggio??>
+                                        <#if sondaggio.getTitolo()??>
+                                            <input type="text" name="title" value="${sondaggio.getTitolo()}" class="form-control" id="title" placeholder="almeno 3 caratteri" maxlength="128" required> 
+                                        <#else>
+                                            <input type="text" name="title" class="form-control" id="title" placeholder="almeno 3 caratteri" maxlength="128" required> 
+                                        </#if>
+                                    <#else>
+                                        <input type="text" name="title" class="form-control" id="title" placeholder="almeno 3 caratteri" maxlength="128" required> 
+                                    </#if>
                                     <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
                                         Il titolo inserito non è valido.
                                     </div>
@@ -36,13 +44,29 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12 mb-3">
                                     <label class="h5" for="description">Descrizione (facoltativa)</label>
-                                    <textarea rows="5" name="description" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione. Sono consentiti al massimo 2048 caratteri" value="" maxlength="2048"></textarea>
+                                    <#if sondaggio??>
+                                        <#if sondaggio.getTestoApertura()??>
+                                            <textarea rows="5" name="description" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione. Sono consentiti al massimo 2048 caratteri" maxlength="2048">${sondaggio.getTestoApertura()}</textarea>                               
+                                        <#else>
+                                            <textarea rows="5" name="description" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione. Sono consentiti al massimo 2048 caratteri" maxlength="2048"></textarea>
+                                        </#if>
+                                    <#else>
+                                        <textarea rows="5" name="description" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione. Sono consentiti al massimo 2048 caratteri" maxlength="2048"></textarea>
+                                    </#if>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12 mb-3">
                                     <label class="h5" for="finalMessage">Messaggio di completamento (facoltativo)</label>
-                                    <textarea rows="3" name="finalMessage" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito apparir&#224; il messaggio di default. Sono consentiti al massimo 1024 caratteri" value="" maxlength="1024"></textarea>
+                                    <#if sondaggio??>
+                                        <#if sondaggio.getTestoChiusura()??>
+                                            <textarea rows="3" name="finalMessage" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito apparir&#224; il messaggio di default. Sono consentiti al massimo 1024 caratteri" maxlength="1024">${sondaggio.getTestoChiusura()}</textarea>
+                                        <#else>
+                                            <textarea rows="3" name="finalMessage" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito apparir&#224; il messaggio di default. Sono consentiti al massimo 1024 caratteri" maxlength="1024"></textarea>
+                                        </#if>
+                                    <#else>
+                                        <textarea rows="3" name="finalMessage" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito apparir&#224; il messaggio di default. Sono consentiti al massimo 1024 caratteri" maxlength="1024"></textarea>
+                                    </#if>
                                 </div>
                             </div>
                             <div class="border-bottom mb-3"></div>
@@ -67,8 +91,16 @@
                                         </label>
                                         &nbspSondaggio privato
                                         <#else>
-                                            <label class="checkbox mb-3">
-                                            <input type="checkbox" name="private" value="private"/>
+                                        <label class="checkbox mb-3">
+                                            <#if sondaggio??>
+                                                <#if sondaggio.isPrivato()??>
+                                                    <input type="checkbox" name="private" value="private" checked>
+                                                <#else>
+                                                    <input type="checkbox" name="private" value="private">
+                                                </#if>
+                                            <#else>
+                                                <input type="checkbox" name="private" value="private">
+                                            </#if>
                                             <span class="warning"></span>
                                         </label>
                                         &nbspSondaggio privato
@@ -87,7 +119,15 @@
                                 <div class="col-lg-12">
                                     <div>
                                         <label class="checkbox mb-3">
-                                            <input type="checkbox" name="modificable" value="modificable"/>
+                                            <#if sondaggio??>
+                                                <#if sondaggio.isModificabile()??>
+                                                    <input type="checkbox" name="modificable" value="modificable" checked>
+                                                <#else>
+                                                    <input type="checkbox" name="modificable" value="modificable">
+                                                </#if>
+                                            <#else>
+                                                <input type="checkbox" name="modificable" value="modificable">
+                                            </#if>
                                             <span class="warning"></span>
                                         </label>
                                         &nbspSondaggio modificabile
@@ -100,7 +140,13 @@
                                 <div class="col-lg-12 mb-2">
                                     <label for="expiration"><b>Data di scadenza (facoltativo)</b></label>
                                     <div class="mb-2" style="width: 180px">
-                                        <input type="date" name="expiration" class="form-control" id="expiration" placeholder="" value="">
+                                        <#if expirationDate??>
+                                            <#setting date_format="yyyy-MM-dd">
+                                            <#assign date = expirationDate?date>
+                                            <input type="date" name="expiration" class="form-control" id="expiration" placeholder="" value="${date}">
+                                        <#else>
+                                            <input type="date" name="expiration" class="form-control" id="expiration" placeholder="" value="">
+                                        </#if>
                                         <div class="invalid-feedback">
                                             La data inserita non è valida
                                         </div>

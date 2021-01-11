@@ -23,12 +23,15 @@ import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -46,13 +49,26 @@ public class FirstSection extends BaseController {
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
-                if ("POST".equals(request.getMethod())) {
-                    action_questions(request, response);
-                } else {
-                    action_default(request, response);
+                if (("POST".equals(request.getMethod())) && (request.getParameter("buttonFirstSection") != null)) {
+                    action_questions(request, response); //caso in cui clicca il bottone "crea sondaggio"
+                    return;
+                }
+                else if (("POST".equals(request.getMethod())) && (request.getParameter("buttonContinue") != null)){
+                    s.setAttribute("continue", "yes");
+                    response.sendRedirect("firstSection"); //caso in cui arriva da firstSectionWarning e decide di continuare
+                    return;
+                }
+                else if (("POST".equals(request.getMethod())) && (request.getParameter("buttonNew") != null)){
+                    s.setAttribute("sondaggio-in-creazione", 0); //caso in cui arriva da firstSectionWarning e vuole nuovo
+                    response.sendRedirect("firstSection");
+                    return;
+                }
+                else{
+                    define_action(request, response, s);
                 }
             } else {
                 action_redirect_login(request, response);
+                return;
             }
             
         } catch (IOException ex) {
@@ -65,10 +81,44 @@ public class FirstSection extends BaseController {
 
         } catch (ParseException ex) {
             Logger.getLogger(FirstSection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FirstSection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void define_action(HttpServletRequest request, HttpServletResponse response, HttpSession s) throws IOException, ServletException, TemplateManagerException, DataException, InterruptedException {
+        if((int)s.getAttribute("sondaggio-in-creazione") != 0){
+            if (s.getAttribute("continue")=="no"){
+                action_warning(request, response); //caso in cui carica la pagina mentre era in creazione un'altro sondaggio / non ha completato la creazione                            
+                return;
+            }
+            else{
+                action_default(request, response);
+                return;
+            }
+        }
+        else {
+            action_default(request, response); //caso base
+            return;
         }
     }
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
+    
+    private void action_warning(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+       try {
+            TemplateResult res = new TemplateResult(getServletContext());
+            HttpSession s = checkSession(request);
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+            Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
+            request.setAttribute("titoloSondaggio", sondaggio.getTitolo());
+            res.activate("MakerPoll/firstSectionWarning.ftl", request, response);
+            return;
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(FirstSection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException, InterruptedException {
        try {
             TemplateResult res = new TemplateResult(getServletContext());
             HttpSession s = checkSession(request);
@@ -89,13 +139,30 @@ public class FirstSection extends BaseController {
                         break;
                 }
             }
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+            if((int)s.getAttribute("sondaggio-in-creazione")!= 0){ //caso in cui hai fatto continue
+                Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
+                request.setAttribute("sondaggio", sondaggio);
+                Date exp = new Date(sondaggio.getScadenza().getTime());
+                LocalDate expLocDate = exp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                String d = expLocDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                request.setAttribute("expirationDate", d);
+                if (s.getAttribute("continue")=="yes"){
+                    s.setAttribute("continue", "no"); //ormai ha fatto il suo compito
+                }
+            }
+            if(s.getAttribute("error") != null){
+                request.setAttribute("error", s.getAttribute("error"));
+                s.removeAttribute("error");
+            }
             res.activate("MakerPoll/firstSection.ftl", request, response);
+            return;
         } catch (TemplateManagerException ex) {
             Logger.getLogger(FirstSection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    private void action_questions(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, ParseException, DataException{
+    private void action_questions(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, ParseException, DataException, InterruptedException{
         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
         TemplateResult res = new TemplateResult(getServletContext());
         HttpSession s = checkSession(request);
@@ -106,8 +173,6 @@ public class FirstSection extends BaseController {
             String date = "";
             boolean privateSurvey = false;
             boolean modificableSurvey = false;
-            
-                   
             
             if(request.getParameter("title") != null){
                 title = SecurityLayer.addSlashes(request.getParameter("title"));
@@ -124,28 +189,26 @@ public class FirstSection extends BaseController {
                 finalMessage = SecurityLayer.stripSlashes(finalMessage);
             }
             
-            if(request.getParameter("date") != null){
+            if(request.getParameter("expiration") != null){
                 date = SecurityLayer.addSlashes(request.getParameter("expiration"));
                 date = SecurityLayer.stripSlashes(date);
             }
             
-            
-            System.out.println(title);
             if (title.length() < 3 || title.length() > 128){
-                request.setAttribute("error", "il titolo deve contenere almeno 3 caratteri o al massimo 128");
-                action_default(request, response);
+                s.setAttribute("error", "il titolo deve contenere almeno 3 caratteri o al massimo 128");
+                response.sendRedirect("firstSection");
                 return;
             }
             
             if (description.length() > 2048){
-                request.setAttribute("error", "la descrizione deve contenere al massimo 2048 caratteri");
-                action_default(request, response);
+                s.setAttribute("error", "la descrizione deve contenere al massimo 2048 caratteri");
+                response.sendRedirect("firstSection");
                 return; 
             }
             
-            if (finalMessage.length() > 2048){
-                request.setAttribute("error", "il messaggio di completamento deve contenere al massimo 1024 caratteri");
-                action_default(request, response);
+            if (finalMessage.length() > 1024){
+                s.setAttribute("error", "il messaggio di completamento deve contenere al massimo 1024 caratteri");
+                response.sendRedirect("firstSection");
                 return; 
             }
             
@@ -157,8 +220,8 @@ public class FirstSection extends BaseController {
                 expirationDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
 
                 if(nowTemp.after(expirationDate)){
-                    request.setAttribute("error", "la data inserita non è valida");
-                    action_default(request, response);
+                    s.setAttribute("error", "la data inserita non è valida");
+                    response.sendRedirect("firstSection");
                     return;
                 }
             }
@@ -166,8 +229,8 @@ public class FirstSection extends BaseController {
             if(request.getParameter("private") != null){
                 int idGruppo = (int) s.getAttribute("groupid");
                 if (idGruppo == 1){
-                    request.setAttribute("error", "non hai i permessi per fare un sondaggio privato");
-                    action_default(request, response);
+                    s.setAttribute("error", "non hai i permessi per fare un sondaggio privato");
+                    response.sendRedirect("firstSection");
                     return;
                 }
                 privateSurvey = true;
@@ -193,9 +256,15 @@ public class FirstSection extends BaseController {
             if(modificableSurvey != false){
                 newSondaggio.setModificabile(true);
             }
-            dl.getSondaggioDAO().storeSondaggio(newSondaggio);
-            s.setAttribute("sondaggio-in-creazione", 1);
+            if((int)s.getAttribute("sondaggio-in-creazione") == 0){
+                dl.getSondaggioDAO().storeSondaggio(newSondaggio);
+                s.setAttribute("sondaggio-in-creazione", newSondaggio.getKey());
+            } else {
+                newSondaggio.setKey((int)s.getAttribute("sondaggio-in-creazione"));
+                dl.getSondaggioDAO().storeSondaggio(newSondaggio);
+            }
             response.sendRedirect("questionsMaker");
+            return;
         }
     }
 

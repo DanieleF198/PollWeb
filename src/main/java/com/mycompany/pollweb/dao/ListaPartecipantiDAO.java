@@ -18,7 +18,7 @@ public interface ListaPartecipantiDAO {
     
     public ListaPartecipantiProxy createListaPartecipanti();
     
-    ListaPartecipanti getListaPartecipanti(int idListaPartecipanti) throws DataException;
+    public ListaPartecipanti getListaPartecipanti(int idListaPartecipanti) throws DataException;
     
     public List<ListaPartecipanti> getListePartecipanti() throws DataException;
     
