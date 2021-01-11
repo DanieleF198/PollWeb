@@ -46,8 +46,8 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
             sDomandaBySondaggioID = connection.prepareStatement("SELECT * FROM Domanda WHERE idSondaggio=?");
             sDomande = connection.prepareStatement("SELECT * FROM Domanda");
             
-            iDomanda = connection.prepareStatement("INSERT INTO Domanda (idDomanda,idSondaggio,titolo,obbligatoria,descrizione,posizione,opzioni,rispostaCorretta,tipo) VALUES(?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uDomanda = connection.prepareStatement("UPDATE Domanda SET idDomanda=?,idSondaggio=?,titolo=?,obbligatoria=?,stadescrizioneto=?,posizione=?,opzioni=?,rispostaCorretta=?,tipo=? WHERE idDomanda=?");
+            iDomanda = connection.prepareStatement("INSERT INTO Domanda (idSondaggio,titolo,obbligatoria,descrizione,posizione,opzioni,rispostaCorretta,tipo) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uDomanda = connection.prepareStatement("UPDATE Domanda SET idSondaggio=?,titolo=?,obbligatoria=?,stadescrizioneto=?,posizione=?,opzioni=?,rispostaCorretta=?,tipo=? WHERE idDomanda=?");
             dDomanda = connection.prepareStatement("DELETE FROM Domanda WHERE idDomanda=?");
             
             
@@ -85,16 +85,15 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
     private DomandaProxy createDomanda(ResultSet rs) throws DataException {
         DomandaProxy d = createDomanda();
         try {
-            d.setKey(rs.getInt("idDomanda")); //TODO add opzioni - rispostaCorretta
             d.setIdSondaggio(rs.getInt("idSondaggio"));
             d.setTitolo(rs.getString("titolo"));
             d.setObbligatoria(rs.getBoolean("obbligatoria"));
             d.setDescrizione(rs.getString("descrizione"));
+            d.setPosizione(rs.getInt("posizione"));
             JSONObject opzioni = (JSONObject) rs.getObject("opzioni");
             d.setOpzioni(opzioni);
             JSONObject rispostaCorretta = (JSONObject) rs.getObject("rispostaCorretta");
             d.setRispostaCorretta(rispostaCorretta);
-            d.setPosizione(rs.getInt("posizione"));
             d.setTipo(rs.getString("tipo"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Domanda object form ResultSet", ex);
@@ -175,14 +174,14 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
                 }
                         
                 
-                uDomanda.setInt(1, domanda.getIdSondaggio());  //TODO aggiungere i JSON
+                uDomanda.setInt(1, domanda.getIdSondaggio());
                 uDomanda.setString(2, domanda.getTitolo());
                 uDomanda.setBoolean(3, domanda.isObbligatoria());
                 uDomanda.setString(4, domanda.getDescrizione());
                 uDomanda.setInt(5, domanda.getPosizione());
-                uDomanda.setString(6, domanda.getTipo());
-                uDomanda.setObject(7, domanda.getOpzioni());
-                uDomanda.setObject(8, domanda.getRispostaCorretta());
+                uDomanda.setObject(6, domanda.getOpzioni());
+                uDomanda.setObject(7, domanda.getRispostaCorretta());
+                uDomanda.setString(8, domanda.getTipo());
                 uDomanda.setInt(9, domanda.getKey());
 
                 if (uDomanda.executeUpdate() == 0) {
@@ -195,9 +194,10 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
                 iDomanda.setBoolean(3, domanda.isObbligatoria());
                 iDomanda.setString(4, domanda.getDescrizione());
                 iDomanda.setInt(5, domanda.getPosizione());
-                iDomanda.setString(6, domanda.getTipo());
-                iDomanda.setObject(7, domanda.getOpzioni());
-                iDomanda.setObject(8, domanda.getRispostaCorretta());
+                iDomanda.setObject(6, domanda.getOpzioni());
+                iDomanda.setObject(7, domanda.getRispostaCorretta());
+                iDomanda.setString(8, domanda.getTipo());
+                
                 
                 if (iDomanda.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

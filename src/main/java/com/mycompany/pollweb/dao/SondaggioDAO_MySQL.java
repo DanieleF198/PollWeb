@@ -93,7 +93,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             s.setQuiz(rs.getBoolean("quiz"));
             s.setVisibilita(rs.getBoolean("visibilita"));
             s.setCreazione(rs.getDate("dataCreazione"));
-            s.setScadenza(rs.getDate("dataScadenza"));
+            s.setScadenza(rs.getDate("dataChiusura"));
             s.setPrivato(rs.getBoolean("privato"));
             s.setPrivato(rs.getBoolean("modificabile"));
         } catch (SQLException ex) {
@@ -162,6 +162,20 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             throw new DataException("Unable to load Sondaggi", ex);
         }
         return result;
+    }
+    
+    @Override
+    public List<Sondaggio> getSondaggiByIdUtente(int idUtente) throws DataException {
+        List<Sondaggio> sondaggi = new ArrayList();
+
+        try (ResultSet rs = sSondaggi.executeQuery()) {
+            while (rs.next()) {
+                sondaggi.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Sondaggi", ex);
+        }
+        return sondaggi;
     }
 
     @Override

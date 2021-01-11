@@ -128,29 +128,19 @@
                                                     <th scope="col">operazioni</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>sondaggio 1</td>
-                                                    <td>03/12/2020</td>
-                                                    <td>05/12/2020</td>
-                                                    <td>da fare</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>sondaggio 2</td>
-                                                    <td>28/11/2020</td>
-                                                    <td>28/12/2020</td>
-                                                    <td>da fare</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>sondaggio 3</td>
-                                                    <td>01/12/2020</td>
-                                                    <td>31/01/2021</td>
-                                                    <td>da fare</td>
-                                                </tr>
-                                            </tbody>
+                                            <#assign c = 1>
+                                            <#list sondaggi as sondaggio>
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">${c}</th>
+                                                        <td>${sondaggio.getTitolo()}</td>
+                                                        <td>${sondaggio.getCreazione()}</td>
+                                                        <td>${sondaggio.getScadenza()}</td>
+                                                        <td>da fare</td>
+                                                    </tr>
+                                                </tbody>
+                                                <#assign c = c + 1>
+                                            </#list>
                                         </table>
                                     </div>
                                 </div>
