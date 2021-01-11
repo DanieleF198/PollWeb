@@ -25,6 +25,10 @@
         <servlet-class>com.mycompany.pollweb.controllers.Dashboard</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AdminDashboard</servlet-name>
+        <servlet-class>com.mycompany.pollweb.controllers.AdminDashboard</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>SendRespRequest</servlet-name>
         <servlet-class>com.mycompany.pollweb.controllers.SendRespRequest</servlet-class>
     </servlet>
@@ -71,6 +75,10 @@
     <servlet-mapping>
         <servlet-name>Dashboard</servlet-name>
         <url-pattern>/dashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminDashboard</servlet-name>
+        <url-pattern>/adminDashboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SendRespRequest</servlet-name>
