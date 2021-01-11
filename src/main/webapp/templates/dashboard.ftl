@@ -139,7 +139,7 @@
                                                         <td>da fare</td>
                                                     </tr>
                                                 </tbody>
-                                                <#assign c = c + 1>
+                                                <#assign c = c + 1> <!--non è l'ID-->
                                             </#list>
                                         </table>
                                     </div>
