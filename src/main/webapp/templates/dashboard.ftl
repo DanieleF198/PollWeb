@@ -129,18 +129,22 @@
                                                 </tr>
                                             </thead>
                                             <#assign c = 1>
-                                            <#list sondaggi as sondaggio>
-                                                <tbody>
+                                            <tbody>
+                                                <#list sondaggi as sondaggio>  
                                                     <tr>
                                                         <th scope="row">${c}</th>
                                                         <td>${sondaggio.getTitolo()}</td>
                                                         <td>${sondaggio.getCreazione()}</td>
-                                                        <td>${sondaggio.getScadenza()}</td>
+                                                        <#if sondaggio.getScadenza()??>
+                                                            <td>${sondaggio.getScadenza()}</td>
+                                                        <#else>
+                                                            <td>Indeterminata</td>
+                                                        </#if>
                                                         <td>da fare</td>
                                                     </tr>
-                                                </tbody>
                                                 <#assign c = c + 1>
-                                            </#list>
+                                                </#list>
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>

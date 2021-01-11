@@ -17,6 +17,7 @@ import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.impl.GruppoImpl;
+import com.mycompany.pollweb.model.Gruppo;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
@@ -39,7 +40,12 @@ public class Dashboard extends BaseController {
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
-                action_default(request, response);
+                if ((Integer)s.getAttribute("groupid") == 3){
+                    action_redirect_adminDashboard(request, response);
+                }
+                else{
+                    action_default(request, response);
+                }
             } else {
                 action_redirect_login(request, response);
             }
@@ -92,10 +98,20 @@ public class Dashboard extends BaseController {
         }
     }
     
-        private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+    private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         try {
             request.setAttribute("urlrequest", request.getRequestURL());
             RequestDispatcher rd = request.getRequestDispatcher("/login");
+            rd.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void action_redirect_adminDashboard(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+        try {
+            request.setAttribute("urlrequest", request.getRequestURL());
+            RequestDispatcher rd = request.getRequestDispatcher("/adminDashboard");
             rd.forward(request, response);
         } catch (ServletException e) {
             e.printStackTrace();
