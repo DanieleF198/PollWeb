@@ -101,6 +101,7 @@ public class SecurityLayer {
         s.setAttribute("remember", remember);
         s.setAttribute("sondaggio-in-creazione", 0);
         s.setAttribute("continue", "no");
+        s.setAttribute("sondaggio-in-conferma", "no");
         return s;
     }
 

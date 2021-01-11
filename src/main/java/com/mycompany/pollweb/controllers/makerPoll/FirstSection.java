@@ -143,10 +143,25 @@ public class FirstSection extends BaseController {
             if((int)s.getAttribute("sondaggio-in-creazione")!= 0){ //caso in cui hai fatto continue
                 Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
                 request.setAttribute("sondaggio", sondaggio);
-                Date exp = new Date(sondaggio.getScadenza().getTime());
-                LocalDate expLocDate = exp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                String d = expLocDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                request.setAttribute("expirationDate", d);
+                if(sondaggio.getScadenza() != null){
+                    Date exp = new Date(sondaggio.getScadenza().getTime());
+                    LocalDate expLocDate = exp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    String d = expLocDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    request.setAttribute("expirationDate", d);
+                }
+                System.out.println(sondaggio.isModificabile());
+                if(sondaggio.isModificabile()){
+                    request.setAttribute("modificable", "yes");
+                }
+                else{
+                    request.setAttribute("modificable", "no");
+                }
+                if(sondaggio.isPrivato()){
+                    request.setAttribute("private", "yes");
+                }
+                else{
+                    request.setAttribute("private", "no");
+                }
                 if (s.getAttribute("continue")=="yes"){
                     s.setAttribute("continue", "no"); //ormai ha fatto il suo compito
                 }
@@ -227,17 +242,21 @@ public class FirstSection extends BaseController {
             }
             
             if(request.getParameter("private") != null){
-                int idGruppo = (int) s.getAttribute("groupid");
-                if (idGruppo == 1){
-                    s.setAttribute("error", "non hai i permessi per fare un sondaggio privato");
-                    response.sendRedirect("firstSection");
-                    return;
+                if(request.getParameter("private").equals("private")){
+                    int idGruppo = (int) s.getAttribute("groupid");
+                    if (idGruppo == 1){
+                        s.setAttribute("error", "non hai i permessi per fare un sondaggio privato");
+                        response.sendRedirect("firstSection");
+                        return;
+                    }
+                    privateSurvey = true;
                 }
-                privateSurvey = true;
             }
-            
+            System.out.println(request.getParameter("modificable"));
             if(request.getParameter("modificable") != null){
-                modificableSurvey = true;
+                if(request.getParameter("modificable").equals("modificable")){
+                    modificableSurvey = true;
+                }
             }
             
             Sondaggio newSondaggio = dl.getSondaggioDAO().createSondaggio();
@@ -263,6 +282,7 @@ public class FirstSection extends BaseController {
                 newSondaggio.setKey((int)s.getAttribute("sondaggio-in-creazione"));
                 dl.getSondaggioDAO().storeSondaggio(newSondaggio);
             }
+            s.setAttribute("fromFirst", "firstSection");
             response.sendRedirect("questionsMaker");
             return;
         }

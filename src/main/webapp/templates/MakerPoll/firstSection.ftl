@@ -92,12 +92,8 @@
                                         &nbspSondaggio privato
                                         <#else>
                                         <label class="checkbox mb-3">
-                                            <#if sondaggio??>
-                                                <#if sondaggio.isPrivato()??>
-                                                    <input type="checkbox" name="private" value="private" checked>
-                                                <#else>
-                                                    <input type="checkbox" name="private" value="private">
-                                                </#if>
+                                            <#if private?? && private=="yes">
+                                                <input type="checkbox" name="private" value="private" checked>
                                             <#else>
                                                 <input type="checkbox" name="private" value="private">
                                             </#if>
@@ -119,11 +115,11 @@
                                 <div class="col-lg-12">
                                     <div>
                                         <label class="checkbox mb-3">
-                                            <#if sondaggio??>
-                                                <#if sondaggio.isModificabile()??>
+                                            <#if modificable??>
+                                                <#if modificable=="yes">
                                                     <input type="checkbox" name="modificable" value="modificable" checked>
                                                 <#else>
-                                                    <input type="checkbox" name="modificable" value="modificable">
+                                                <input type="checkbox" name="modificable" value="modificable">
                                                 </#if>
                                             <#else>
                                                 <input type="checkbox" name="modificable" value="modificable">

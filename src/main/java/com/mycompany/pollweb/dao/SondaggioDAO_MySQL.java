@@ -95,7 +95,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             s.setCreazione(rs.getDate("dataCreazione"));
             s.setScadenza(rs.getDate("dataChiusura"));
             s.setPrivato(rs.getBoolean("privato"));
-            s.setPrivato(rs.getBoolean("modificabile"));
+            s.setModificabile(rs.getBoolean("modificabile"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Sondaggio object form ResultSet", ex);
         }

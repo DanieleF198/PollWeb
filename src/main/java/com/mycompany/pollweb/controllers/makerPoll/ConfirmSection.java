@@ -17,8 +17,11 @@ import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.result.FailureResult;
+import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -32,10 +35,6 @@ public class ConfirmSection extends BaseController {
          try {
             if (request.getParameter("confirm") != null) {
                 action_confirm(request, response);
-            } else if(request.getParameter("nextQuestion") != null){
-                action_next_question(request, response);
-            } else if(request.getParameter("prevQuestion") != null){
-                action_prev_question(request, response);
             } else {
                 action_default(request, response);
             }
@@ -61,17 +60,11 @@ public class ConfirmSection extends BaseController {
     }
     
     private void action_confirm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        response.sendRedirect("confirmSection"); //ATTENZIONE, per ora fa solo un redirect, ma quando implementeremo effettivamente vanno considerati i casi di errore 
+        HttpSession s = checkSession(request);
+        s.setAttribute("sondaggio-in-conferma", "yes");
+        response.sendRedirect("confirmSection");
+        return;
     }
-    
-    private void action_next_question(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        response.sendRedirect("questionsMaker"); //ATTENZIONE, per ora fa solo un redirect, ma quando implementeremo effettivamente vanno considerati i casi di errore 
-    }
-    
-    private void action_prev_question(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        response.sendRedirect("questionsMaker"); //ATTENZIONE, per ora fa solo un redirect, ma quando implementeremo effettivamente vanno considerati i casi di errore 
-    }
-
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
         if (request.getAttribute("exception") != null) {

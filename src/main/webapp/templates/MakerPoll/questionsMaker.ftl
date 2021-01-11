@@ -43,8 +43,28 @@
                 <div class="header-margin"></div>
                 <div class="container-fluid">
                     <div class="container">
-                        <h1 class="h3 mb-3 font-weight-normal">Creazione sondaggio - creazione domande</h1>
-                        <form method="post" action="confirmSection" class="needs-validation" novalidate>
+                        <form method="post" action="questionsMaker" class="needs-validation" novalidate>
+                            <#if noError??>
+                                <div class="row mb-3">
+                                    <div class="col-lg-12">
+                                        <h1 class="h3 mb-3 font-weight-normal">Creazione sondaggio - creazione domande</h1>
+                                    </div>   
+                                </div>
+                            <#else>
+                                <div class="row mb-3">
+                                    <div class="col-lg-8">
+                                        <h1 class="h3 mb-3 font-weight-normal">Creazione sondaggio - creazione domande</h1>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <button type="submit" name="removeQuestion" value="removeQuestionButton" class="btn btn-lg btn-danger float-lg-right custom-block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+                                            Rimuovi domanda
+                                        </button>
+                                    </div>
+                                </div>
+                            </#if>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="questionTitle">Titolo domanda</label>
@@ -290,24 +310,48 @@
                                 </div>
                             </div> 
                             <div class="row mt-3 custom-margin-bottom">
-                                <div class="col-lg-4 mb-2 custom-left">
-                                    <button type="submit" name="prevQuestion" value="prevQuestionButton" class="btn btn-lg btn-warning custom-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
-                                        </svg>
-                                        Domanda precedente
-                                    </button>
-                                </div>
-                                <div class="col-lg-4 mb-2 custom-center">
-                                    <button type="submit" name="confirm" value="confirmButton" class="btn btn-lg btn-warning custom-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
-                                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
-                                            <path fill-rule="evenodd" d="M8 11a.5.5 0 0 0 .5-.5V6.707l1.146 1.147a.5.5 0 0 0 .708-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L7.5 6.707V10.5a.5.5 0 0 0 .5.5z"/>                                    
-                                        </svg>
-                                        Vai alla conferma
-                                    </button>
-                                </div>
+                                <#if noPrev??>
+                                    <div class="col-lg-4 mb-2 custom-left">
+                                        <button name="prevQuestion" value="prevQuestionButton" class="btn btn-lg btn-warning custom-block" type="submit" disabled>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
+                                            </svg>
+                                            Domanda precedente
+                                        </button>
+                                    </div>
+                                <#else>
+                                    <div class="col-lg-4 mb-2 custom-left">
+                                        <button name="prevQuestion" value="prevQuestionButton" class="btn btn-lg btn-warning custom-block" type="submit" >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
+                                            </svg>
+                                            Domanda precedente
+                                        </button>
+                                    </div>
+                                </#if>
+                                <#if noConf??>
+                                    <div class="col-lg-4 mb-2 custom-center">
+                                        <button type="submit" name="confirm" value="confirmButton" class="btn btn-lg btn-warning custom-block" disabled>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                                                <path fill-rule="evenodd" d="M8 11a.5.5 0 0 0 .5-.5V6.707l1.146 1.147a.5.5 0 0 0 .708-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L7.5 6.707V10.5a.5.5 0 0 0 .5.5z"/>                                    
+                                            </svg>
+                                            Vai alla conferma
+                                        </button>
+                                    </div>
+                                <#else>
+                                    <div class="col-lg-4 mb-2 custom-center">
+                                        <button type="submit" name="confirm" value="confirmButton" class="btn btn-lg btn-warning custom-block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                                                <path fill-rule="evenodd" d="M8 11a.5.5 0 0 0 .5-.5V6.707l1.146 1.147a.5.5 0 0 0 .708-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L7.5 6.707V10.5a.5.5 0 0 0 .5.5z"/>                                    
+                                            </svg>
+                                            Vai alla conferma
+                                        </button>
+                                    </div>
+                                </#if>
                                 <div class="col-lg-4 mb-2 custom-right">
                                     <button type="submit" name="nextQuestion" value="nextQuestionButton" class="btn btn-lg btn-warning custom-block">
                                         Domanda successiva
