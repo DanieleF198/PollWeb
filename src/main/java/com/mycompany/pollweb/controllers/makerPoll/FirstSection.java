@@ -59,7 +59,10 @@ public class FirstSection extends BaseController {
                     return;
                 }
                 else if (("POST".equals(request.getMethod())) && (request.getParameter("buttonNew") != null)){
-                    s.setAttribute("sondaggio-in-creazione", 0); //caso in cui arriva da firstSectionWarning e vuole nuovo
+                    s.setAttribute("sondaggio-in-creazione", 0); //caso in cui arriva da firstSectionWarning e decide di creare nuovo sondaggio.
+                    s.setAttribute("continue", "no");            //in questo caso resetto il sessionamento per il nuovo sondaggio
+                    s.setAttribute("sondaggio-in-conferma", "no");
+                    s.setAttribute("domanda-in-creazione", 0);
                     response.sendRedirect("firstSection");
                     return;
                 }
@@ -162,8 +165,11 @@ public class FirstSection extends BaseController {
                 else{
                     request.setAttribute("private", "no");
                 }
-                if (s.getAttribute("continue")=="yes"){
+                if (s.getAttribute("continue").equals("yes")){
                     s.setAttribute("continue", "no"); //ormai ha fatto il suo compito
+                }
+                if(s.getAttribute("sondaggio-in-conferma").equals("yes")){
+                    s.setAttribute("sondaggio-in-conferma", "no"); //ormai ha fatto il suo compito
                 }
             }
             if(s.getAttribute("error") != null){

@@ -28,6 +28,7 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
     
     private PreparedStatement sDomandaByID;
     private PreparedStatement sDomandaBySondaggioID;
+    private PreparedStatement sDomandaBySondaggioIDAndPosition;
     private PreparedStatement sDomande;
     private PreparedStatement iDomanda;
     private PreparedStatement uDomanda;
@@ -44,10 +45,11 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
             
             sDomandaByID = connection.prepareStatement("SELECT * FROM Domanda WHERE idDomanda=?");
             sDomandaBySondaggioID = connection.prepareStatement("SELECT * FROM Domanda WHERE idSondaggio=?");
+            sDomandaBySondaggioIDAndPosition = connection.prepareStatement("SELECT * FROM Domanda WHERE idSondaggio=? AND posizione=?");
             sDomande = connection.prepareStatement("SELECT * FROM Domanda");
             
-            iDomanda = connection.prepareStatement("INSERT INTO Domanda (idSondaggio,titolo,obbligatoria,descrizione,posizione,opzioni,rispostaCorretta,tipo) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uDomanda = connection.prepareStatement("UPDATE Domanda SET idSondaggio=?,titolo=?,obbligatoria=?,stadescrizioneto=?,posizione=?,opzioni=?,rispostaCorretta=?,tipo=? WHERE idDomanda=?");
+            iDomanda = connection.prepareStatement("INSERT INTO Domanda (idSondaggio,titolo,obbligatoria,descrizione,posizione,opzioni,tipo) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uDomanda = connection.prepareStatement("UPDATE Domanda SET idSondaggio=?,titolo=?,obbligatoria=?,descrizione=?,posizione=?,opzioni=?,tipo=? WHERE idDomanda=?");
             dDomanda = connection.prepareStatement("DELETE FROM Domanda WHERE idDomanda=?");
             
             
@@ -90,7 +92,8 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
             d.setObbligatoria(rs.getBoolean("obbligatoria"));
             d.setDescrizione(rs.getString("descrizione"));
             d.setPosizione(rs.getInt("posizione"));
-            JSONObject opzioni = (JSONObject) rs.getObject("opzioni");
+            String jsonString = rs.getObject("opzioni").toString().replaceAll("\"", "\\\"");
+            JSONObject opzioni = new JSONObject(jsonString);
             d.setOpzioni(opzioni);
             JSONObject rispostaCorretta = (JSONObject) rs.getObject("rispostaCorretta");
             d.setRispostaCorretta(rispostaCorretta);
@@ -125,27 +128,59 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
         return d;
     }
     
-    @Override
-    public Domanda getDomandaByIdSondaggio(int idSondaggio) throws DataException {
-        Domanda d = null;
-        //prima vediamo se l'oggetto è già stato caricato
-        if (dataLayer.getCache().has(Domanda.class, idSondaggio)) {
-            d = dataLayer.getCache().get(Domanda.class, idSondaggio);
-        } else {
-            //altrimenti lo carichiamo dal database
+    public boolean checkDomanda(int idDomanda) throws DataException {
+        boolean b = false;
+        if (dataLayer.getCache().has(Domanda.class, idDomanda)) {
+            b = true;
+        }
+        else{
             try {
-                sDomandaBySondaggioID.setInt(1, idSondaggio);
-                try (ResultSet rs = sDomandaBySondaggioID.executeQuery()) {
+                sDomandaByID.setInt(1, idDomanda);
+                try (ResultSet rs = sDomandaByID.executeQuery()) {
                     if (rs.next()) {
-                        d = createDomanda(rs);
-                        //e lo mettiamo anche nella cache
-                        dataLayer.getCache().add(Domanda.class, d);
+                        b = true;
                     }
                 }
             } catch (SQLException ex) {
                 throw new DataException("Unable to load Domanda by idDomanda", ex);
             }
         }
+        return b;
+    }
+    
+    @Override
+    public List<Domanda> getDomandaByIdSondaggio(int idSondaggio) throws DataException {
+        List<Domanda> domande = new ArrayList();
+            try {
+                sDomandaBySondaggioID.setInt(1, idSondaggio);
+                try (ResultSet rs = sDomandaBySondaggioID.executeQuery()) {
+                    while (rs.next()) {
+                        domande.add((Domanda)getDomanda(rs.getInt("idDomanda")));
+                        
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Domanda by idSondaggio", ex);
+            }
+        
+        return domande;
+    }
+    
+    @Override
+    public Domanda getDomandaByIdSondaggioAndPosition(int idSondaggio, int posizione) throws DataException {
+        Domanda d = null;
+            try {
+                sDomandaBySondaggioIDAndPosition.setInt(1, idSondaggio);
+                sDomandaBySondaggioIDAndPosition.setInt(2, posizione);
+                try (ResultSet rs = sDomandaBySondaggioIDAndPosition.executeQuery()) {
+                    while (rs.next()) {
+                        d = (Domanda)getDomanda(rs.getInt("idDomanda"));
+                        d.setKey(rs.getInt("idDomanda"));
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Domanda by idSondaggio", ex);
+            }
         return d;
     }
     
@@ -179,10 +214,13 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
                 uDomanda.setBoolean(3, domanda.isObbligatoria());
                 uDomanda.setString(4, domanda.getDescrizione());
                 uDomanda.setInt(5, domanda.getPosizione());
-                uDomanda.setObject(6, domanda.getOpzioni());
-                uDomanda.setObject(7, domanda.getRispostaCorretta());
-                uDomanda.setString(8, domanda.getTipo());
-                uDomanda.setInt(9, domanda.getKey());
+                if(domanda.getOpzioni() != null){
+                    uDomanda.setObject(6, domanda.getOpzioni().toString());
+                }else{
+                    uDomanda.setObject(6, "{}");
+                }
+                uDomanda.setString(7, domanda.getTipo());
+                uDomanda.setInt(8, domanda.getKey());
 
                 if (uDomanda.executeUpdate() == 0) {
                     throw new OptimisticLockException(domanda);
@@ -194,9 +232,12 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
                 iDomanda.setBoolean(3, domanda.isObbligatoria());
                 iDomanda.setString(4, domanda.getDescrizione());
                 iDomanda.setInt(5, domanda.getPosizione());
-                iDomanda.setObject(6, domanda.getOpzioni());
-                iDomanda.setObject(7, domanda.getRispostaCorretta());
-                iDomanda.setString(8, domanda.getTipo());
+                if(domanda.getOpzioni() != null){
+                    iDomanda.setObject(6, domanda.getOpzioni().toString());
+                }else{
+                    iDomanda.setObject(6, "{}");
+                }
+                iDomanda.setString(7, domanda.getTipo());
                 
                 
                 if (iDomanda.executeUpdate() == 1) {
