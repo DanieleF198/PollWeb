@@ -243,7 +243,7 @@ input[type=number] {
     background-color: darkorange;
 }
 
-.pagination > li > a{
+.ation > li > a{
     background-color: white;
     color: #353a40;
 }
@@ -261,20 +261,39 @@ input[type=number] {
 }
 
 .pagination > .active > a{
-    color: white;
-    background-color: #5A4181 !Important;
-    border: solid 1px #5A4181 !Important;
+    color: #33373d;
+    background-color: #eee;
+    border-color: #ddd;
     border-color: #f0ad4e;
     -webkit-box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
             box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
 }
 
 .pagination > .active > a:hover{
-    background-color: #5A4181 !Important;
-    border: solid 1px #5A4181;
+    color: #33373d;
+    background-color: #eee;
+    border-color: #ddd;
     border-color: #f0ad4e;
     -webkit-box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
             box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
+}
+
+.page-link {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: #33373d !Important;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+}
+
+.page-item.active .page-link {
+  color: #33373d !Important;
+  z-index: 3 !Important;
+  background-color: #eee!Important;
+  border-color:#f0ad4e !Important;
 }
 
 .table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
@@ -547,7 +566,7 @@ input[type=number] {
             align-items: center;
     -webkit-box-pack: center;
         -ms-flex-pack: center;
-            justify-content: center;
+            pagination: center;
 }
 
 .custom-right{
@@ -603,6 +622,7 @@ input[type=number] {
 .form-signin {
     font-weight: 400;
 }
+
 .form-signin .form-control {
     position: relative;
     -webkit-box-sizing: border-box;
@@ -611,16 +631,23 @@ input[type=number] {
     padding: 10px;
     font-size: 16px;
 }
+
 .form-signin .form-control:focus {
     z-index: 2;
 }
+
 .form-signin input[type="email"] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
+
 .form-signin input[type="password"] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.label-width-searchBox{
+    width: 100%;
 }

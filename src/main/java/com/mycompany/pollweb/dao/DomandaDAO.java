@@ -26,4 +26,6 @@ public interface DomandaDAO {
     
     public void storeDomanda(Domanda domanda) throws DataException;
     
+    public void deleteDomanda(int idDomanda) throws DataException;
+    
 }

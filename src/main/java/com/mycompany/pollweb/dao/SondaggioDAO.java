@@ -28,4 +28,6 @@ public interface SondaggioDAO {
     
     public void storeSondaggio(Sondaggio sondaggio) throws DataException;
     
+    public void deleteSondaggio(int idSondaggio) throws DataException;
+    
 }

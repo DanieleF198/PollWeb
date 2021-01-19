@@ -28,4 +28,6 @@ public interface UtenteDAO {
     
     public void storeUtente(Utente utente) throws DataException;
     
+    public void deleteUtente(int idUtente) throws DataException;
+    
 }

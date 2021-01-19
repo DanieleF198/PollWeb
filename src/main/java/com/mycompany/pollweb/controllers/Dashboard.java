@@ -22,6 +22,7 @@ import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,7 +79,7 @@ public class Dashboard extends BaseController {
                 request.setAttribute("eta", (Integer)s.getAttribute("eta"));
                 request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
                 
-                List<Sondaggio> sondaggi = dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
                 request.setAttribute("sondaggi", sondaggi);
                 
                 res.activate("dashboard.ftl", request, response);

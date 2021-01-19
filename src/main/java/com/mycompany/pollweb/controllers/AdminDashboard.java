@@ -9,6 +9,7 @@ import com.mycompany.pollweb.dao.PollWebDataLayer;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.impl.GruppoImpl;
 import com.mycompany.pollweb.model.Sondaggio;
+import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
@@ -16,6 +17,7 @@ import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +41,10 @@ public class AdminDashboard extends BaseController {
          try {
             HttpSession s = checkSession(request); //in teoria il controllo avviene prima ma lo eseguiamo comunque
             if (s!= null) {
+                if (("POST".equals(request.getMethod())) && (request.getParameter("btnDeleteUser") != null)) {
+                   action_delete_user(request, response);
+                    return;
+                }
                 action_default(request, response);
             } else {
                 action_redirect_login(request, response);
@@ -71,6 +77,12 @@ public class AdminDashboard extends BaseController {
             request.setAttribute("eta", (Integer)s.getAttribute("eta"));
             request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
             
+            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
+            request.setAttribute("sondaggi", sondaggi);
+            
+            List<Utente> utenti = dl.getUtenteDAO().getUtenti();
+            request.setAttribute("utenti", utenti);
+            
             res.activate("adminDashboard.ftl", request, response);
         }
     }
@@ -83,7 +95,7 @@ public class AdminDashboard extends BaseController {
         }
     }
     
-        private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+    private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         try {
             request.setAttribute("urlrequest", request.getRequestURL());
             RequestDispatcher rd = request.getRequestDispatcher("/login");
@@ -92,5 +104,11 @@ public class AdminDashboard extends BaseController {
             e.printStackTrace();
         }
     }
+        
+    private void action_delete_user(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        request.getParameter("deleteId"); //deleteId
+    }
+    
 }
    

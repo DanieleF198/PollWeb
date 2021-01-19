@@ -165,8 +165,8 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     }
     
     @Override
-    public List<Sondaggio> getSondaggiByIdUtente(int idUtente) throws DataException {
-        List<Sondaggio> sondaggi = new ArrayList();
+    public ArrayList<Sondaggio> getSondaggiByIdUtente(int idUtente) throws DataException {
+        ArrayList<Sondaggio> sondaggi = new ArrayList();
 
         try (ResultSet rs = sSondaggi.executeQuery()) {
             while (rs.next()) {
@@ -303,4 +303,16 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
         }
     }
     
+    @Override
+    public void deleteSondaggio(int idSondaggio) throws DataException {
+        try {
+            if (dataLayer.getCache().has(Sondaggio.class, idSondaggio)) {
+            dataLayer.getCache().delete(Sondaggio.class, idSondaggio);
+        }
+            dSondaggio.setInt(1, idSondaggio);
+            dSondaggio.execute();
+        } catch (SQLException ex) {
+            throw new DataException("Unable to delete Sondaggio By ID", ex);
+        }
+    }
 }

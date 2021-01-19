@@ -290,4 +290,17 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
         }
     }
     
+    @Override
+    public void deleteUtente(int idUtente) throws DataException {
+        try {
+            if (dataLayer.getCache().has(Utente.class, idUtente)) {
+            dataLayer.getCache().delete(Utente.class, idUtente);
+        }
+            dUtente.setInt(1, idUtente);
+            dUtente.execute();
+        } catch (SQLException ex) {
+            throw new DataException("Unable to delete Utente By ID", ex);
+        }
+    }
+    
 }

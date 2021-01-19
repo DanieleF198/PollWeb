@@ -248,4 +248,17 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
         }
     }
     
+    @Override
+    public void deleteDomanda(int idDomanda) throws DataException {
+        try {
+            if (dataLayer.getCache().has(Domanda.class, idDomanda)) {
+            dataLayer.getCache().delete(Domanda.class, idDomanda);
+        }
+            dDomanda.setInt(1, idDomanda);
+            dDomanda.execute();
+        } catch (SQLException ex) {
+            throw new DataException("Unable to delete Domanda By ID", ex);
+        }
+    }
+    
 }
