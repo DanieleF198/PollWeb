@@ -68,7 +68,11 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="questionTitle">Titolo domanda</label>
-                                    <input type="text" class="form-control" id="questionTitle" placeholder="" value="" required> 
+                                    <#if titleQuestion?? && titleQuestion!="">
+                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder="" value="${titleQuestion}" required>
+                                    <#else>
+                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder="" value="" required> 
+                                    </#if>
                                     <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
                                         Il titolo inserito non è valido.
                                     </div>
@@ -77,14 +81,26 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="questionDescription">Descrizione domanda (facoltativo)</label>
-                                    <textarea rows="3" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" value=""></textarea>
+                                    <#if description?? && description="">
+                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" value="${description}"></textarea>
+                                    <#else>
+                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" value=""></textarea>
+                                    </#if>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div>
                                         <label class="checkbox mb-3">
-                                            <input type="checkbox" value="obbligatory"/>
+                                            <#if obbligatory??>
+                                                <#if obbligatory=="yes">
+                                                    <input type="checkbox" name="questionObbligatory" value="obbligatory" checked/>
+                                                <#else>
+                                                    <input type="checkbox" name="questionObbligatory" value="obbligatory"/>
+                                                </#if>
+                                            <#else>
+                                                <input type="checkbox" name="questionObbligatory" value="obbligatory"/>
+                                            </#if>
                                             <span class="warning"></span>
                                         </label>
                                         &nbspRisposta obbligatoria
@@ -95,24 +111,62 @@
                                 <div class="col-lg-12 mb-3">
                                     <p class="h5">Opzioni risposta</p>
                                     <div class="tab-wrap">
-                                        <input type="radio" id="openShort" name="tabGroup" class="tab" checked>
-                                        <label for="openShort">Domanda aperta - breve</label>
+                                        <#if checked??>
+                                            <#if checked=="openShort">
+                                                <input type="radio" value="openShort" id="openShort" name="tabGroup" class="tab" checked>
+                                            <#else>
+                                                <input type="radio" value="openShort" id="openShort" name="tabGroup" class="tab">
+                                            </#if>
+                                            <label for="openShort">Domanda aperta - breve</label>
+                                            <#if checked=="openLong">
+                                                <input type="radio" value="openLong" id="openLong" name="tabGroup" class="tab" checked>
+                                            <#else>
+                                                <input type="radio" value="openLong" id="openLong" name="tabGroup" class="tab">
+                                            </#if>
+                                            <label for="openLong">Domanda aperta - lunga</label>
+                                            <#if checked=="openNumber">
+                                                <input type="radio" value="openNumber" id="openNumber" name="tabGroup" class="tab" checked>
+                                            <#else>
+                                                <input type="radio" value="openNumber" id="openNumber" name="tabGroup" class="tab">
+                                            </#if>
+                                            <label for="openNumber">Domanda aperta - numero</label>
+                                            <#if checked=="openDate">
+                                                <input type="radio" value="openDate" id="openDate" name="tabGroup" class="tab" checked>
+                                            <#else>
+                                                <input type="radio" value="openDate" id="openDate" name="tabGroup" class="tab">
+                                            </#if>
+                                            <label for="openDate">Domanda aperta - data</label>
+                                            <#if checked=="closeSingle">
+                                                <input type="radio" value="closeSingle" id="closeSingle" name="tabGroup" class="tab" checked>
+                                            <#else>
+                                                <input type="radio" value="closeSingle" id="closeSingle" name="tabGroup" class="tab">
+                                            </#if>
+                                            <label for="closeSingle">Scelta singola</label>
+                                            <#if checked=="closeMultiple">
+                                                <input type="radio" value="closeMultiple" id="closeMultiple" name="tabGroup" class="tab" checked>
+                                            <#else>
+                                                <input type="radio" value="closeMultiple" id="closeMultiple" name="tabGroup" class="tab">
+                                            </#if>
+                                            <label for="closeMultiple">Scelta multipla</label>
+                                        <#else>
+                                            <input type="radio" value="openShort" id="openShort" name="tabGroup" class="tab" checked>
+                                            <label for="openShort">Domanda aperta - breve</label>
 
-                                        <input type="radio" id="openLong" name="tabGroup" class="tab">
-                                        <label for="openLong">Domanda aperta - lunga</label>
-                                        
-                                        <input type="radio" id="openNumber" name="tabGroup" class="tab">
-                                        <label for="openNumber">Domanda aperta - numero</label>
-                                        
-                                        <input type="radio" id="openDate" name="tabGroup" class="tab">
-                                        <label for="openDate">Domanda aperta - data</label>
-                                        
-                                        <input type="radio" id="closeSingle" name="tabGroup" class="tab">
-                                        <label for="closeSingle">Scelta singola</label>
-                                        
-                                        <input type="radio" id="closeMultiple" name="tabGroup" class="tab">
-                                        <label for="closeMultiple">Scelta multipla</label>
+                                            <input type="radio" value="openLong" id="openLong" name="tabGroup" class="tab">
+                                            <label for="openLong">Domanda aperta - lunga</label>
 
+                                            <input type="radio" value="openNumber" id="openNumber" name="tabGroup" class="tab">
+                                            <label for="openNumber">Domanda aperta - numero</label>
+
+                                            <input type="radio" value="openDate" id="openDate" name="tabGroup" class="tab">
+                                            <label for="openDate">Domanda aperta - data</label>
+
+                                            <input type="radio" value="closeSingle" id="closeSingle" name="tabGroup" class="tab">
+                                            <label for="closeSingle">Scelta singola</label>
+
+                                            <input type="radio" value="closeMultiple" id="closeMultiple" name="tabGroup" class="tab">
+                                            <label for="closeMultiple">Scelta multipla</label>
+                                        </#if>
                                         <div class="tab__content">
                                             <div class="row mt-1 mb-1">
                                                 <div class="col-lg-12">
@@ -197,55 +251,103 @@
                                             <div class="row mt-1 mb-1">
                                                 <div class="col-lg-3">
                                                     <label for="option1">Opzione 1</label>
-                                                    <input type="text" class="form-control" id="option1" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option0?? && option0!="">
+                                                        <input type="text" class="form-control" id="option1" name="option1" placehorder="Opzione" onkeyup="success()" value="${option0}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option1" name="option1" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option2">Opzione 2</label>
-                                                    <input type="text" class="form-control" id="option2" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option1?? && option1!="">
+                                                        <input type="text" class="form-control" id="option2" name="option2" placehorder="Opzione" onkeyup="success()" value="${option1}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option2" name="option2" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option3">Opzione 3</label>
-                                                    <input type="text" class="form-control" id="option3" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option2?? && option2!="">
+                                                        <input type="text" class="form-control" id="option3" name="option3" placehorder="Opzione" onkeyup="success()" value="${option2}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option3" name="option3" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option4">Opzione 4</label>
-                                                    <input type="text" class="form-control" id="option4" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option3?? && option3!="">
+                                                        <input type="text" class="form-control" id="option4" name="option4" placehorder="Opzione" onkeyup="success()" value="${option3}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option4" name="option4" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>                                                
                                                 </div>
                                             </div>
                                             <div class="row mt-1 mb-1">
                                                 <div class="col-lg-3">
                                                     <label for="option5">Opzione 5</label>
-                                                    <input type="text" class="form-control" id="option5" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option4?? && option4!="">
+                                                        <input type="text" class="form-control" id="option5" name="option5" placehorder="Opzione" onkeyup="success()" value="${option4}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option5" name="option5" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option6">Opzione 6</label>
-                                                    <input type="text" class="form-control" id="option6" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option5?? && option5!="">
+                                                        <input type="text" class="form-control" id="option6" name="option6" placehorder="Opzione" onkeyup="success()" value="${option5}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option6" name="option6" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option7">Opzione 7</label>
-                                                    <input type="text" class="form-control" id="option7" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option6?? && option6!="">
+                                                        <input type="text" class="form-control" id="option7" name="option7" placehorder="Opzione" onkeyup="success()" value="${option6}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option7" name="option7" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option8">Opzione 8</label>
-                                                    <input type="text" class="form-control" id="option8" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option7?? && option7!="">
+                                                        <input type="text" class="form-control" id="option8" name="option8" placehorder="Opzione" onkeyup="success()" value="${option7}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option8" name="option8" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                             </div>
                                             <div class="row mt-1 mb-1">
                                                 <div class="col-lg-3">
                                                     <label for="option9">Opzione 9</label>
-                                                    <input type="text" class="form-control" id="option9" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option8?? && option8!="">
+                                                        <input type="text" class="form-control" id="option9" name="option9" placehorder="Opzione" onkeyup="success()" value="${option8}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option9" name="option9" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option10">Opzione 10</label>
-                                                    <input type="text" class="form-control" id="option10" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option9?? && option9!="">
+                                                        <input type="text" class="form-control" id="option10" name="option10" placehorder="Opzione" onkeyup="success()" value="${option9}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option10" name="option10" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option11">Opzione 11</label>
-                                                    <input type="text" class="form-control" id="option11" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option10?? && option10!="">
+                                                        <input type="text" class="form-control" id="option11" name="option11" placehorder="Opzione" onkeyup="success()" value="${option10}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option11" name="option11" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option12">Opzione 12</label>
-                                                    <input type="text" class="form-control" id="option12" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option11?? && option11!="">
+                                                        <input type="text" class="form-control" id="option12" name="option12" placehorder="Opzione" onkeyup="success()" value="${option11}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option12" name="option12" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                             </div>
                                         </div>
@@ -254,113 +356,161 @@
                                             <div class="row mt-1 mb-1">
                                                 <div class="col-lg-3">
                                                     <label for="option1m">Opzione 1</label>
-                                                    <input type="text" class="form-control" id="option1m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option0m?? && option0m!="">
+                                                        <input type="text" class="form-control" id="option1m" name="option1m" placehorder="Opzione" onkeyup="success()" value="${option0m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option1m" name="option1m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option2m">Opzione 2</label>
-                                                    <input type="text" class="form-control" id="option2m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option1m?? && option1m!="">
+                                                        <input type="text" class="form-control" id="option2m" name="option2m" placehorder="Opzione" onkeyup="success()" value="${option1m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option2m" name="option2m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option3m">Opzione 3</label>
-                                                    <input type="text" class="form-control" id="option3m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option2m?? && option2m!="">
+                                                        <input type="text" class="form-control" id="option3m" name="option3m" placehorder="Opzione" onkeyup="success()" value="${option2m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option3m" name="option3m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option4m">Opzione 4</label>
-                                                    <input type="text" class="form-control" id="option4m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option3m?? && option3m!="">
+                                                        <input type="text" class="form-control" id="option4m" name="option4m" placehorder="Opzione" onkeyup="success()" value="${option3m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option4m" name="option4m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>                                                
                                                 </div>
                                             </div>
                                             <div class="row mt-1 mb-1">
                                                 <div class="col-lg-3">
                                                     <label for="option5m">Opzione 5</label>
-                                                    <input type="text" class="form-control" id="option5m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option4m?? && option4m!="">
+                                                        <input type="text" class="form-control" id="option5m" name="option5m" placehorder="Opzione" onkeyup="success()" value="${option4m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option5m" name="option5m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option6m">Opzione 6</label>
-                                                    <input type="text" class="form-control" id="option6m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option5m?? && option5m!="">
+                                                        <input type="text" class="form-control" id="option6m" name="option6m" placehorder="Opzione" onkeyup="success()" value="${option5m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option6m" name="option6m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option7m">Opzione 7</label>
-                                                    <input type="text" class="form-control" id="option7m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option6m?? && option6m!="">
+                                                        <input type="text" class="form-control" id="option7m" name="option7m" placehorder="Opzione" onkeyup="success()" value="${option6m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option7m" name="option7m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option8m">Opzione 8</label>
-                                                    <input type="text" class="form-control" id="option8m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option7m?? && option7m!="">
+                                                        <input type="text" class="form-control" id="option8m" name="option8m" placehorder="Opzione" onkeyup="success()" value="${option7m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option8m" name="option8m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                             </div>
                                             <div class="row mt-1 mb-1">
                                                 <div class="col-lg-3">
                                                     <label for="option9m">Opzione 9</label>
-                                                    <input type="text" class="form-control" id="option9m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option8m?? && option8m!="">
+                                                        <input type="text" class="form-control" id="option9m" name="option9m" placehorder="Opzione" onkeyup="success()" value="${option8m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option9m" name="option9m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option10m">Opzione 10</label>
-                                                    <input type="text" class="form-control" id="option10m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option9m?? && option9m!="">
+                                                        <input type="text" class="form-control" id="option10m" name="option10m" placehorder="Opzione" onkeyup="success()" value="${option9m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option10m" name="option10m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option11m">Opzione 11</label>
-                                                    <input type="text" class="form-control" id="option11m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option10m?? && option10m!="">
+                                                        <input type="text" class="form-control" id="option11m" name="option11m" placehorder="Opzione" onkeyup="success()" value="${option10m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option11m" name="option11m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3">
                                                     <label for="option12m">Opzione 12</label>
-                                                    <input type="text" class="form-control" id="option12m" placehorder="Opzione" onkeyup="success()">
+                                                    <#if option11m?? && option11m!="">
+                                                        <input type="text" class="form-control" id="option12m" name="option12m" placehorder="Opzione" onkeyup="success()" value="${option11m}">
+                                                    <#else>
+                                                        <input type="text" class="form-control" id="option12m" name="option12m" placehorder="Opzione" onkeyup="success()">
+                                                    </#if>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div> 
-                            <div class="row mt-3 custom-margin-bottom">
-                                <#if noPrev??>
-                                    <div class="col-lg-4 mb-2 custom-left">
+                        <div class="row mt-3 custom-margin-bottom">
+                            <#if noPrev??>
+                                <div class="col-lg-4 mb-2 custom-left">
                                         <button name="prevQuestion" value="prevQuestionButton" class="btn btn-lg btn-warning custom-block" type="submit" disabled>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
-                                            </svg>
-                                            Domanda precedente
-                                        </button>
-                                    </div>
-                                <#else>
-                                    <div class="col-lg-4 mb-2 custom-left">
-                                        <button name="prevQuestion" value="prevQuestionButton" class="btn btn-lg btn-warning custom-block" type="submit" >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
-                                            </svg>
-                                            Domanda precedente
-                                        </button>
-                                    </div>
-                                </#if>
-                                <#if noConf??>
-                                    <div class="col-lg-4 mb-2 custom-center">
-                                        <button type="submit" name="confirm" value="confirmButton" class="btn btn-lg btn-warning custom-block" disabled>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
-                                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
-                                                <path fill-rule="evenodd" d="M8 11a.5.5 0 0 0 .5-.5V6.707l1.146 1.147a.5.5 0 0 0 .708-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L7.5 6.707V10.5a.5.5 0 0 0 .5.5z"/>                                    
-                                            </svg>
-                                            Vai alla conferma
-                                        </button>
-                                    </div>
-                                <#else>
-                                    <div class="col-lg-4 mb-2 custom-center">
-                                        <button type="submit" name="confirm" value="confirmButton" class="btn btn-lg btn-warning custom-block">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
-                                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
-                                                <path fill-rule="evenodd" d="M8 11a.5.5 0 0 0 .5-.5V6.707l1.146 1.147a.5.5 0 0 0 .708-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L7.5 6.707V10.5a.5.5 0 0 0 .5.5z"/>                                    
-                                            </svg>
-                                            Vai alla conferma
-                                        </button>
-                                    </div>
-                                </#if>
-                                <div class="col-lg-4 mb-2 custom-right">
-                                    <button type="submit" name="nextQuestion" value="nextQuestionButton" class="btn btn-lg btn-warning custom-block">
-                                        Domanda successiva
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>                                    
+                                            <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
                                         </svg>
+                                        Domanda precedente
                                     </button>
                                 </div>
+                            <#else>
+                                <div class="col-lg-4 mb-2 custom-left">
+                                        <button name="prevQuestion" value="prevQuestionButton" class="btn btn-lg btn-warning custom-block" type="submit" >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
+                                        </svg>
+                                        Domanda precedente
+                                    </button>
+                                </div>
+                            </#if>
+                            <#if noConf??>
+                                <div class="col-lg-4 mb-2 custom-center">
+                                        <button type="submit" name="confirm" value="confirmButton"  formaction="/PollWeb/makerPoll/confirmSection" class="btn btn-lg btn-warning custom-block" disabled>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                                            <path fill-rule="evenodd" d="M8 11a.5.5 0 0 0 .5-.5V6.707l1.146 1.147a.5.5 0 0 0 .708-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L7.5 6.707V10.5a.5.5 0 0 0 .5.5z"/>                                    
+                                        </svg>
+                                        Vai alla conferma
+                                    </button>
+                                </div>
+                            <#else>
+                                <div class="col-lg-4 mb-2 custom-center">
+                                        <button type="submit" name="confirm" value="confirmButton" formaction="/PollWeb/makerPoll/confirmSection" class="btn btn-lg btn-warning custom-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                                            <path fill-rule="evenodd" d="M8 11a.5.5 0 0 0 .5-.5V6.707l1.146 1.147a.5.5 0 0 0 .708-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L7.5 6.707V10.5a.5.5 0 0 0 .5.5z"/>                                    
+                                        </svg>
+                                        Vai alla conferma
+                                    </button>
+                                </div>
+                            </#if>
+                            <div class="col-lg-4 mb-2 custom-right">
+                                    <button type="submit" name="nextQuestion" value="nextQuestionButton" class="btn btn-lg btn-warning custom-block">
+                                    Domanda successiva
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>                                    
+                                    </svg>
+                                </button>
                             </div>
+                        </div>
                         </form>
                     </div>
                 </div>

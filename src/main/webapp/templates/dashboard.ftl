@@ -142,15 +142,9 @@
                                                         </#if>
                                                         <td>da fare</td>
                                                     </tr>
-<<<<<<< HEAD
-                                                <#assign c = c + 1>
-                                                </#list>
-                                            </tbody>
-=======
                                                 </tbody>
                                                 <#assign c = c + 1> <!--non è l'ID-->
                                             </#list>
->>>>>>> 5d006de33a8c926c9ec2dea9898c12a06fd47140
                                         </table>
                                     </div>
                                 </div>

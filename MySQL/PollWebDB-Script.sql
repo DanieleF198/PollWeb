@@ -69,13 +69,13 @@ CREATE TABLE Utente (
   CREATE TABLE Domanda(
 	idDomanda int NOT NULL AUTO_INCREMENT,
     idSondaggio int NOT NULL,
-    titolo varchar(45) NOT NULL,
-    obbligatoria boolean NOT NULL,
-    descrizione varchar(245) NOT NULL,
+    titolo varchar(45),
+    obbligatoria boolean,
+    descrizione varchar(245),
     posizione int NOT NULL,
-    opzioni JSON NOT NULL,
+    opzioni JSON,
     rispostaCorretta JSON,
-    tipo varchar(45) NOT NULL,
+    tipo varchar(45),
     PRIMARY KEY (idDomanda),
     FOREIGN KEY (idSondaggio) REFERENCES Sondaggio (idSondaggio) on update cascade on delete cascade
   );

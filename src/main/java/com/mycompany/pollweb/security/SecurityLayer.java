@@ -99,9 +99,11 @@ public class SecurityLayer {
         s.setAttribute("ip", request.getRemoteHost());
         s.setAttribute("inizio-sessione", Calendar.getInstance());
         s.setAttribute("remember", remember);
+        //i seguenti attributi servono per la gestione della creazione del sondaggio
         s.setAttribute("sondaggio-in-creazione", 0);
         s.setAttribute("continue", "no");
         s.setAttribute("sondaggio-in-conferma", "no");
+        s.setAttribute("domanda-in-creazione", 0);
         return s;
     }
 
