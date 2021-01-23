@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +42,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     private PreparedStatement searchSondaggiTitolo;
     private PreparedStatement searchSondaggiDataCreazione;
     private PreparedStatement searchSondaggiDataChiusura;
+    private PreparedStatement searchSondaggiNoData;
     
     SondaggioDAO_MySQL(DataLayer d) {
         super(d);
@@ -61,6 +63,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             searchSondaggiTitolo = connection.prepareStatement("SELECT * FROM Sondaggio WHERE titolo LIKE ?");
             searchSondaggiDataCreazione = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataCreazione = ?");
             searchSondaggiDataChiusura = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataChiusura = ?");
+            searchSondaggiNoData = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataChiusura IS NULL");
             
             
             
@@ -79,6 +82,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             searchSondaggiTitolo.close();
             searchSondaggiDataCreazione.close();
             searchSondaggiDataChiusura.close();
+            searchSondaggiNoData.close();
             
             sSondaggi.close();
             
@@ -324,17 +328,14 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     @Override
     public ArrayList<Sondaggio> searchSondaggi(ArrayList<Sondaggio> sondaggi, String ricerca) throws DataException{
         
-        System.out.println("RICERCA - " + ricerca);
-        
         if(ricerca == null || ricerca.isEmpty()){
             return sondaggi;
         }
-
+        
         ArrayList<Sondaggio> sondaggiSearch = new ArrayList();
-        Iterator itSondaggi = sondaggi.iterator();
+        
         boolean data = false;
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); //controllo se sto ricercando una data nel formato corretto
         sdf.setLenient(false);
         try {
             sdf.parse(ricerca);
@@ -343,19 +344,52 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             data = false;
         }
         try {
-            System.out.println("DATA: " + data);
             if(!data){
-                System.out.println("Siamo nella zona Titolo");
+                if("indeterminata".equals(ricerca) || "indeterminato".equals(ricerca)){
+                    try (ResultSet rsNoData = searchSondaggiNoData.executeQuery()) {
+                        while (rsNoData.next()) {
+                            Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsNoData.getInt("idSondaggio"))); // SONDAGGIO: il sondaggio del result
+                            System.out.println("NO DATA - Controllo sondaggio: " + sondaggio.getTitolo());
+                            for (int i = 0; i < sondaggi.size(); i++){
+                                Sondaggio sondaggioList = (Sondaggio) sondaggi.get(i); //SONDAGGIOLIST: il sondaggio corrente in "sondaggi" scrollando la lista
+                                if(sondaggio.getKey() == sondaggioList.getKey()){
+                                    boolean add = true;
+                                    for (int j = 0; j < sondaggiSearch.size(); j++){
+                                        Sondaggio sondaggioCheck = (Sondaggio) sondaggiSearch.get(j);
+                                        if(sondaggioCheck.getKey() == sondaggioList.getKey()){
+                                            add = false;
+                                        }
+                                    }
+                                    if(add){
+                                        System.out.println("NO DATA - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
+                                        sondaggiSearch.add(sondaggioList);
+                                    }
+                                    else{add = true;}
+                                } 
+                            }
+                        }
+                    }
+                }
                 searchSondaggiTitolo.setString(1, ricerca);
                 try (ResultSet rsTitolo = searchSondaggiTitolo.executeQuery()) {
                     while (rsTitolo.next()) {
                         Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsTitolo.getInt("idSondaggio"))); //il sondaggio del result
                         System.out.println("TITOLO - Controllo sondaggio numero: " + sondaggio.getTitolo());
-                        while (itSondaggi.hasNext()){
-                            Sondaggio sondaggioList = (Sondaggio) itSondaggi.next(); //il sondaggio corrente in "sondaggi"
+                        for (int i = 0; i < sondaggi.size(); i++){
+                            Sondaggio sondaggioList = (Sondaggio) sondaggi.get(i); //il sondaggio corrente in "sondaggi"
                             if(sondaggio.getKey() == sondaggioList.getKey()){
-                                System.out.println("TITOLO - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
-                                sondaggiSearch.add(sondaggioList);
+                                boolean add = true;
+                                for (int j = 0; j < sondaggiSearch.size(); j++){
+                                    Sondaggio sondaggioCheck = (Sondaggio) sondaggiSearch.get(j);
+                                    if(sondaggioCheck.getKey() == sondaggioList.getKey()){
+                                        add = false;
+                                    }
+                                }
+                                if(add){
+                                    System.out.println("TITOLO - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
+                                    sondaggiSearch.add(sondaggioList);
+                                }
+                                else{add = true;}
                             } 
                         }
                     }
@@ -371,12 +405,21 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                     while (rsCreazione.next()) {
                         Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsCreazione.getInt("idSondaggio"))); //il sondaggio del result
                         System.out.println("DATA CREAZIONE - : " + sondaggio.getCreazione());
-                        while (itSondaggi.hasNext()){
-                            Sondaggio sondaggioList = (Sondaggio) itSondaggi.next(); //il sondaggio corrente in "sondaggi"
+                        for (int i = 0; i < sondaggi.size(); i++){
+                            Sondaggio sondaggioList = (Sondaggio) sondaggi.get(i); //il sondaggio corrente in "sondaggi"
                             System.out.println("DATA CREAZIONE - : " + sondaggioList.getCreazione());
                             if(sondaggio.getKey() == sondaggioList.getKey()){
-                                System.out.println("DATA CREAZIONE - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
-                                sondaggiSearch.add(sondaggioList);
+                                boolean add = true;
+                                for (int j = 0; j < sondaggiSearch.size(); j++){
+                                    Sondaggio sondaggioCheck = (Sondaggio) sondaggiSearch.get(j);
+                                    if(sondaggioCheck.getKey() == sondaggioList.getKey()){
+                                        add = false;
+                                    }
+                                }
+                                if(add){
+                                    System.out.println("DATA CREAZIONE - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
+                                    sondaggiSearch.add(sondaggioList);
+                                }
                             } 
                         }
                     }
@@ -388,12 +431,21 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                     while (rsChiusura.next()) {
                         Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsChiusura.getInt("idSondaggio"))); //il sondaggio del result
                         System.out.println("DATA CHIUSURA - : " + sondaggio.getScadenza());
-                        while (itSondaggi.hasNext()){
-                            Sondaggio sondaggioList = (Sondaggio) itSondaggi.next(); //il sondaggio corrente in "sondaggi"
+                        for (int i = 0; i < sondaggi.size(); i++){
+                            Sondaggio sondaggioList = (Sondaggio) sondaggi.get(i); //il sondaggio corrente in "sondaggi"
                             System.out.println("DATA CHIUSURA - : " + sondaggioList.getScadenza());
                             if(sondaggio.getKey() == sondaggioList.getKey()){
-                                System.out.println("DATA CHIUSURA - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
-                                sondaggiSearch.add(sondaggioList);
+                                boolean add = true;
+                                for (int j = 0; j < sondaggi.size(); j++){
+                                    Sondaggio sondaggioCheck = (Sondaggio) sondaggiSearch.get(j);
+                                    if(sondaggioCheck.getKey() == sondaggioList.getKey()){
+                                        add = false;
+                                    }
+                                }
+                                if(add){
+                                    System.out.println("DATA CREAZIONE - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
+                                    sondaggiSearch.add(sondaggioList);
+                                }
                             } 
                         }
                     }
