@@ -65,6 +65,13 @@
                                     </div>
                                 </div>
                             </#if>
+                            <div class="row mb-2">
+                                <div class="col-lg-12">
+                                    <#if numeroDomanda??>
+                                        <p class="h5 font-weight-normal">domanda #${numeroDomanda}</h1>
+                                    </#if>
+                                </div>
+                            </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="questionTitle">Titolo domanda</label>
@@ -516,144 +523,236 @@
                 </div>
             </main>
             <@macros.footer />
-            <script> //aggiustare codice javascipt per casi errore (disabled rosso + alert)
+            <!--NOTA: QuestionMaker funziona tranquillamente anche con javascript disabilitato, questo script è stato messo solo per una migliore esperienza d'uso-->
+            <script>
                 function disable(){
-                    document.getElementById('option2').disabled = true; 
-                    document.getElementById('option3').disabled = true; 
-                    document.getElementById('option4').disabled = true; 
-                    document.getElementById('option5').disabled = true; 
-                    document.getElementById('option6').disabled = true; 
-                    document.getElementById('option7').disabled = true; 
-                    document.getElementById('option8').disabled = true; 
-                    document.getElementById('option9').disabled = true; 
-                    document.getElementById('option10').disabled = true; 
-                    document.getElementById('option11').disabled = true; 
-                    document.getElementById('option12').disabled = true; 
-                    document.getElementById('option2m').disabled = true; 
-                    document.getElementById('option3m').disabled = true; 
-                    document.getElementById('option4m').disabled = true; 
-                    document.getElementById('option5m').disabled = true; 
-                    document.getElementById('option6m').disabled = true; 
-                    document.getElementById('option7m').disabled = true; 
-                    document.getElementById('option8m').disabled = true; 
-                    document.getElementById('option9m').disabled = true; 
-                    document.getElementById('option10m').disabled = true; 
-                    document.getElementById('option11m').disabled = true; 
-                    document.getElementById('option12m').disabled = true; 
+                    <#if option0?? && option0!="">
+                        document.getElementById('option2').disabled = false;
+                    <#else>
+                        document.getElementById('option2').disabled = true; 
+                    </#if>
+                    <#if option1?? && option1!="">
+                        document.getElementById('option3').disabled = false; 
+                    <#else>
+                        document.getElementById('option3').disabled = true; 
+                    </#if>
+                    <#if option2?? && option2!="">
+                        document.getElementById('option4').disabled = false; 
+                    <#else>
+                        document.getElementById('option4').disabled = true; 
+                    </#if>
+                    <#if option3?? && option3!="">
+                        document.getElementById('option5').disabled = false;
+                    <#else>
+                        document.getElementById('option5').disabled = true; 
+                    </#if>
+                    <#if option4?? && option4!="">
+                        document.getElementById('option6').disabled = false; 
+                    <#else>
+                        document.getElementById('option6').disabled = true; 
+                    </#if>
+                    <#if option5?? && option5!="">
+                        document.getElementById('option7').disabled = false; 
+                    <#else>
+                        document.getElementById('option7').disabled = true; 
+                    </#if>
+                    <#if option6?? && option6!="">
+                        document.getElementById('option8').disabled = false;
+                    <#else>
+                        document.getElementById('option8').disabled = true; 
+                    </#if>
+                    <#if option7?? && option7!="">
+                        document.getElementById('option9').disabled = false; 
+                    <#else>
+                        document.getElementById('option9').disabled = true; 
+                    </#if>
+                    <#if option8?? && option8!="">
+                        document.getElementById('option10').disabled = false; 
+                    <#else>
+                        document.getElementById('option10').disabled = true; 
+                    </#if>
+                    <#if option9?? && option9!="">
+                        document.getElementById('option11').disabled = false; 
+                    <#else>
+                        document.getElementById('option11').disabled = true; 
+                    </#if>
+                    <#if option10?? && option10!="">
+                        document.getElementById('option12').disabled = false; 
+                    <#else>
+                        document.getElementById('option12').disabled = true; 
+                    </#if>
+                        
+                    <#if option0m?? && option0m!="">
+                        document.getElementById('option2m').disabled = false;
+                    <#else>
+                        document.getElementById('option2m').disabled = true; 
+                    </#if>
+                    <#if option1m?? && option1m!="">
+                        document.getElementById('option3m').disabled = false; 
+                    <#else>
+                        document.getElementById('option3m').disabled = true; 
+                    </#if>
+                    <#if option2m?? && option2m!="">
+                        document.getElementById('option4m').disabled = false; 
+                    <#else>
+                        document.getElementById('option4m').disabled = true; 
+                    </#if>
+                    <#if option3m?? && option3m!="">
+                        document.getElementById('option5m').disabled = false;
+                    <#else>
+                        document.getElementById('option5m').disabled = true; 
+                    </#if>
+                    <#if option4m?? && option4m!="">
+                        document.getElementById('option6m').disabled = false; 
+                    <#else>
+                        document.getElementById('option6m').disabled = true; 
+                    </#if>
+                    <#if option5m?? && option5m!="">
+                        document.getElementById('option7m').disabled = false; 
+                    <#else>
+                        document.getElementById('option7m').disabled = true; 
+                    </#if>
+                    <#if option6m?? && option6m!="">
+                        document.getElementById('option8m').disabled = false;
+                    <#else>
+                        document.getElementById('option8m').disabled = true; 
+                    </#if>
+                    <#if option7m?? && option7m!="">
+                        document.getElementById('option9m').disabled = false; 
+                    <#else>
+                        document.getElementById('option9m').disabled = true; 
+                    </#if>
+                    <#if option8m?? && option8m!="">
+                        document.getElementById('option10m').disabled = false; 
+                    <#else>
+                        document.getElementById('option10m').disabled = true; 
+                    </#if>
+                    <#if option9m?? && option9m!="">
+                        document.getElementById('option11m').disabled = false; 
+                    <#else>
+                        document.getElementById('option11m').disabled = true; 
+                    </#if>
+                    <#if option10m?? && option10m!="">
+                        document.getElementById('option12m').disabled = false; 
+                    <#else>
+                        document.getElementById('option12m').disabled = true; 
+                    </#if>
                 }
                     
+                    
                 function success() {
-                        if(document.getElementById("option1").value==="") { 
-                           document.getElementById('option2').disabled = true; 
-                        } else { 
-                           document.getElementById('option2').disabled = false;
-                        }
-                        if(document.getElementById("option2").value==="") { 
-                           document.getElementById('option3').disabled = true; 
-                        } else { 
-                           document.getElementById('option3').disabled = false;
-                        }
-                        if(document.getElementById("option3").value==="") { 
-                           document.getElementById('option4').disabled = true; 
-                        } else { 
-                           document.getElementById('option4').disabled = false;
-                        }
-                        if(document.getElementById("option4").value==="") { 
-                           document.getElementById('option5').disabled = true; 
-                        } else { 
-                           document.getElementById('option5').disabled = false;
-                        }
-                        if(document.getElementById("option5").value==="") { 
-                           document.getElementById('option6').disabled = true; 
-                        } else { 
-                           document.getElementById('option6').disabled = false;
-                        }
-                        if(document.getElementById("option6").value==="") { 
-                           document.getElementById('option7').disabled = true; 
-                        } else { 
-                           document.getElementById('option7').disabled = false;
-                        }
-                        if(document.getElementById("option7").value==="") { 
-                           document.getElementById('option8').disabled = true; 
-                        } else { 
-                           document.getElementById('option8').disabled = false;
-                        }
-                        if(document.getElementById("option8").value==="") { 
-                           document.getElementById('option9').disabled = true; 
-                        } else { 
-                           document.getElementById('option9').disabled = false;
-                        }
-                        if(document.getElementById("option9").value==="") { 
-                           document.getElementById('option10').disabled = true; 
-                        } else { 
-                           document.getElementById('option10').disabled = false;
-                        }
-                        if(document.getElementById("option10").value==="") { 
-                           document.getElementById('option11').disabled = true; 
-                        } else { 
-                           document.getElementById('option11').disabled = false;
-                        }
-                        if(document.getElementById("option11").value==="") { 
-                           document.getElementById('option12').disabled = true; 
-                        } else { 
-                           document.getElementById('option12').disabled = false;
-                        }
-                        if(document.getElementById("option1m").value==="") { 
-                           document.getElementById('option2m').disabled = true; 
-                        } else { 
-                           document.getElementById('option2m').disabled = false;
-                        }
-                        if(document.getElementById("option2m").value==="") { 
-                           document.getElementById('option3m').disabled = true; 
-                        } else { 
-                           document.getElementById('option3m').disabled = false;
-                        }
-                        if(document.getElementById("option3m").value==="") { 
-                           document.getElementById('option4m').disabled = true; 
-                        } else { 
-                           document.getElementById('option4m').disabled = false;
-                        }
-                        if(document.getElementById("option4m").value==="") { 
-                           document.getElementById('option5m').disabled = true; 
-                        } else { 
-                           document.getElementById('option5m').disabled = false;
-                        }
-                        if(document.getElementById("option5m").value==="") { 
-                           document.getElementById('option6m').disabled = true; 
-                        } else { 
-                           document.getElementById('option6m').disabled = false;
-                        }
-                        if(document.getElementById("option6m").value==="") { 
-                           document.getElementById('option7m').disabled = true; 
-                        } else { 
-                           document.getElementById('option7m').disabled = false;
-                        }
-                        if(document.getElementById("option7m").value==="") { 
-                           document.getElementById('option8m').disabled = true; 
-                        } else { 
-                           document.getElementById('option8m').disabled = false;
-                        }
-                        if(document.getElementById("option8m").value==="") { 
-                           document.getElementById('option9m').disabled = true; 
-                        } else { 
-                           document.getElementById('option9m').disabled = false;
-                        }
-                        if(document.getElementById("option9m").value==="") { 
-                           document.getElementById('option10m').disabled = true; 
-                        } else { 
-                           document.getElementById('option10m').disabled = false;
-                        }
-                        if(document.getElementById("option10m").value==="") { 
-                           document.getElementById('option11m').disabled = true; 
-                        } else { 
-                           document.getElementById('option11m').disabled = false;
-                        }
-                        if(document.getElementById("option11m").value==="") { 
-                           document.getElementById('option12m').disabled = true; 
-                        } else { 
-                           document.getElementById('option12m').disabled = false;
-                        }
+
+                    if(document.getElementById("option1").value==="") {
+                        document.getElementById('option2').disabled = true;
+                    } else {
+                        document.getElementById('option2').disabled = false;
                     }
+                    if(document.getElementById("option2").value==="") { 
+                       document.getElementById('option3').disabled = true; 
+                    } else { 
+                       document.getElementById('option3').disabled = false;
+                    }
+                    if(document.getElementById("option3").value==="") { 
+                       document.getElementById('option4').disabled = true; 
+                    } else { 
+                       document.getElementById('option4').disabled = false;
+                    }
+                    if(document.getElementById("option4").value==="") { 
+                       document.getElementById('option5').disabled = true; 
+                    } else { 
+                       document.getElementById('option5').disabled = false;
+                    }
+                    if(document.getElementById("option5").value==="") { 
+                       document.getElementById('option6').disabled = true; 
+                    } else { 
+                       document.getElementById('option6').disabled = false;
+                    }
+                    if(document.getElementById("option6").value==="") { 
+                       document.getElementById('option7').disabled = true; 
+                    } else { 
+                       document.getElementById('option7').disabled = false;
+                    }
+                    if(document.getElementById("option7").value==="") { 
+                       document.getElementById('option8').disabled = true; 
+                    } else { 
+                       document.getElementById('option8').disabled = false;
+                    }
+                    if(document.getElementById("option8").value==="") { 
+                       document.getElementById('option9').disabled = true; 
+                    } else { 
+                       document.getElementById('option9').disabled = false;
+                    }
+                    if(document.getElementById("option9").value==="") { 
+                       document.getElementById('option10').disabled = true; 
+                    } else { 
+                       document.getElementById('option10').disabled = false;
+                    }
+                    if(document.getElementById("option10").value==="") { 
+                       document.getElementById('option11').disabled = true; 
+                    } else { 
+                       document.getElementById('option11').disabled = false;
+                    }
+                    if(document.getElementById("option11").value==="") { 
+                       document.getElementById('option12').disabled = true; 
+                    } else { 
+                       document.getElementById('option12').disabled = false;
+                    }
+                    if(document.getElementById("option1m").value==="") { 
+                       document.getElementById('option2m').disabled = true; 
+                    } else { 
+                       document.getElementById('option2m').disabled = false;
+                    }
+                    if(document.getElementById("option2m").value==="") { 
+                       document.getElementById('option3m').disabled = true; 
+                    } else { 
+                       document.getElementById('option3m').disabled = false;
+                    }
+                    if(document.getElementById("option3m").value==="") { 
+                       document.getElementById('option4m').disabled = true; 
+                    } else { 
+                       document.getElementById('option4m').disabled = false;
+                    }
+                    if(document.getElementById("option4m").value==="") { 
+                       document.getElementById('option5m').disabled = true; 
+                    } else { 
+                       document.getElementById('option5m').disabled = false;
+                    }
+                    if(document.getElementById("option5m").value==="") { 
+                       document.getElementById('option6m').disabled = true; 
+                    } else { 
+                       document.getElementById('option6m').disabled = false;
+                    }
+                    if(document.getElementById("option6m").value==="") { 
+                       document.getElementById('option7m').disabled = true; 
+                    } else { 
+                       document.getElementById('option7m').disabled = false;
+                    }
+                    if(document.getElementById("option7m").value==="") { 
+                       document.getElementById('option8m').disabled = true; 
+                    } else { 
+                       document.getElementById('option8m').disabled = false;
+                    }
+                    if(document.getElementById("option8m").value==="") { 
+                       document.getElementById('option9m').disabled = true; 
+                    } else { 
+                       document.getElementById('option9m').disabled = false;
+                    }
+                    if(document.getElementById("option9m").value==="") { 
+                       document.getElementById('option10m').disabled = true; 
+                    } else { 
+                       document.getElementById('option10m').disabled = false;
+                    }
+                    if(document.getElementById("option10m").value==="") { 
+                       document.getElementById('option11m').disabled = true; 
+                    } else { 
+                       document.getElementById('option11m').disabled = false;
+                    }
+                    if(document.getElementById("option11m").value==="") { 
+                       document.getElementById('option12m').disabled = true; 
+                    } else { 
+                       document.getElementById('option12m').disabled = false;
+                    }
+                }
             </script>
             <@macros.script />
         </div>
