@@ -19,6 +19,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import com.mycompany.pollweb.data.OptimisticLockException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,6 +38,9 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     private PreparedStatement iSondaggio;
     private PreparedStatement uSondaggio;
     private PreparedStatement dSondaggio;
+    private PreparedStatement searchSondaggiTitolo;
+    private PreparedStatement searchSondaggiDataCreazione;
+    private PreparedStatement searchSondaggiDataChiusura;
     
     SondaggioDAO_MySQL(DataLayer d) {
         super(d);
@@ -49,6 +58,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,quiz,visibilita,dataCreazione,dataChiusura,privato,modificabile) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,quiz=?,visibilita=?,dataCreazione=?,dataChiusura=?, privato=?,modificabile=? WHERE idSondaggio=?");
             dSondaggio = connection.prepareStatement("DELETE FROM Sondaggio WHERE idSondaggio=?");
+            searchSondaggiTitolo = connection.prepareStatement("SELECT * FROM Sondaggio WHERE titolo LIKE ?");
+            searchSondaggiDataCreazione = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataCreazione = ?");
+            searchSondaggiDataChiusura = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataChiusura = ?");
+            
             
             
         } catch (SQLException ex) {
@@ -63,6 +76,9 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             
             sSondaggioByID.close();
             sSondaggioByIDUtente.close();
+            searchSondaggiTitolo.close();
+            searchSondaggiDataCreazione.close();
+            searchSondaggiDataChiusura.close();
             
             sSondaggi.close();
             
@@ -85,6 +101,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     private SondaggioProxy createSondaggio(ResultSet rs) throws DataException {
         SondaggioProxy s = createSondaggio();
         try {
+            s.setKey(rs.getInt("idSondaggio"));
             s.setIdUtente(rs.getInt("idUtente"));
             s.setTitolo(rs.getString("titolo"));
             s.setTestoApertura(rs.getString("testoApertura"));
@@ -302,6 +319,95 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             throw new DataException("Unable to store sondaggio", ex);
         }
     }
+    
+    
+    @Override
+    public ArrayList<Sondaggio> searchSondaggi(ArrayList<Sondaggio> sondaggi, String ricerca) throws DataException{
+        
+        System.out.println("RICERCA - " + ricerca);
+        
+        if(ricerca == null || ricerca.isEmpty()){
+            return sondaggi;
+        }
+
+        ArrayList<Sondaggio> sondaggiSearch = new ArrayList();
+        Iterator itSondaggi = sondaggi.iterator();
+        boolean data = false;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false);
+        try {
+            sdf.parse(ricerca);
+            data = true;
+        } catch (ParseException e) {
+            data = false;
+        }
+        try {
+            System.out.println("DATA: " + data);
+            if(!data){
+                System.out.println("Siamo nella zona Titolo");
+                searchSondaggiTitolo.setString(1, ricerca);
+                try (ResultSet rsTitolo = searchSondaggiTitolo.executeQuery()) {
+                    while (rsTitolo.next()) {
+                        Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsTitolo.getInt("idSondaggio"))); //il sondaggio del result
+                        System.out.println("TITOLO - Controllo sondaggio numero: " + sondaggio.getTitolo());
+                        while (itSondaggi.hasNext()){
+                            Sondaggio sondaggioList = (Sondaggio) itSondaggi.next(); //il sondaggio corrente in "sondaggi"
+                            if(sondaggio.getKey() == sondaggioList.getKey()){
+                                System.out.println("TITOLO - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
+                                sondaggiSearch.add(sondaggioList);
+                            } 
+                        }
+                    }
+                }
+            }
+            else{
+                System.out.println("Siamo nella zona DataCreazione");
+                java.util.Date dataRicerca = new SimpleDateFormat("yyyy-MM-dd").parse(ricerca);  //creiamo una data per cercarla nel DB
+                java.sql.Date dataRicercaSQL = new java.sql.Date(dataRicerca.getTime());
+                
+                searchSondaggiDataCreazione.setDate(1, dataRicercaSQL);
+                try (ResultSet rsCreazione = searchSondaggiDataCreazione.executeQuery()) {
+                    while (rsCreazione.next()) {
+                        Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsCreazione.getInt("idSondaggio"))); //il sondaggio del result
+                        System.out.println("DATA CREAZIONE - : " + sondaggio.getCreazione());
+                        while (itSondaggi.hasNext()){
+                            Sondaggio sondaggioList = (Sondaggio) itSondaggi.next(); //il sondaggio corrente in "sondaggi"
+                            System.out.println("DATA CREAZIONE - : " + sondaggioList.getCreazione());
+                            if(sondaggio.getKey() == sondaggioList.getKey()){
+                                System.out.println("DATA CREAZIONE - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
+                                sondaggiSearch.add(sondaggioList);
+                            } 
+                        }
+                    }
+                }
+                System.out.println("Siamo nella zona DataChiusura");
+                
+                searchSondaggiDataChiusura.setDate(1, dataRicercaSQL);
+                try (ResultSet rsChiusura = searchSondaggiDataChiusura.executeQuery()) {
+                    while (rsChiusura.next()) {
+                        Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsChiusura.getInt("idSondaggio"))); //il sondaggio del result
+                        System.out.println("DATA CHIUSURA - : " + sondaggio.getScadenza());
+                        while (itSondaggi.hasNext()){
+                            Sondaggio sondaggioList = (Sondaggio) itSondaggi.next(); //il sondaggio corrente in "sondaggi"
+                            System.out.println("DATA CHIUSURA - : " + sondaggioList.getScadenza());
+                            if(sondaggio.getKey() == sondaggioList.getKey()){
+                                System.out.println("DATA CHIUSURA - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
+                                sondaggiSearch.add(sondaggioList);
+                            } 
+                        }
+                    }
+                }
+            }
+
+        }catch (SQLException ex) {
+                throw new DataException("Unable to search sondaggio", ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(SondaggioDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sondaggiSearch;
+    }
+
     
     @Override
     public void deleteSondaggio(int idSondaggio) throws DataException {

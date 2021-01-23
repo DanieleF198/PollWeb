@@ -8,6 +8,7 @@ package com.mycompany.pollweb.dao;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.proxy.SondaggioProxy;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,8 @@ public interface SondaggioDAO {
     public List<Sondaggio> getSondaggi() throws DataException;
     
     public void storeSondaggio(Sondaggio sondaggio) throws DataException;
+    
+    public ArrayList<Sondaggio> searchSondaggi(ArrayList<Sondaggio> sondaggi, String ricerca) throws DataException;
     
     public void deleteSondaggio(int idSondaggio) throws DataException;
     
