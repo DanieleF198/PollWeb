@@ -55,6 +55,8 @@ public class FirstSection extends BaseController {
                 }
                 else if (("POST".equals(request.getMethod())) && (request.getParameter("buttonContinue") != null)){
                     s.setAttribute("continue", "yes");
+                    s.setAttribute("sondaggio-in-conferma", "no");
+                    s.setAttribute("domanda-in-creazione", 0);
                     response.sendRedirect("firstSection"); //caso in cui arriva da firstSectionWarning e decide di continuare
                     return;
                 }
@@ -63,6 +65,9 @@ public class FirstSection extends BaseController {
                     s.setAttribute("continue", "no");            //in questo caso resetto il sessionamento per il nuovo sondaggio
                     s.setAttribute("sondaggio-in-conferma", "no");
                     s.setAttribute("domanda-in-creazione", 0);
+                    if(s.getAttribute("updateDomanda")!= null){
+                        s.removeAttribute("updateDomanda");
+                    }
                     response.sendRedirect("firstSection");
                     return;
                 }

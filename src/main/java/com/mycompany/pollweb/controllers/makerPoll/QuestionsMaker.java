@@ -22,7 +22,10 @@ import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,8 +76,6 @@ public class QuestionsMaker extends BaseController {
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
-                System.out.println(s.getAttribute("sondaggio-in-conferma"));
-                System.out.println("nyah" + request.getParameter("returnQuestions"));
                 if((int)s.getAttribute("sondaggio-in-creazione") != 0 && (s.getAttribute("fromFirst") != null) && (s.getAttribute("sondaggio-in-conferma").equals("no"))){ //è arrivato da firstSection cliccando su bottone
                     System.out.println("caso 1");
                     s.removeAttribute("fromFirst");
@@ -175,7 +176,7 @@ public class QuestionsMaker extends BaseController {
                     request.setAttribute("checked", "closeMultiple");
                     JSONArray opzioni = domanda.getOpzioni().getJSONArray("opzioni");
                     for(int i = 0; i < opzioni.length(); i++){
-                        request.setAttribute("option"+ i, opzioni.get(i));
+                        request.setAttribute("option"+ i + "m", opzioni.get(i));
                     }
                 }
                 request.setAttribute("noPrev", "yes");
@@ -187,6 +188,9 @@ public class QuestionsMaker extends BaseController {
                 request.setAttribute("noConf", "yes");
                 
             }
+            System.out.println("valore update:" + s.getAttribute("updateDomanda"));
+            System.out.println("domanda corrente:" + s.getAttribute("domanda-in-creazione"));
+            request.setAttribute("numeroDomanda", (int)s.getAttribute("domanda-in-creazione"));
             res.activate("MakerPoll/questionsMaker.ftl", request, response);
             return;
         } catch (TemplateManagerException ex) {
@@ -198,6 +202,10 @@ public class QuestionsMaker extends BaseController {
        try {
             TemplateResult res = new TemplateResult(getServletContext());
             HttpSession s = checkSession(request);
+            if((int)s.getAttribute("domanda-in-creazione")==0){
+                action_warning(request, response);
+                return;
+            }
             PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
             int position = (int)s.getAttribute("domanda-in-creazione") - 1;
             Domanda domanda = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position);
@@ -205,7 +213,7 @@ public class QuestionsMaker extends BaseController {
             //prima di occuparci di prenderci i dati di prevDomanda carichiamo eventuali dati di currentDomanda
             //ovviamente dobbiamo riconoscere il caso in cui current domanda è effettivamente esistente(cioè se è la prima volta che stiamo cliccando "prev" o meno)
             
-            if(s.getAttribute("updateDomanda")!=null){
+            if(s.getAttribute("updateDomanda")!=null && request.getAttribute("fromRemove") == null){
             
                 String title = "";
                 String description = "";
@@ -331,15 +339,18 @@ public class QuestionsMaker extends BaseController {
 
                 currentDomanda.setPosizione((int)s.getAttribute("domanda-in-creazione"));
                 if(s.getAttribute("updateDomanda")!=null){
-                    currentDomanda.setKey((int)s.getAttribute("updateDomanda"));
+                    Domanda domandaToUpdate = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("updateDomanda"));
+                    System.out.println("Ehy, la key è:" + domandaToUpdate.getKey());
+                    currentDomanda.setKey(domandaToUpdate.getKey());
                 }
                 dl.getDomandaDAO().storeDomanda(currentDomanda);
             }
             
             //ancora prima di prev domanda dobbiamo assicurarci che non sia il caso in cui a)sta cliccando per la prima volta "prevDomanda", b)ha scritto qualcosa nel prev
             //cioè una sorta di next nel caso base al contrario
+
             
-            if(s.getAttribute("updateDomanda")==null && (request.getParameter("questionTitle") != null || request.getParameter("questionDescription") != null || request.getParameter("questionDescription") != null)){
+            if(s.getAttribute("updateDomanda")==null && ((request.getParameter("questionTitle") != null && !request.getParameter("questionTitle").equals("")) || (request.getParameter("questionDescription") != null && !request.getParameter("questionDescription").equals("")) || (request.getParameter("questionObbligatory") != null && !request.getParameter("questionObbligatory").equals("")))){
                 //controllo su quale sia checkato non lo facciamo perché qualcosa sarà sempre checkato, e se il tipo non ha avuto la voglia di scriversi quantomeno il titolo o la descrizione o chacckare se è obbligatorio
                 //assumiamo che voglia tornare alla domanda precedente senza aver ancora iniziato a creare la corrente. Altrimenti glieli memorizziamo temporaneamente
                 String title = "";
@@ -466,11 +477,11 @@ public class QuestionsMaker extends BaseController {
 
                 newDomanda.setPosizione((int)s.getAttribute("domanda-in-creazione"));
                 //non ci poniamo il problema dell'update perché in questo caso siamo sicuri che la domanda ancora non esiste
+                System.out.println("CIAOOO");
                 dl.getDomandaDAO().storeDomanda(newDomanda); 
             }
             
             //prevDomanda
-            
             if(domanda.getPosizione() == 0){
                 request.setAttribute("noPrev", "yes");
             }
@@ -503,12 +514,14 @@ public class QuestionsMaker extends BaseController {
                 request.setAttribute("checked", "closeMultiple");
                 JSONArray opzioni = domanda.getOpzioni().getJSONArray("opzioni");
                 for(int i = 0; i < opzioni.length(); i++){
-                    request.setAttribute("option"+ i, opzioni.get(i));
+                    request.setAttribute("option"+ i + "m", opzioni.get(i));
                 }
             }
             s.setAttribute("domanda-in-creazione", domanda.getPosizione());
-            System.out.println("domanda id bello: " + domanda.getKey());
-            s.setAttribute("updateDomanda", domanda.getKey());
+            s.setAttribute("updateDomanda", domanda.getPosizione());
+            System.out.println("valore update:" + s.getAttribute("updateDomanda"));
+            System.out.println("domanda corrente:" + s.getAttribute("domanda-in-creazione"));
+            request.setAttribute("numeroDomanda", (int)s.getAttribute("domanda-in-creazione"));
             res.activate("MakerPoll/questionsMaker.ftl", request, response);
             return;
         } catch (TemplateManagerException ex) {
@@ -521,7 +534,6 @@ public class QuestionsMaker extends BaseController {
             PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
             TemplateResult res = new TemplateResult(getServletContext());
             HttpSession s = checkSession(request);
-            System.out.println("Domanda in creazione:" + s.getAttribute("domanda-in-creazione") );
             int position = (int)s.getAttribute("domanda-in-creazione") +1;
             Domanda domanda = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position);
             if(domanda!=null){ //caso in cui la prossima domanda già esiste (vuol dire che abbiamo cliccato "domanda precedente" e poi "domanda successiva"
@@ -653,13 +665,11 @@ public class QuestionsMaker extends BaseController {
                 Domanda domandaE = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("domanda-in-creazione"));
                 
                 oldDomanda.setPosizione((int)s.getAttribute("domanda-in-creazione"));
-                if(s.getAttribute("updateDOmanda")!=null){
-                    oldDomanda.setKey((int)s.getAttribute("updateDomanda"));
-                    if(dl.getDomandaDAO().checkDomanda((int)s.getAttribute("updateDomanda") + 1)){ //esiste ancora una next (abbiamo fatto n prev ed n - x next (con x < n)
-                        s.setAttribute("updateDomanda", oldDomanda.getKey() + 1);
-                    } else {
-                        s.removeAttribute("updateDomanda"); //non esiste ancora una next, cioè questa è l'ultima domanda creata (in teoria qui non dovrei mai finire, se ne occupa il caso "newDomanda", ma un controllo in più non fa mai male)
-                    }
+                if(s.getAttribute("updateDomanda")!=null){
+                    Domanda domandaToUpdate = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("updateDomanda"));
+                    oldDomanda.setKey(domandaToUpdate.getKey());
+                    //esiste ancora una next (abbiamo fatto n prev ed n - x next (con x < n)
+                    s.setAttribute("updateDomanda", domanda.getPosizione());
                 }
                 
                 if(domandaE!=null){
@@ -667,6 +677,7 @@ public class QuestionsMaker extends BaseController {
                 }
                         
                 dl.getDomandaDAO().storeDomanda(oldDomanda);
+                
                 
                 //nextDomanda
                 
@@ -836,9 +847,9 @@ public class QuestionsMaker extends BaseController {
                 Domanda domandaE = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("domanda-in-creazione"));
                 
                 newDomanda.setPosizione((int)s.getAttribute("domanda-in-creazione"));
-                System.out.println(s.getAttribute("updateDomanda"));
                 if(s.getAttribute("updateDomanda")!=null){
-                    newDomanda.setKey((int)s.getAttribute("updateDomanda"));
+                    Domanda domandaToUpdate = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("updateDomanda"));
+                    newDomanda.setKey(domandaToUpdate.getKey());
                     s.removeAttribute("updateDomanda");
                 }
                 if(domandaE!=null){
@@ -847,8 +858,12 @@ public class QuestionsMaker extends BaseController {
                 
                 dl.getDomandaDAO().storeDomanda(newDomanda);
                 s.setAttribute("domanda-in-creazione", (int)s.getAttribute("domanda-in-creazione") + 1);
+                
+                request.setAttribute("noError", "yes");
             }
-            System.out.println("domanda in creazione:" + s.getAttribute("domanda-in-creazione"));
+            System.out.println("valore update:" + s.getAttribute("updateDomanda"));
+            System.out.println("domanda corrente:" + s.getAttribute("domanda-in-creazione"));
+            request.setAttribute("numeroDomanda", (int)s.getAttribute("domanda-in-creazione"));
             res.activate("MakerPoll/questionsMaker.ftl", request, response);
             return;
         } catch (TemplateManagerException ex) {
@@ -859,10 +874,83 @@ public class QuestionsMaker extends BaseController {
     private void action_remove_case(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
        try {
             TemplateResult res = new TemplateResult(getServletContext());
-//            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
-//            HttpSession s = checkSession(request);
-//            Domanda domandaToRemove = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("domanda-in-creazione"));
-//            TODO
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+            HttpSession s = checkSession(request);
+            Domanda domandaToRemove = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("domanda-in-creazione"));
+            if(domandaToRemove!=null){
+                dl.getDomandaDAO().deleteDomanda(domandaToRemove.getKey());
+            }
+            else {
+                action_warning(request, response);
+            }
+            int position = (int)s.getAttribute("domanda-in-creazione");
+            position++;
+            Domanda domandaSuccessiva;
+            System.out.println("posizione vale: " + position);
+            //caso in cui stiamo rimuovendo l'ultima domanda esistente (cioè domanda in posizione 0 con nessuna domanda davanti)
+            if(position == 1){
+                domandaSuccessiva = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position); 
+                if(domandaSuccessiva== null){
+                    if(s.getAttribute("updateDomanda") !=null){
+                        s.removeAttribute("updateDomanda");
+                    }
+                    action_first_case(request, response);
+                    return;
+                }
+            }
+            for(int i = 0; i < 1; i--){
+                domandaSuccessiva = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position);
+                if(domandaSuccessiva != null){
+                    domandaSuccessiva.setPosizione(position - 1);
+                    dl.getDomandaDAO().storeDomanda(domandaSuccessiva);
+                    position++;
+                }
+                else{
+                    break;
+                }
+            }
+            
+            domandaSuccessiva = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("domanda-in-creazione"));
+            if(domandaSuccessiva != null){
+                if(domandaSuccessiva.getTitolo()!=null && !domandaSuccessiva.getTitolo().isEmpty()){
+                    request.setAttribute("titleQuestion", domandaSuccessiva.getTitolo());
+                }
+                if(domandaSuccessiva.getDescrizione()!=null && !domandaSuccessiva.getDescrizione().isEmpty()){
+                    request.setAttribute("description", domandaSuccessiva.getDescrizione());
+                }
+                if(domandaSuccessiva.isObbligatoria()){
+                    request.setAttribute("obbligatory", "yes");
+                } else {
+                    request.setAttribute("obbligatory", "no");
+                }
+                if(domandaSuccessiva.getTipo().equals("openShort")){
+                    request.setAttribute("checked", "openShort");
+                } else if(domandaSuccessiva.getTipo().equals("openLong")){
+                    request.setAttribute("checked", "openLong");
+                } else if(domandaSuccessiva.getTipo().equals("openNumber")){
+                    request.setAttribute("checked", "openNumber");
+                } else if(domandaSuccessiva.getTipo().equals("openDate")){
+                    request.setAttribute("checked", "openDate");
+                } else if(domandaSuccessiva.getTipo().equals("closeSingle")){
+                    request.setAttribute("checked", "closeSingle");
+                    JSONArray opzioni = domandaSuccessiva.getOpzioni().getJSONArray("opzioni");
+                    for(int i = 0; i < opzioni.length(); i++){
+                        request.setAttribute("option"+ i, opzioni.get(i));
+                    }
+                } else if(domandaSuccessiva.getTipo().equals("closeMultiple")){
+                    request.setAttribute("checked", "closeMultiple");
+                    JSONArray opzioni = domandaSuccessiva.getOpzioni().getJSONArray("opzioni");
+                    for(int i = 0; i < opzioni.length(); i++){
+                        request.setAttribute("option"+ i +"m", opzioni.get(i));
+                    }
+                }
+            } else {
+                request.setAttribute("fromRemove", "yes");
+                action_prev_case(request, response);
+                return;
+            }
+            
+            request.setAttribute("numeroDomanda", (int)s.getAttribute("domanda-in-creazione"));
             res.activate("MakerPoll/questionsMaker.ftl", request, response);
             return;
         } catch (TemplateManagerException ex) {
