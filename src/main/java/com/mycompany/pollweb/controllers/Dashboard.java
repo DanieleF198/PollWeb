@@ -43,9 +43,16 @@ public class Dashboard extends BaseController {
             if (s!= null) {
                 if ((Integer)s.getAttribute("groupid") == 3){
                     action_redirect_adminDashboard(request, response);
+                    return;
                 }
                 else{
+                    if(request.getParameter("header-search-tuoi-sondaggi") != null){
+                        System.out.println("REQUEST HEADER_SEARCH: " + request.getParameter("header-search-tuoi-sondaggi"));
+                        action_tuoi_sondaggi_search(request, response);
+                        return;
+                    }
                     action_default(request, response);
+                    return;
                 }
             } else {
                 action_redirect_login(request, response);
@@ -81,7 +88,52 @@ public class Dashboard extends BaseController {
                 
                 ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
                 request.setAttribute("sondaggi", sondaggi);
+
+                res.activate("dashboard.ftl", request, response);
                 
+                
+            }
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void action_tuoi_sondaggi_search(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+       try {
+            if(!(SecurityLayer.checkSession(request) != null)){ //controllo in più per essere sicuri
+                action_redirect_login(request,response);
+            }else{
+                PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                TemplateResult res = new TemplateResult(getServletContext());
+                HttpSession s = request.getSession(false);
+                GruppoImpl g = new GruppoImpl();
+                request.setAttribute("username", (String)s.getAttribute("username"));
+                request.setAttribute("email", (String)s.getAttribute("email"));
+                request.setAttribute("nome", (String)s.getAttribute("nome"));
+                request.setAttribute("cognome", (String)s.getAttribute("cognome"));
+                request.setAttribute("eta", (Integer)s.getAttribute("eta"));
+                request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
+                
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
+                sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("header-search-tuoi-sondaggi"));
+                request.setAttribute("sondaggi", sondaggi);
+                
+                if(!request.getParameter("header-search-tuoi-sondaggi").isEmpty()){
+                    request.setAttribute("ricercaTuoiSondaggi", "yes");
+                }
+                else{
+                    request.setAttribute("ricercaTuoiSondaggi", "");
+                }
+                
+                if(sondaggi.isEmpty()){ 
+                    request.setAttribute("listaTuoiSondaggiVuota", "yes");  
+                    System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
+                }
+                else{
+                    request.setAttribute("LISTA SONDAGGI VUOTA: " + "listaTuoiSondaggiVuota", "");
+                    System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
+                }
+
                 res.activate("dashboard.ftl", request, response);
                 
                 
