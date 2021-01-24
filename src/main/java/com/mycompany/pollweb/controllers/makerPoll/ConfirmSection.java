@@ -45,7 +45,7 @@ public class ConfirmSection extends BaseController {
                 //prima di andare avanti salviamo l'ultima domanda (quella da cui ha cliccato "conferma").
                 //nota, in questo caso, assumiamo che se la domanda è vuota allora non la vuole caricare, se invece anche un solo campo tra "titolo", "descrizione" e "obbligatoria" è riempito/checkato
                 //allora assumiamo che la domanda vuole essere caricata
-                if((request.getParameter("questionTitle") != null && !request.getParameter("questionTitle").equals("")) || (request.getParameter("questionDescription") != null && !request.getParameter("questionDescription").equals("")) || (request.getParameter("questionObbligatory") != null && !request.getParameter("questionObbligatory").equals(""))){
+                if((request.getParameter("questionTitle") != null && !request.getParameter("questionTitle").equals("")) || (request.getParameter("questionDescription") != null && !request.getParameter("questionDescription").equals("")) || (request.getParameter("questionObbligatory") != null && !request.getParameter("questionObbligatory").equals("")) || (request.getParameter("openShortConstraint") != null && !request.getParameter("openShortConstraint").equals("")) || (request.getParameter("openLongConstraint") != null && !request.getParameter("openLongConstraint").equals("")) || (request.getParameter("openNumberConstraintMin") != null && !request.getParameter("openNumberConstraintMin").equals("")) || (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").equals("")) || (request.getParameter("openDateConstraintMin") != null && !request.getParameter("openDateConstraintMin").equals("")) || (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").equals(""))){
                     PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
                     String title = "";
                     String description = "";
@@ -77,12 +77,48 @@ public class ConfirmSection extends BaseController {
 
                     if(tipo.equals("openShort")){
                         newDomanda.setTipo("openShort");
+                        if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
+                            String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
+                            newDomanda.setVincolo(vincolo);
+                        }
                     } else if (tipo.equals("openLong")) {
                         newDomanda.setTipo("openLong");
+                        if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
+                            String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
+                            newDomanda.setVincolo(vincolo);
+                        }
                     } else if (tipo.equals("openNumber")) {
                         newDomanda.setTipo("openNumber");
+                        if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
+                            if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                                String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
+                                newDomanda.setVincolo(vincolo);
+                            } else {
+                                String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
+                                newDomanda.setVincolo(vincolo);
+                            }
+                        } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                            String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
+                            newDomanda.setVincolo(vincolo);
+                        }
                     } else if (tipo.equals("openDate")) {
                         newDomanda.setTipo("openDate");
+                        if(request.getParameter("openDateConstraintMin")!=null && !request.getParameter("openDateConstraintMin").isEmpty()){
+                            if(request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                                String strMinDate = request.getParameter("openDateConstraintMin");
+                                String strMaxDate = request.getParameter("openDateConstraintMax");
+                                String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
+                                newDomanda.setVincolo(vincolo);
+                            } else { 
+                                String strMinDate = request.getParameter("openDateConstraintMin");
+                                String vincolo = "Constraint: " +strMinDate;
+                                newDomanda.setVincolo(vincolo);
+                            }
+                        } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                            String strMaxDate = request.getParameter("openDateConstraintMax");
+                            String vincolo = "Constraint: null -- " +strMaxDate;
+                            newDomanda.setVincolo(vincolo);
+                        }
                     } else if (tipo.equals("closeSingle")) {
                         newDomanda.setTipo("closeSingle");
                         JSONObject opzioni = new JSONObject();

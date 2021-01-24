@@ -98,6 +98,12 @@ public class DomandaProxy extends DomandaImpl implements DataItemProxy {
         super.setPosizione(posizione);
         this.modified = true;
     }
+    
+    @Override
+    public void setVincolo(String vincolo) {
+        super.setVincolo(vincolo);
+        this.modified = true;
+    }
 
     @Override
     public void setObbligatoria(boolean obbligatoria) {

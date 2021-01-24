@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
 import static jdk.internal.org.jline.utils.Colors.s;
@@ -159,12 +161,93 @@ public class QuestionsMaker extends BaseController {
                     request.setAttribute("obbligatory", "no");
                 }
                 if(domanda.getTipo().equals("openShort")){
+                    if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                        System.out.println(domanda.getVincolo());
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(domanda.getVincolo());
+                        if(m.find(0)){
+                            String constraint = m.group(0);
+                            System.out.println(constraint);
+                            request.setAttribute("openShortConstraint", constraint);
+                        }
+                    }
                     request.setAttribute("checked", "openShort");
                 } else if(domanda.getTipo().equals("openLong")){
+                    if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(domanda.getVincolo());
+                        if(m.find(0)){
+                            String constraint = m.group(0);
+                            System.out.println(constraint);
+                            request.setAttribute("openLongConstraint", constraint);
+                        }
+                    }
                     request.setAttribute("checked", "openLong");
                 } else if(domanda.getTipo().equals("openNumber")){
-                    request.setAttribute("checked", "openNumber");
+                    if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(domanda.getVincolo());
+                        if(domanda.getVincolo().contains("Null --")){
+                            int indexOf = domanda.getVincolo().indexOf("--");
+                            String secondPart = domanda.getVincolo().substring(indexOf);
+                            System.out.println(secondPart);
+                            m = p.matcher(secondPart);
+                            if(m.find(0)){
+                                String constraintMax = m.group(0);
+                                request.setAttribute("openNumberConstraintMax", constraintMax);
+                            }
+                        } else if (domanda.getVincolo().contains("--")){
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                int indexOf = domanda.getVincolo().indexOf("--");
+                                String secondPart = domanda.getVincolo().substring(indexOf);
+                                System.out.println(secondPart);
+                                m = p.matcher(secondPart);
+                                if(m.find(0)){
+                                    String constraintMax = m.group(0);
+                                    request.setAttribute("openNumberConstraintMin", constraintMin);
+                                    request.setAttribute("openNumberConstraintMax", constraintMax);
+                                }
+                            }
+                        } else {
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                request.setAttribute("openNumberConstraintMin", constraintMin);
+                            }
+                        }
+                    }
+                    request.setAttribute("checked", "openNumber"); 
                 } else if(domanda.getTipo().equals("openDate")){
+                    if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                        Pattern p = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+                        Matcher m = p.matcher(domanda.getVincolo());
+                        if(domanda.getVincolo().contains("Null --")){
+                            int indexOf = domanda.getVincolo().indexOf("--");
+                            String secondPart = domanda.getVincolo().substring(indexOf);
+                            m = p.matcher(secondPart);
+                            if(m.find(0)){
+                                String constraintMax = m.group(0);
+                                request.setAttribute("openDateConstraintMax", constraintMax);
+                            }
+                        } else if (domanda.getVincolo().contains("--")){
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                int indexOf = domanda.getVincolo().indexOf("--");
+                                String secondPart = domanda.getVincolo().substring(indexOf);
+                                m = p.matcher(secondPart);
+                                if(m.find(0)){
+                                    String constraintMax = m.group(0);
+                                    request.setAttribute("openDateConstraintMin", constraintMin);
+                                    request.setAttribute("openDateConstraintMax", constraintMax);
+                                }
+                            }
+                        } else {
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                request.setAttribute("openDateConstraintMin", constraintMin);
+                            }
+                        }
+                    }
                     request.setAttribute("checked", "openDate");
                 } else if(domanda.getTipo().equals("closeSingle")){
                     request.setAttribute("checked", "closeSingle");
@@ -245,12 +328,48 @@ public class QuestionsMaker extends BaseController {
 
                 if(tipo.equals("openShort")){
                     currentDomanda.setTipo("openShort");
+                    if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
+                        String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
+                        currentDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openLong")) {
                     currentDomanda.setTipo("openLong");
+                    if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
+                        String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
+                        currentDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openNumber")) {
                     currentDomanda.setTipo("openNumber");
+                    if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
+                        if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                            String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
+                            currentDomanda.setVincolo(vincolo);
+                        } else {
+                            String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
+                            currentDomanda.setVincolo(vincolo);
+                        }
+                    } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                        String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
+                        currentDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openDate")) {
                     currentDomanda.setTipo("openDate");
+                    if(request.getParameter("openDateConstraintMin")!=null && !request.getParameter("openDateConstraintMin").isEmpty()){
+                        if(request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                            String strMinDate = request.getParameter("openDateConstraintMin");
+                            String strMaxDate = request.getParameter("openDateConstraintMax");
+                            String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
+                            currentDomanda.setVincolo(vincolo);
+                        } else { 
+                            String strMinDate = request.getParameter("openDateConstraintMin");
+                            String vincolo = "Constraint: " +strMinDate;
+                            currentDomanda.setVincolo(vincolo);
+                        }
+                    } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                        String strMaxDate = request.getParameter("openDateConstraintMax");
+                        String vincolo = "Constraint: Null -- " +strMaxDate;
+                        currentDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("closeSingle")) {
                     currentDomanda.setTipo("closeSingle");
                     JSONObject opzioni = new JSONObject();
@@ -350,7 +469,7 @@ public class QuestionsMaker extends BaseController {
             //cioè una sorta di next nel caso base al contrario
 
             
-            if(s.getAttribute("updateDomanda")==null && ((request.getParameter("questionTitle") != null && !request.getParameter("questionTitle").equals("")) || (request.getParameter("questionDescription") != null && !request.getParameter("questionDescription").equals("")) || (request.getParameter("questionObbligatory") != null && !request.getParameter("questionObbligatory").equals("")))){
+            if(s.getAttribute("updateDomanda")==null && ((request.getParameter("questionTitle") != null && !request.getParameter("questionTitle").equals("")) || (request.getParameter("questionDescription") != null && !request.getParameter("questionDescription").equals("")) || (request.getParameter("questionObbligatory") != null && !request.getParameter("questionObbligatory").equals("")) || (request.getParameter("openShortConstraint") != null && !request.getParameter("openShortConstraint").equals("")) || (request.getParameter("openLongConstraint") != null && !request.getParameter("openLongConstraint").equals("")) || (request.getParameter("openNumberConstraintMin") != null && !request.getParameter("openNumberConstraintMin").equals("")) || (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").equals("")) || (request.getParameter("openDateConstraintMin") != null && !request.getParameter("openDateConstraintMin").equals("")) || (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").equals("")))){
                 //controllo su quale sia checkato non lo facciamo perché qualcosa sarà sempre checkato, e se il tipo non ha avuto la voglia di scriversi quantomeno il titolo o la descrizione o chacckare se è obbligatorio
                 //assumiamo che voglia tornare alla domanda precedente senza aver ancora iniziato a creare la corrente. Altrimenti glieli memorizziamo temporaneamente
                 String title = "";
@@ -383,12 +502,48 @@ public class QuestionsMaker extends BaseController {
 
                 if(tipo.equals("openShort")){
                     newDomanda.setTipo("openShort");
+                    if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
+                        String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
+                        newDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openLong")) {
                     newDomanda.setTipo("openLong");
+                    if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
+                        String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
+                        newDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openNumber")) {
                     newDomanda.setTipo("openNumber");
+                    if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
+                        if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                            String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
+                            newDomanda.setVincolo(vincolo);
+                        } else {
+                            String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
+                            newDomanda.setVincolo(vincolo);
+                        }
+                    } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                        String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
+                        newDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openDate")) {
                     newDomanda.setTipo("openDate");
+                    if(request.getParameter("openDateConstraintMin")!=null && !request.getParameter("openDateConstraintMin").isEmpty()){
+                        if(request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                            String strMinDate = request.getParameter("openDateConstraintMin");
+                            String strMaxDate = request.getParameter("openDateConstraintMax");
+                            String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
+                            newDomanda.setVincolo(vincolo);
+                        } else { 
+                            String strMinDate = request.getParameter("openDateConstraintMin");
+                            String vincolo = "Constraint: " +strMinDate;
+                            newDomanda.setVincolo(vincolo);
+                        }
+                    } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                        String strMaxDate = request.getParameter("openDateConstraintMax");
+                        String vincolo = "Constraint: Null -- " +strMaxDate;
+                        newDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("closeSingle")) {
                     newDomanda.setTipo("closeSingle");
                     JSONObject opzioni = new JSONObject();
@@ -497,12 +652,93 @@ public class QuestionsMaker extends BaseController {
                 request.setAttribute("obbligatory", "no");
             }
             if(domanda.getTipo().equals("openShort")){
+                if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                    System.out.println(domanda.getVincolo());
+                    Pattern p = Pattern.compile("\\d+");
+                    Matcher m = p.matcher(domanda.getVincolo());
+                    if(m.find(0)){
+                        String constraint = m.group(0);
+                        System.out.println(constraint);
+                        request.setAttribute("openShortConstraint", constraint);
+                    }
+                }
                 request.setAttribute("checked", "openShort");
             } else if(domanda.getTipo().equals("openLong")){
+                if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                    Pattern p = Pattern.compile("\\d+");
+                    Matcher m = p.matcher(domanda.getVincolo());
+                    if(m.find(0)){
+                        String constraint = m.group(0);
+                        System.out.println(constraint);
+                        request.setAttribute("openLongConstraint", constraint);
+                    }
+                }
                 request.setAttribute("checked", "openLong");
             } else if(domanda.getTipo().equals("openNumber")){
-                request.setAttribute("checked", "openNumber");
+                if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                    Pattern p = Pattern.compile("\\d+");
+                    Matcher m = p.matcher(domanda.getVincolo());
+                    if(domanda.getVincolo().contains("Null --")){
+                        int indexOf = domanda.getVincolo().indexOf("--");
+                        String secondPart = domanda.getVincolo().substring(indexOf);
+                        System.out.println(secondPart);
+                        m = p.matcher(secondPart);
+                        if(m.find(0)){
+                            String constraintMax = m.group(0);
+                            request.setAttribute("openNumberConstraintMax", constraintMax);
+                        }
+                    } else if (domanda.getVincolo().contains("--")){
+                        if(m.find(0)){ 
+                            String constraintMin = m.group(0);
+                            int indexOf = domanda.getVincolo().indexOf("--");
+                            String secondPart = domanda.getVincolo().substring(indexOf);
+                            System.out.println(secondPart);
+                            m = p.matcher(secondPart);
+                            if(m.find(0)){
+                                String constraintMax = m.group(0);
+                                request.setAttribute("openNumberConstraintMin", constraintMin);
+                                request.setAttribute("openNumberConstraintMax", constraintMax);
+                            }
+                        }
+                    } else {
+                        if(m.find(0)){ 
+                            String constraintMin = m.group(0);
+                            request.setAttribute("openNumberConstraintMin", constraintMin);
+                        }
+                    }
+                }
+                request.setAttribute("checked", "openNumber"); 
             } else if(domanda.getTipo().equals("openDate")){
+                if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                    Pattern p = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+                    Matcher m = p.matcher(domanda.getVincolo());
+                    if(domanda.getVincolo().contains("Null --")){
+                        int indexOf = domanda.getVincolo().indexOf("--");
+                        String secondPart = domanda.getVincolo().substring(indexOf);
+                        m = p.matcher(secondPart);
+                        if(m.find(0)){
+                            String constraintMax = m.group(0);
+                            request.setAttribute("openDateConstraintMax", constraintMax);
+                        }
+                    } else if (domanda.getVincolo().contains("--")){
+                        if(m.find(0)){ 
+                            String constraintMin = m.group(0);
+                            int indexOf = domanda.getVincolo().indexOf("--");
+                            String secondPart = domanda.getVincolo().substring(indexOf);
+                            m = p.matcher(secondPart);
+                            if(m.find(0)){
+                                String constraintMax = m.group(0);
+                                request.setAttribute("openDateConstraintMin", constraintMin);
+                                request.setAttribute("openDateConstraintMax", constraintMax);
+                            }
+                        }
+                    } else {
+                        if(m.find(0)){ 
+                            String constraintMin = m.group(0);
+                            request.setAttribute("openDateConstraintMin", constraintMin);
+                        }
+                    }
+                }
                 request.setAttribute("checked", "openDate");
             } else if(domanda.getTipo().equals("closeSingle")){
                 request.setAttribute("checked", "closeSingle");
@@ -570,12 +806,48 @@ public class QuestionsMaker extends BaseController {
 
                 if(tipo.equals("openShort")){
                     oldDomanda.setTipo("openShort");
+                    if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
+                        String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
+                        oldDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openLong")) {
                     oldDomanda.setTipo("openLong");
+                    if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
+                        String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
+                        oldDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openNumber")) {
                     oldDomanda.setTipo("openNumber");
+                    if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
+                        if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                            String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
+                            oldDomanda.setVincolo(vincolo);
+                        } else {
+                            String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
+                            oldDomanda.setVincolo(vincolo);
+                        }
+                    } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                        String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
+                        oldDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openDate")) {
                     oldDomanda.setTipo("openDate");
+                    if(request.getParameter("openDateConstraintMin")!=null && !request.getParameter("openDateConstraintMin").isEmpty()){
+                        if(request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                            String strMinDate = request.getParameter("openDateConstraintMin");
+                            String strMaxDate = request.getParameter("openDateConstraintMax");
+                            String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
+                            oldDomanda.setVincolo(vincolo);
+                        } else { 
+                            String strMinDate = request.getParameter("openDateConstraintMin");
+                            String vincolo = "Constraint: " +strMinDate;
+                            oldDomanda.setVincolo(vincolo);
+                        }
+                    } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                        String strMaxDate = request.getParameter("openDateConstraintMax");
+                        String vincolo = "Constraint: Null -- " +strMaxDate;
+                        oldDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("closeSingle")) {
                     oldDomanda.setTipo("closeSingle");
                     JSONObject opzioni = new JSONObject();
@@ -693,12 +965,93 @@ public class QuestionsMaker extends BaseController {
                     request.setAttribute("obbligatory", "no");
                 }
                 if(domanda.getTipo().equals("openShort")){
+                    if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                        System.out.println(domanda.getVincolo());
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(domanda.getVincolo());
+                        if(m.find(0)){
+                            String constraint = m.group(0);
+                            System.out.println(constraint);
+                            request.setAttribute("openShortConstraint", constraint);
+                        }
+                    }
                     request.setAttribute("checked", "openShort");
                 } else if(domanda.getTipo().equals("openLong")){
+                    if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(domanda.getVincolo());
+                        if(m.find(0)){
+                            String constraint = m.group(0);
+                            System.out.println(constraint);
+                            request.setAttribute("openLongConstraint", constraint);
+                        }
+                    }
                     request.setAttribute("checked", "openLong");
                 } else if(domanda.getTipo().equals("openNumber")){
-                    request.setAttribute("checked", "openNumber");
+                    if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(domanda.getVincolo());
+                        if(domanda.getVincolo().contains("Null --")){
+                            int indexOf = domanda.getVincolo().indexOf("--");
+                            String secondPart = domanda.getVincolo().substring(indexOf);
+                            System.out.println(secondPart);
+                            m = p.matcher(secondPart);
+                            if(m.find(0)){
+                                String constraintMax = m.group(0);
+                                request.setAttribute("openNumberConstraintMax", constraintMax);
+                            }
+                        } else if (domanda.getVincolo().contains("--")){
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                int indexOf = domanda.getVincolo().indexOf("--");
+                                String secondPart = domanda.getVincolo().substring(indexOf);
+                                System.out.println(secondPart);
+                                m = p.matcher(secondPart);
+                                if(m.find(0)){
+                                    String constraintMax = m.group(0);
+                                    request.setAttribute("openNumberConstraintMin", constraintMin);
+                                    request.setAttribute("openNumberConstraintMax", constraintMax);
+                                }
+                            }
+                        } else {
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                request.setAttribute("openNumberConstraintMin", constraintMin);
+                            }
+                        }
+                    }
+                    request.setAttribute("checked", "openNumber"); 
                 } else if(domanda.getTipo().equals("openDate")){
+                    if(domanda.getVincolo()!=null && !domanda.getVincolo().isEmpty()){
+                        Pattern p = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+                        Matcher m = p.matcher(domanda.getVincolo());
+                        if(domanda.getVincolo().contains("Null --")){
+                            int indexOf = domanda.getVincolo().indexOf("--");
+                            String secondPart = domanda.getVincolo().substring(indexOf);
+                            m = p.matcher(secondPart);
+                            if(m.find(0)){
+                                String constraintMax = m.group(0);
+                                request.setAttribute("openDateConstraintMax", constraintMax);
+                            }
+                        } else if (domanda.getVincolo().contains("--")){
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                int indexOf = domanda.getVincolo().indexOf("--");
+                                String secondPart = domanda.getVincolo().substring(indexOf);
+                                m = p.matcher(secondPart);
+                                if(m.find(0)){
+                                    String constraintMax = m.group(0);
+                                    request.setAttribute("openDateConstraintMin", constraintMin);
+                                    request.setAttribute("openDateConstraintMax", constraintMax);
+                                }
+                            }
+                        } else {
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                request.setAttribute("openDateConstraintMin", constraintMin);
+                            }
+                        }
+                    }
                     request.setAttribute("checked", "openDate");
                 } else if(domanda.getTipo().equals("closeSingle")){
                     request.setAttribute("checked", "closeSingle");
@@ -748,12 +1101,48 @@ public class QuestionsMaker extends BaseController {
 
                 if(tipo.equals("openShort")){
                     newDomanda.setTipo("openShort");
+                    if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
+                        String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
+                        newDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openLong")) {
                     newDomanda.setTipo("openLong");
+                    if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
+                        String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
+                        newDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openNumber")) {
                     newDomanda.setTipo("openNumber");
+                    if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
+                        if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                            String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
+                            newDomanda.setVincolo(vincolo);
+                        } else {
+                            String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
+                            newDomanda.setVincolo(vincolo);
+                        }
+                    } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                        String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
+                        newDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("openDate")) {
                     newDomanda.setTipo("openDate");
+                    if(request.getParameter("openDateConstraintMin")!=null && !request.getParameter("openDateConstraintMin").isEmpty()){
+                        if(request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                            String strMinDate = request.getParameter("openDateConstraintMin");
+                            String strMaxDate = request.getParameter("openDateConstraintMax");
+                            String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
+                            newDomanda.setVincolo(vincolo);
+                        } else { 
+                            String strMinDate = request.getParameter("openDateConstraintMin");
+                            String vincolo = "Constraint: " +strMinDate;
+                            newDomanda.setVincolo(vincolo);
+                        }
+                    } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                        String strMaxDate = request.getParameter("openDateConstraintMax");
+                        String vincolo = "Constraint: Null -- " +strMaxDate;
+                        newDomanda.setVincolo(vincolo);
+                    }
                 } else if (tipo.equals("closeSingle")) {
                     newDomanda.setTipo("closeSingle");
                     JSONObject opzioni = new JSONObject();
@@ -924,12 +1313,93 @@ public class QuestionsMaker extends BaseController {
                     request.setAttribute("obbligatory", "no");
                 }
                 if(domandaSuccessiva.getTipo().equals("openShort")){
+                    if(domandaSuccessiva.getVincolo()!=null && !domandaSuccessiva.getVincolo().isEmpty()){
+                        System.out.println(domandaSuccessiva.getVincolo());
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(domandaSuccessiva.getVincolo());
+                        if(m.find(0)){
+                            String constraint = m.group(0);
+                            System.out.println(constraint);
+                            request.setAttribute("openShortConstraint", constraint);
+                        }
+                    }
                     request.setAttribute("checked", "openShort");
                 } else if(domandaSuccessiva.getTipo().equals("openLong")){
+                    if(domandaSuccessiva.getVincolo()!=null && !domandaSuccessiva.getVincolo().isEmpty()){
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(domandaSuccessiva.getVincolo());
+                        if(m.find(0)){
+                            String constraint = m.group(0);
+                            System.out.println(constraint);
+                            request.setAttribute("openLongConstraint", constraint);
+                        }
+                    }
                     request.setAttribute("checked", "openLong");
                 } else if(domandaSuccessiva.getTipo().equals("openNumber")){
-                    request.setAttribute("checked", "openNumber");
+                    if(domandaSuccessiva.getVincolo()!=null && !domandaSuccessiva.getVincolo().isEmpty()){
+                        Pattern p = Pattern.compile("\\d+");
+                        Matcher m = p.matcher(domandaSuccessiva.getVincolo());
+                        if(domandaSuccessiva.getVincolo().contains("Null --")){
+                            int indexOf = domandaSuccessiva.getVincolo().indexOf("--");
+                            String secondPart = domandaSuccessiva.getVincolo().substring(indexOf);
+                            System.out.println(secondPart);
+                            m = p.matcher(secondPart);
+                            if(m.find(0)){
+                                String constraintMax = m.group(0);
+                                request.setAttribute("openNumberConstraintMax", constraintMax);
+                            }
+                        } else if (domandaSuccessiva.getVincolo().contains("--")){
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                int indexOf = domandaSuccessiva.getVincolo().indexOf("--");
+                                String secondPart = domandaSuccessiva.getVincolo().substring(indexOf);
+                                System.out.println(secondPart);
+                                m = p.matcher(secondPart);
+                                if(m.find(0)){
+                                    String constraintMax = m.group(0);
+                                    request.setAttribute("openNumberConstraintMin", constraintMin);
+                                    request.setAttribute("openNumberConstraintMax", constraintMax);
+                                }
+                            }
+                        } else {
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                request.setAttribute("openNumberConstraintMin", constraintMin);
+                            }
+                        }
+                    }
+                    request.setAttribute("checked", "openNumber"); 
                 } else if(domandaSuccessiva.getTipo().equals("openDate")){
+                    if(domandaSuccessiva.getVincolo()!=null && !domandaSuccessiva.getVincolo().isEmpty()){
+                        Pattern p = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+                        Matcher m = p.matcher(domandaSuccessiva.getVincolo());
+                        if(domandaSuccessiva.getVincolo().contains("Null --")){
+                            int indexOf = domandaSuccessiva.getVincolo().indexOf("--");
+                            String secondPart = domandaSuccessiva.getVincolo().substring(indexOf);
+                            m = p.matcher(secondPart);
+                            if(m.find(0)){
+                                String constraintMax = m.group(0);
+                                request.setAttribute("openDateConstraintMax", constraintMax);
+                            }
+                        } else if (domandaSuccessiva.getVincolo().contains("--")){
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                int indexOf = domandaSuccessiva.getVincolo().indexOf("--");
+                                String secondPart = domandaSuccessiva.getVincolo().substring(indexOf);
+                                m = p.matcher(secondPart);
+                                if(m.find(0)){
+                                    String constraintMax = m.group(0);
+                                    request.setAttribute("openDateConstraintMin", constraintMin);
+                                    request.setAttribute("openDateConstraintMax", constraintMax);
+                                }
+                            }
+                        } else {
+                            if(m.find(0)){ 
+                                String constraintMin = m.group(0);
+                                request.setAttribute("openDateConstraintMin", constraintMin);
+                            }
+                        }
+                    }
                     request.setAttribute("checked", "openDate");
                 } else if(domandaSuccessiva.getTipo().equals("closeSingle")){
                     request.setAttribute("checked", "closeSingle");
@@ -951,6 +1421,9 @@ public class QuestionsMaker extends BaseController {
             }
             
             request.setAttribute("numeroDomanda", (int)s.getAttribute("domanda-in-creazione"));
+            if((int)s.getAttribute("domanda-in-creazione") == 0){
+                request.setAttribute("noPrev", "yes");
+            }
             res.activate("MakerPoll/questionsMaker.ftl", request, response);
             return;
         } catch (TemplateManagerException ex) {
