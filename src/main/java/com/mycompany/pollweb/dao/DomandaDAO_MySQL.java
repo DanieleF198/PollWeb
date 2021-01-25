@@ -48,8 +48,8 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
             sDomandaBySondaggioIDAndPosition = connection.prepareStatement("SELECT * FROM Domanda WHERE idSondaggio=? AND posizione=?");
             sDomande = connection.prepareStatement("SELECT * FROM Domanda");
             
-            iDomanda = connection.prepareStatement("INSERT INTO Domanda (idSondaggio,titolo,obbligatoria,descrizione,posizione,opzioni,tipo) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uDomanda = connection.prepareStatement("UPDATE Domanda SET idSondaggio=?,titolo=?,obbligatoria=?,descrizione=?,posizione=?,opzioni=?,tipo=? WHERE idDomanda=?");
+            iDomanda = connection.prepareStatement("INSERT INTO Domanda (idSondaggio,titolo,obbligatoria,descrizione,posizione,opzioni,tipo,vincolo) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uDomanda = connection.prepareStatement("UPDATE Domanda SET idSondaggio=?,titolo=?,obbligatoria=?,descrizione=?,posizione=?,opzioni=?,tipo=?,vincolo=? WHERE idDomanda=?");
             dDomanda = connection.prepareStatement("DELETE FROM Domanda WHERE idDomanda=?");
             
             
@@ -98,6 +98,7 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
             JSONObject rispostaCorretta = (JSONObject) rs.getObject("rispostaCorretta");
             d.setRispostaCorretta(rispostaCorretta);
             d.setTipo(rs.getString("tipo"));
+            d.setVincolo(rs.getString("vincolo"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Domanda object form ResultSet", ex);
         }
@@ -220,7 +221,8 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
                     uDomanda.setObject(6, "{}");
                 }
                 uDomanda.setString(7, domanda.getTipo());
-                uDomanda.setInt(8, domanda.getKey());
+                uDomanda.setString(8, domanda.getVincolo());
+                uDomanda.setInt(9, domanda.getKey());
 
                 if (uDomanda.executeUpdate() == 0) {
                     throw new OptimisticLockException(domanda);
@@ -238,7 +240,7 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
                     iDomanda.setObject(6, "{}");
                 }
                 iDomanda.setString(7, domanda.getTipo());
-                
+                iDomanda.setString(8, domanda.getVincolo());
                 
                 if (iDomanda.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

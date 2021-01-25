@@ -12,7 +12,7 @@ import org.json.JSONObject;
  *
  * @author Cronio
  */
-public interface Domanda extends DataItem<Integer> {
+public interface Domanda extends DataItem<Integer>, Comparable<Domanda> {
     
     public int getIdSondaggio();
     
@@ -29,6 +29,8 @@ public interface Domanda extends DataItem<Integer> {
     public JSONObject getOpzioni();
     
     public int getPosizione();
+    
+    public String getVincolo();
 
     public boolean isObbligatoria();
     
@@ -49,5 +51,7 @@ public interface Domanda extends DataItem<Integer> {
     public void setPosizione(int posizione);
 
     public void setObbligatoria(boolean obbligatoria);
+    
+    public void setVincolo(String vincolo);
     
 }

@@ -18,6 +18,7 @@
                     <!-- General information -->
                     <div class="container">
                         <h1 class="h3 mb-3 font-weight-normal">Creazione sondaggio - Ultime informazioni e conferma</h1>
+                        <form id="operations" name="operations" action="confirmSection" method="POST">
                         <form id="confirmForm" method="post" action="confirmSection" class="needs-validation" enctype="multipart/form-data" novalidate>
                             <div class="row mt-3">
                                 <div class="col-lg-12">
@@ -34,41 +35,67 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Domanda 1</td>
-                                                    <td>descrizione</td>
-                                                    <td>scelta singola</td>
-                                                    <td>da fare</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Domanda 2</td>
-                                                    <td>descrizione</td>
-                                                    <td>scelta multipla</td>
-                                                    <td>da fare</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Domanda 3</td>
-                                                    <td>descrizione</td>
-                                                    <td>testo breve</td>
-                                                    <td>da fare</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">4</th>
-                                                    <td>Domanda 4</td>
-                                                    <td>descrizione</td>
-                                                    <td>testo lungo</td>
-                                                    <td>da fare</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">5</th>
-                                                    <td>Domanda 5</td>
-                                                    <td>descrizione</td>
-                                                    <td>numero</td>
-                                                    <td>da fare</td>
-                                                </tr>
+                                                <#list domande as domanda>  
+                                                    <tr>
+                                                        <th scope="row">${domanda.getPosizione()}</th>
+                                                        <#if domanda.getTitolo()?? && domanda.getTitolo()!="">
+                                                            <#if domanda.getTitolo()?length \gt 42>
+                                                                <#assign titolo = domanda.getTitolo()?substring(0,42)>
+                                                                <td>${titolo}...</td>
+                                                            <#else>
+                                                                <#assign titolo = domanda.getTitolo()>
+                                                                <td>${titolo}</td>
+                                                            </#if>
+                                                        <#else>
+                                                            <td> N/A </td>
+                                                        </#if>
+                                                        <#if domanda.getDescrizione()?? && domanda.getDescrizione()!="">
+                                                            <#if domanda.getDescrizione()?length \gt 35>
+                                                                <#assign descrizione = domanda.getDescrizione()?substring(0,35)>
+                                                                <td>${descrizione}...</td>
+                                                            <#else>
+                                                                <#assign descrizione = domanda.getDescrizione()>
+                                                                <td>${descrizione}</td>
+                                                            </#if>
+                                                        <#else>
+                                                            <td> N/A </td>
+                                                        </#if>
+                                                        <td>${domanda.getTipo()}</td>
+                                                        <td>
+                                                            <#if domanda?is_first>
+                                                                <button form="operations" type="submit" name="goUpQuestion" value="goUpQuestionButton${domanda.getPosizione()}" class="btn btn-light mr-1 mb-1" title="Sposta in alto" disabled>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+                                                                        <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+                                                                    </svg>
+                                                                </button>
+                                                            <#else>
+                                                                <button form="operations" type="submit" name="goUpQuestion" value="goUpQuestionButton${domanda.getPosizione()}" class="btn btn-light mr-1 mb-1" title="Sposta in alto">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+                                                                        <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </#if>
+                                                            <#if domanda?is_last>
+                                                                <button form="operations" type="submit" name="goDownQuestion" value="goDownQuestionButton${domanda.getPosizione()}" class="btn btn-light mr-1 mb-1" title="sposta in basso" disabled>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+                                                                      <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+                                                                    </svg>
+                                                                </button>
+                                                            <#else>
+                                                                <button form="operations" type="submit" name="goDownQuestion" value="goDownQuestionButton${domanda.getPosizione()}" class="btn btn-light mr-1 mb-1" title="sposta in basso">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+                                                                      <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </#if>
+                                                            <button form="operations" type="submit" name="removeQuestion" value="removeQuestionButton${domanda.getPosizione()}" class="btn btn-danger" title="elimina">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                                </svg>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </#list>
                                             </tbody>
                                         </table>
                                     </div>

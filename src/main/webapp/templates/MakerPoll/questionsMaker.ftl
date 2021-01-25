@@ -76,9 +76,9 @@
                                 <div class="col-lg-12">
                                     <label class="h5" for="questionTitle">Titolo domanda</label>
                                     <#if titleQuestion?? && titleQuestion!="">
-                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder="" value="${titleQuestion}" required>
+                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder=""  maxlength="128" value="${titleQuestion}" required>
                                     <#else>
-                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder="" value="" required> 
+                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder=""  maxlength="128" value="" required> 
                                     </#if>
                                     <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
                                         Il titolo inserito non è valido.
@@ -88,10 +88,10 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="questionDescription">Descrizione domanda (facoltativo)</label>
-                                    <#if description?? && description="">
-                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" value="${description}"></textarea>
+                                    <#if description?? && description!="">
+                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" maxlength="245">${description}</textarea>
                                     <#else>
-                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" value=""></textarea>
+                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" maxlength="245"></textarea>
                                     </#if>
                                 </div>
                             </div>
@@ -177,17 +177,21 @@
                                         <div class="tab__content">
                                             <div class="row mt-1 mb-1">
                                                 <div class="col-lg-12">
-                                                <textarea rows="1" class="form-control" placeholder="Nella risposta breve, l'utente pu&#242; rispondere con un massimo di X caratteri" style="resize: none"></textarea>
+                                                <textarea rows="1" class="form-control" placeholder="Nella risposta breve, l'utente pu&#242; rispondere con un massimo di 128 caratteri" style="resize: none" max="128"></textarea>
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
-                                                <div class="col-lg-4">
-                                                    <p><b>Numero minimo di caratteri</b> (opzionale)</p>
+                                                <div class="col-lg-6">
+                                                    <p><b>Numero minimo di caratteri</b> (opzionale - massimo valore: 64)</p>
                                                 </div>
                                             </div>
                                             <div class="row mb-1">
                                                 <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-                                                    <input type="number" class="form-control" id="openShortConstraint">
+                                                    <#if openShortConstraint?? && openShortConstraint!="">
+                                                        <input name="openShortConstraint" type="number" class="form-control" id="openShortConstraint" value="${openShortConstraint}">
+                                                    <#else>
+                                                        <input name="openShortConstraint" type="number" class="form-control" id="openShortConstraint">
+                                                    </#if>
                                                 </div>
                                             </div>
                                         </div>
@@ -195,17 +199,21 @@
                                         <div class="tab__content">
                                             <div class="row mt-1 mb-1">
                                                 <div class="col-lg-12">
-                                                <textarea rows="3" class="form-control" placeholder="Nella risposta lunga, l'utente pu&#242; rispondere con un massimo di X+Y caratteri" style="resize: none"></textarea>
+                                                <textarea rows="3" class="form-control" placeholder="Nella risposta lunga, l'utente pu&#242; rispondere con un massimo di 512 caratteri" style="resize: none" max="512"></textarea>
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
-                                                <div class="col-lg-4">
-                                                    <p><b>Numero minimo di caratteri</b> (opzionale)</p>
+                                                <div class="col-lg-6">
+                                                    <p><b>Numero minimo di caratteri</b> (opzionale - massimo valore: 256)</p>
                                                 </div>
                                             </div>
                                             <div class="row mb-1">
                                                 <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-                                                    <input type="number" class="form-control" id="openLongConstraint">
+                                                    <#if openLongConstraint?? && openLongConstraint!="">
+                                                        <input name="openLongConstraint" type="number" class="form-control" id="openLongConstraint" value="${openLongConstraint}">
+                                                    <#else>
+                                                        <input name="openLongConstraint" type="number" class="form-control" id="openLongConstraint">
+                                                    </#if>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,10 +231,18 @@
                                             </div>
                                             <div class="row mb-1">
                                                 <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-                                                    <input type="number" class="form-control" id="openNumberConstraintMin" placeholder="minimo">
+                                                    <#if openNumberConstraintMin?? && openNumberConstraintMin!="">
+                                                        <input name="openNumberConstraintMin" type="number" class="form-control" id="openNumberConstraintMin" placeholder="minimo" value="${openNumberConstraintMin}">
+                                                    <#else>
+                                                        <input name="openNumberConstraintMin" type="number" class="form-control" id="openNumberConstraintMin" placeholder="minimo">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-                                                    <input type="number" class="form-control" id="openNumberConstraintMax" placeholder="massimo">
+                                                    <#if openNumberConstraintMax?? && openNumberConstraintMax!="">
+                                                        <input name="openNumberConstraintMax" type="number" class="form-control" id="openNumberConstraintMax" placeholder="massimo" value="${openNumberConstraintMax}">
+                                                    <#else>
+                                                        <input name="openNumberConstraintMax" type="number" class="form-control" id="openNumberConstraintMax" placeholder="massimo">
+                                                    </#if>
                                                 </div>
                                             </div>
                                         </div>
@@ -238,18 +254,26 @@
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
-                                                <div class="col-lg-4">
-                                                    <p><b>Range di date</b> (opzionali)</p>
+                                                <div class="col-lg-9">
+                                                    <p><b>Range di date</b> (opzionali - scrivere date complete altrimenti il vincolo non sar&#225 memorizzato)</p>
                                                 </div>
                                             </div>
                                             <div class="row mb-1">
                                                 <div class="col-lg-3 col-md-4 col-sm-5 col-5">
-                                                    minimo: 
-                                                    <input type="date" class="form-control" id="openDateConstraintMin">
+                                                    minimo:
+                                                    <#if openDateConstraintMin?? && openDateConstraintMin!="">
+                                                        <input name="openDateConstraintMin" type="date" class="form-control" id="openDateConstraintMin" value="${openDateConstraintMin}">
+                                                    <#else>
+                                                        <input name="openDateConstraintMin" type="date" class="form-control" id="openDateConstraintMin">
+                                                    </#if>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-5 col-5">
                                                     massimo: 
-                                                    <input type="date" class="form-control" id="openDateConstraintMax">
+                                                    <#if openDateConstraintMax?? && openDateConstraintMax!="">
+                                                        <input name="openDateConstraintMax" type="date" class="form-control" id="openDateConstraintMax" value="${openDateConstraintMax}">
+                                                    <#else>
+                                                        <input name="openDateConstraintMax" type="date" class="form-control" id="openDateConstraintMax">
+                                                    </#if>
                                                 </div>
                                             </div>
                                         </div>

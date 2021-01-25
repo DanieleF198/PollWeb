@@ -27,6 +27,7 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     public boolean obbligatoria;
     private JSONObject opzioni = new JSONObject();   
     private JSONObject rispostaCorretta = new JSONObject();   
+    private String vincolo;
 
     public DomandaImpl() {
         super();
@@ -39,6 +40,7 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
         this.obbligatoria = false;
         this.opzioni = null;
         this.rispostaCorretta = null;
+        this.vincolo = "";
     }
 
     @Override
@@ -79,6 +81,11 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     @Override
     public int getPosizione() {
         return posizione;
+    }
+    
+    @Override
+    public String getVincolo(){
+        return vincolo;
     }
 
     @Override
@@ -129,6 +136,18 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     @Override
     public void setObbligatoria(boolean obbligatoria) {
         this.obbligatoria = obbligatoria;
+    }
+    
+    @Override
+    public void setVincolo(String vincolo){
+        this.vincolo = vincolo;
+    }
+
+    @Override
+    public int compareTo(Domanda domanda) {
+        Integer posizioneInteger = this.getPosizione();
+        Integer otherPosizioneInteger = domanda.getPosizione();
+        return posizioneInteger.compareTo(otherPosizioneInteger);
     }
     
 }

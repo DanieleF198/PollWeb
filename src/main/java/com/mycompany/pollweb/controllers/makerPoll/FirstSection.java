@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.model.Domanda;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
@@ -57,6 +58,13 @@ public class FirstSection extends BaseController {
                     s.setAttribute("continue", "yes");
                     s.setAttribute("sondaggio-in-conferma", "no");
                     s.setAttribute("domanda-in-creazione", 0);
+                    PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                    Domanda controlDomanda = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), 0);
+                    if(controlDomanda == null){
+                        if(s.getAttribute("updateDomanda")!= null){
+                            s.removeAttribute("updateDomanda");
+                        }
+                    }
                     response.sendRedirect("firstSection"); //caso in cui arriva da firstSectionWarning e decide di continuare
                     return;
                 }
