@@ -76,9 +76,9 @@
                                 <div class="col-lg-12">
                                     <label class="h5" for="questionTitle">Titolo domanda</label>
                                     <#if titleQuestion?? && titleQuestion!="">
-                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder="" value="${titleQuestion}" required>
+                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder=""  maxlength="128" value="${titleQuestion}" required>
                                     <#else>
-                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder="" value="" required> 
+                                        <input type="text" name="questionTitle" class="form-control" id="questionTitle" placeholder=""  maxlength="128" value="" required> 
                                     </#if>
                                     <div class="invalid-feedback"> <!-- non so esattamente come funzioni ma per il momento ce lo lascio -->
                                         Il titolo inserito non è valido.
@@ -88,10 +88,10 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <label class="h5" for="questionDescription">Descrizione domanda (facoltativo)</label>
-                                    <#if description?? && description="">
-                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" value="${description}"></textarea>
+                                    <#if description?? && description!="">
+                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" maxlength="245">${description}</textarea>
                                     <#else>
-                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" value=""></textarea>
+                                        <textarea rows="3" name="questionDescription" class="form-control" id="questionDescription" placeholder="Dai maggiori informazioni all'utente per dargli modo di rispondere nella maniera pi&#250; consapevole" maxlength="245"></textarea>
                                     </#if>
                                 </div>
                             </div>

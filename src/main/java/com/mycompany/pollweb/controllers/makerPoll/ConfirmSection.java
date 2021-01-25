@@ -23,6 +23,7 @@ import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -41,12 +42,12 @@ public class ConfirmSection extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
             HttpSession s = checkSession(request);
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
             if (request.getParameter("confirm") != null && s.getAttribute("sondaggio-in-conferma").equals("no")){
                 //prima di andare avanti salviamo l'ultima domanda (quella da cui ha cliccato "conferma").
                 //nota, in questo caso, assumiamo che se la domanda è vuota allora non la vuole caricare, se invece anche un solo campo tra "titolo", "descrizione" e "obbligatoria" è riempito/checkato
                 //allora assumiamo che la domanda vuole essere caricata
                 if((request.getParameter("questionTitle") != null && !request.getParameter("questionTitle").equals("")) || (request.getParameter("questionDescription") != null && !request.getParameter("questionDescription").equals("")) || (request.getParameter("questionObbligatory") != null && !request.getParameter("questionObbligatory").equals("")) || (request.getParameter("openShortConstraint") != null && !request.getParameter("openShortConstraint").equals("")) || (request.getParameter("openLongConstraint") != null && !request.getParameter("openLongConstraint").equals("")) || (request.getParameter("openNumberConstraintMin") != null && !request.getParameter("openNumberConstraintMin").equals("")) || (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").equals("")) || (request.getParameter("openDateConstraintMin") != null && !request.getParameter("openDateConstraintMin").equals("")) || (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").equals(""))){
-                    PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
                     String title = "";
                     String description = "";
                     String tipo = request.getParameter("tabGroup");
@@ -227,9 +228,60 @@ public class ConfirmSection extends BaseController {
                 s.setAttribute("sondaggio-in-conferma", "yes");
                 action_default(request, response);
                 return;
-            }else {
-                action_warning(request, response);
+            }else if("POST".equals(request.getMethod()) && request.getParameter("removeQuestion") != null){
+                int position = Integer.parseInt(request.getParameter("removeQuestion").substring(20));
+                Domanda domandaToRemove = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position);
+                if(domandaToRemove!=null){
+                    dl.getDomandaDAO().deleteDomanda(domandaToRemove.getKey());
+                }
+                else {
+                    action_warning(request, response);
+                }
+                position++;
+                Domanda domandaSuccessiva;
+                if(position == 1){
+                    domandaSuccessiva = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position); 
+                    if(domandaSuccessiva== null){
+                        action_default(request, response);
+                        return;
+                    }
+                }
+                for(int i = 0; i < 1; i--){
+                    domandaSuccessiva = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position);
+                    if(domandaSuccessiva != null){
+                        domandaSuccessiva.setPosizione(position - 1);
+                        dl.getDomandaDAO().storeDomanda(domandaSuccessiva);
+                        position++;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                action_default(request, response);
                 return;
+            }else if("POST".equals(request.getMethod()) && request.getParameter("goUpQuestion") != null){ //goUp Vuol dire diminuire la posizione (so che suona strano)
+                int position = Integer.parseInt(request.getParameter("goUpQuestion").substring(18));
+                Domanda domandaToGoUp = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position);
+                Domanda domandaToGoDown = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position-1);
+                domandaToGoUp.setPosizione(position-1);
+                domandaToGoDown.setPosizione(position);
+                dl.getDomandaDAO().storeDomanda(domandaToGoUp);
+                dl.getDomandaDAO().storeDomanda(domandaToGoDown);
+                action_default(request, response);
+                return;
+            }else if("POST".equals(request.getMethod()) && request.getParameter("goDownQuestion") != null){ //goDown Vuol dire aumentare la posizione (so che suona strano)
+                int position = Integer.parseInt(request.getParameter("goDownQuestion").substring(20));
+                Domanda domandaToGoDown = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position);
+                Domanda domandaToGoUp = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), position+1);
+                domandaToGoDown.setPosizione(position+1);
+                domandaToGoUp.setPosizione(position);
+                dl.getDomandaDAO().storeDomanda(domandaToGoDown);
+                dl.getDomandaDAO().storeDomanda(domandaToGoUp);
+                action_default(request, response);
+                return;
+            } else {
+                action_warning(request, response);
+                return;  
             }
 
         } catch (IOException ex) {
@@ -248,9 +300,14 @@ public class ConfirmSection extends BaseController {
         return;
     }
     
-    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
+    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
        try {
             TemplateResult res = new TemplateResult(getServletContext());  
+            HttpSession s = checkSession(request);
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+            ArrayList<Domanda> domande = (ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio((Integer)s.getAttribute("sondaggio-in-creazione"));
+            Collections.sort(domande);
+            request.setAttribute("domande", domande);
             res.activate("MakerPoll/confirmSection.ftl", request, response);
             return;
         } catch (TemplateManagerException ex) {

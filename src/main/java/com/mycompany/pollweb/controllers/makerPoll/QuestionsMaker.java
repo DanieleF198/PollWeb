@@ -86,6 +86,15 @@ public class QuestionsMaker extends BaseController {
                 } else if(request.getParameter("returnQuestions") != null){ //è arrivato da confirmSection cliccando su bottone
                     System.out.println("caso 2");
                     s.setAttribute("sondaggio-in-conferma", "no");
+                    PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                    Domanda controlDomanda = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), 0);
+                    if(controlDomanda == null){
+                        if(s.getAttribute("updateDomanda")!= null){
+                            s.removeAttribute("updateDomanda");
+                        }
+                    } else {
+                        s.setAttribute("updateDomanda", 0);
+                    }
                     action_first_case(request, response);
                     return;
                 } else if((int)s.getAttribute("sondaggio-in-creazione") != 0 && (s.getAttribute("sondaggio-in-conferma").equals("yes"))) { //è arrivato da confirmSection senza cliccare su "torna alla sezione domande"
@@ -632,7 +641,6 @@ public class QuestionsMaker extends BaseController {
 
                 newDomanda.setPosizione((int)s.getAttribute("domanda-in-creazione"));
                 //non ci poniamo il problema dell'update perché in questo caso siamo sicuri che la domanda ancora non esiste
-                System.out.println("CIAOOO");
                 dl.getDomandaDAO().storeDomanda(newDomanda); 
             }
             
@@ -757,6 +765,7 @@ public class QuestionsMaker extends BaseController {
             s.setAttribute("updateDomanda", domanda.getPosizione());
             System.out.println("valore update:" + s.getAttribute("updateDomanda"));
             System.out.println("domanda corrente:" + s.getAttribute("domanda-in-creazione"));
+            System.out.println(request.getAttribute("description"));
             request.setAttribute("numeroDomanda", (int)s.getAttribute("domanda-in-creazione"));
             res.activate("MakerPoll/questionsMaker.ftl", request, response);
             return;

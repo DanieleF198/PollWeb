@@ -12,7 +12,7 @@ import org.json.JSONObject;
  *
  * @author Cronio
  */
-public interface Domanda extends DataItem<Integer> {
+public interface Domanda extends DataItem<Integer>, Comparable<Domanda> {
     
     public int getIdSondaggio();
     

@@ -142,5 +142,12 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     public void setVincolo(String vincolo){
         this.vincolo = vincolo;
     }
+
+    @Override
+    public int compareTo(Domanda domanda) {
+        Integer posizioneInteger = this.getPosizione();
+        Integer otherPosizioneInteger = domanda.getPosizione();
+        return posizioneInteger.compareTo(otherPosizioneInteger);
+    }
     
 }
