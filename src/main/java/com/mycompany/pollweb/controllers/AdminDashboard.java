@@ -85,6 +85,24 @@ public class AdminDashboard extends BaseController {
             List<Utente> utenti = dl.getUtenteDAO().getUtenti();
             request.setAttribute("utenti", utenti);
             
+            if(sondaggi.isEmpty()){ 
+                request.setAttribute("listaTuoiSondaggiVuota", "yes");  
+                System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
+            }
+            else{
+                request.setAttribute("LISTA SONDAGGI VUOTA: " + "listaTuoiSondaggiVuota", "");
+                System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
+            }
+            
+            if(sondaggi.isEmpty()){ 
+                request.setAttribute("listaUtentiVuota", "yes");  
+                System.out.println("LISTA UTENTI VUOTA: " + request.getAttribute("listaUtentiVuota"));
+            }
+            else{
+                request.setAttribute("LISTA UTENTI VUOTA: " + "listaUtentiVuota", "");
+                System.out.println("LISTA UTENTI VUOTA: " + request.getAttribute("listaUtentiVuota"));
+            }
+            
             res.activate("adminDashboard.ftl", request, response);
         }
     }
