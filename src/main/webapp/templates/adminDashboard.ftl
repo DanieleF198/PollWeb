@@ -132,18 +132,20 @@
                                             </thead>
                                             <#assign c = 1>
                                             <tbody>
-                                                <#list sondaggi as sondaggio>  
-                                                    <tr>
-                                                        <th scope="row">${c}</th>
-                                                        <td>${sondaggio.getTitolo()}</td>
-                                                        <td>${sondaggio.getCreazione()}</td>
-                                                        <#if sondaggio.getScadenza()??>
-                                                            <td>${sondaggio.getScadenza()}</td>
-                                                        <#else>
-                                                            <td>Indeterminata</td>
-                                                        </#if>
-                                                        <td><button class="btn btn-warning">elimina</button></td>
-                                                    </tr>
+                                                <#list sondaggi as sondaggio>
+                                                    <form>
+                                                        <tr>
+                                                            <th scope="row">${c}</th>
+                                                            <td>${sondaggio.getTitolo()}</td>
+                                                            <td>${sondaggio.getCreazione()}</td>
+                                                            <#if sondaggio.getScadenza()??>
+                                                                <td>${sondaggio.getScadenza()}</td>
+                                                            <#else>
+                                                                <td>Indeterminata</td>
+                                                            </#if>
+                                                            <td><button name="btnDeleteSondaggio" value="${sondaggio.getKey()}" class="btn brn-lg btn-warning" type="submit">elimina</button></td>
+                                                        </tr>
+                                                    <form>
                                                     <#assign c = c + 1> <!--non è l'ID-->
                                                 </#list>
                                             </tbody>
@@ -194,19 +196,21 @@
                                                 <tbody>
                                                     <#list utenti as utente>  
                                                         <#if utente.getIdGruppo()!= 3>
-                                                            <tr>
-                                                                <form method="post" action="firstSection" class="update">
-                                                                <th scope="row">${c}</th>
-                                                                <td>${utente.getNome()}</td>
-                                                                <td>${utente.getCognome()}</td>
-                                                                <td>${utente.getEmail()}</td>
-                                                                <#if utente.getIdGruppo()== 1>
-                                                                    <td>utente base</td>
-                                                                <#else>
-                                                                    <td>responsabile</td>
-                                                                </#if>
-                                                                <td><button name="btnDeleteUser" value="btnDeleteUser" class="btn brn-lg btn-warning" type="submit">elimina</button></td>
-                                                            </tr>
+                                                            <form>
+                                                                <tr>
+                                                                    <form method="post" action="firstSection" class="update">
+                                                                    <th scope="row">${c}</th>
+                                                                    <td>${utente.getNome()}</td>
+                                                                    <td>${utente.getCognome()}</td>
+                                                                    <td>${utente.getEmail()}</td>
+                                                                    <#if utente.getIdGruppo()== 1>
+                                                                        <td>utente base</td>
+                                                                    <#else>
+                                                                        <td>responsabile</td>
+                                                                    </#if>
+                                                                    <td><button name="btnDeleteUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">elimina</button></td>
+                                                                </tr>
+                                                            </form>
                                                             <#assign c = c + 1> <!--non è l'ID-->
                                                         </#if>
                                                     </#list>
