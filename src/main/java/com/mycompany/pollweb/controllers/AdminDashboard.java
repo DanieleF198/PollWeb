@@ -41,9 +41,11 @@ public class AdminDashboard extends BaseController {
          try {
             HttpSession s = checkSession(request); //in teoria il controllo avviene prima ma lo eseguiamo comunque
             if (s!= null) {
-                if (("POST".equals(request.getMethod())) && (request.getParameter("btnDeleteUser") != null)) {
-                   action_delete_user(request, response);
-                    return;
+                if ((request.getParameter("btnDeleteUser") != null)) {          
+                   action_delete_user(request);
+                }
+                if ((request.getParameter("btnDeleteSondaggio") != null)) {          
+                   action_delete_sondaggio(request);
                 }
                 action_default(request, response);
             } else {
@@ -83,6 +85,24 @@ public class AdminDashboard extends BaseController {
             List<Utente> utenti = dl.getUtenteDAO().getUtenti();
             request.setAttribute("utenti", utenti);
             
+            if(sondaggi.isEmpty()){ 
+                request.setAttribute("listaTuoiSondaggiVuota", "yes");  
+                System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
+            }
+            else{
+                request.setAttribute("LISTA SONDAGGI VUOTA: " + "listaTuoiSondaggiVuota", "");
+                System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
+            }
+            
+            if(sondaggi.isEmpty()){ 
+                request.setAttribute("listaUtentiVuota", "yes");  
+                System.out.println("LISTA UTENTI VUOTA: " + request.getAttribute("listaUtentiVuota"));
+            }
+            else{
+                request.setAttribute("LISTA UTENTI VUOTA: " + "listaUtentiVuota", "");
+                System.out.println("LISTA UTENTI VUOTA: " + request.getAttribute("listaUtentiVuota"));
+            }
+            
             res.activate("adminDashboard.ftl", request, response);
         }
     }
@@ -105,9 +125,30 @@ public class AdminDashboard extends BaseController {
         }
     }
         
-    private void action_delete_user(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+    private void action_delete_user(HttpServletRequest request) throws  IOException, DataException {
         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
-        request.getParameter("deleteId"); //deleteId
+        int userId = 0;
+        request.getParameter("btnDeleteUser");
+        System.out.println("Utente da eliminare: " + request.getParameter("btnDeleteUser"));
+        try{
+        userId = Integer.parseInt(request.getParameter("btnDeleteUser"));
+        }
+        catch (NumberFormatException e){
+        }
+        dl.getUtenteDAO().deleteUtente(userId);
+    }
+    
+    private void action_delete_sondaggio(HttpServletRequest request) throws  IOException, DataException {
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        int sondaggioId = 0;
+        request.getParameter("btnDeleteSondaggio");
+        System.out.println("Sondaggio da eliminare: " + request.getParameter("btnDeleteSondaggio"));
+        try{
+        sondaggioId = Integer.parseInt(request.getParameter("btnDeleteSondaggio"));
+        }
+        catch (NumberFormatException e){
+        }
+        dl.getSondaggioDAO().deleteSondaggio(sondaggioId);
     }
     
 }

@@ -102,10 +102,17 @@
                             <div class="col-lg-9 col-md-8 col-sm-7 col-6">
                                 <h2>I Tuoi sondaggi</h2>
                             </div>
-                            <div class="col-lg-3 col-md-4 col-sm-5 col-6 d-flex justify-content-end" >
-                                <a href="#" class="btn btn-light">Crea un sondaggio</a>
-                            </div>
                         </div>
+                        <#if listaTuoiSondaggiVuota?? && listaTuoiSondaggiVuota!="">
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <h2>Nessun sondaggio da OBLITERARE!</h2>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-9 col-md-8 col-sm-7 col-6"></div>
+                            </div>
+                        <#else>
                         <div class="row mt-3">
                             <div class="col-lg-12">
                                 <div id="search-field">
@@ -121,37 +128,40 @@
                                 <div class="col-lg-12">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-curved">
-                                            <thead>
-                                                <tr class="bg-warning">
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Titolo</th>
-                                                    <th scope="col">Data creazione</th>
-                                                    <th scope="col">data scadenza</th>
-                                                    <th scope="col">operazioni</th>
-                                                </tr>
-                                            </thead>
-                                            <#assign c = 1>
-                                            <tbody>
-                                                <#list sondaggi as sondaggio>  
-                                                    <tr>
-                                                        <th scope="row">${c}</th>
-                                                        <td>${sondaggio.getTitolo()}</td>
-                                                        <td>${sondaggio.getCreazione()}</td>
-                                                        <#if sondaggio.getScadenza()??>
-                                                            <td>${sondaggio.getScadenza()}</td>
-                                                        <#else>
-                                                            <td>Indeterminata</td>
-                                                        </#if>
-                                                        <td><button class="btn btn-warning">elimina</button></td>
+                                                <thead>
+                                                    <tr class="bg-warning">
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Titolo</th>
+                                                        <th scope="col">Data creazione</th>
+                                                        <th scope="col">data scadenza</th>
+                                                        <th scope="col">operazioni</th>
                                                     </tr>
-                                                    <#assign c = c + 1> <!--non è l'ID-->
-                                                </#list>
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <#assign c = 1>
+                                                <tbody>
+                                                    <#list sondaggi as sondaggio>
+                                                        <form>
+                                                            <tr>
+                                                                <th scope="row">${c}</th>
+                                                                <td>${sondaggio.getTitolo()}</td>
+                                                                <td>${sondaggio.getCreazione()}</td>
+                                                                <#if sondaggio.getScadenza()??>
+                                                                    <td>${sondaggio.getScadenza()}</td>
+                                                                <#else>
+                                                                    <td>Indeterminata</td>
+                                                                </#if>
+                                                                <td><button name="btnDeleteSondaggio" value="${sondaggio.getKey()}" class="btn brn-lg btn-warning" type="submit">elimina</button></td>
+                                                            </tr>
+                                                        <form>
+                                                        <#assign c = c + 1> <!--non è l'ID-->
+                                                    </#list>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </#if>
                     </div>
                     <!-- Polls end -->
                     <!-- Utenti end -->
@@ -159,12 +169,19 @@
                         <div class="container bg-white border rounded-lg">
                             <div class="row pt-3 pb-2 pl-2 pr-2 bg-warning margin-bottom">
                                 <div class="col-lg-9 col-md-8 col-sm-7 col-6">
-                                    <h2>I Tuoi sondaggi</h2>
-                                </div>
-                                <div class="col-lg-3 col-md-4 col-sm-5 col-6 d-flex justify-content-end" >
-                                    <a href="#" class="btn btn-light">Crea un sondaggio</a>
+                                    <h2>Lista Utenti</h2>
                                 </div>
                             </div>
+                            <#if listaUtentiVuota?? && listaUtentiVuota!="">
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <h2>Nessun utente da OBLITERARE!</h2>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-9 col-md-8 col-sm-7 col-6"></div>
+                            </div>
+                            <#else>
                             <div class="row mt-3">
                                 <div class="col-lg-12">
                                     <div id="search-field">
@@ -194,19 +211,21 @@
                                                 <tbody>
                                                     <#list utenti as utente>  
                                                         <#if utente.getIdGruppo()!= 3>
-                                                            <tr>
-                                                                <form method="post" action="firstSection" class="update">
-                                                                <th scope="row">${c}</th>
-                                                                <td>${utente.getNome()}</td>
-                                                                <td>${utente.getCognome()}</td>
-                                                                <td>${utente.getEmail()}</td>
-                                                                <#if utente.getIdGruppo()== 1>
-                                                                    <td>utente base</td>
-                                                                <#else>
-                                                                    <td>responsabile</td>
-                                                                </#if>
-                                                                <td><button name="btnDeleteUser" value="btnDeleteUser" class="btn brn-lg btn-warning" type="submit">elimina</button></td>
-                                                            </tr>
+                                                            <form>
+                                                                <tr>
+                                                                    <form method="post" action="firstSection" class="update">
+                                                                    <th scope="row">${c}</th>
+                                                                    <td>${utente.getNome()}</td>
+                                                                    <td>${utente.getCognome()}</td>
+                                                                    <td>${utente.getEmail()}</td>
+                                                                    <#if utente.getIdGruppo()== 1>
+                                                                        <td>utente base</td>
+                                                                    <#else>
+                                                                        <td>responsabile</td>
+                                                                    </#if>
+                                                                    <td><button name="btnDeleteUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">elimina</button></td>
+                                                                </tr>
+                                                            </form>
                                                             <#assign c = c + 1> <!--non è l'ID-->
                                                         </#if>
                                                     </#list>
@@ -216,6 +235,7 @@
                                     </div>
                                 </div>
                             </div>
+                        </#if>
                         </div>
 
 
