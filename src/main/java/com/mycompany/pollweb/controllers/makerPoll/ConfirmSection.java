@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
@@ -307,6 +309,69 @@ public class ConfirmSection extends BaseController {
             PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
             ArrayList<Domanda> domande = (ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio((Integer)s.getAttribute("sondaggio-in-creazione"));
             Collections.sort(domande);
+            ArrayList<String> errors = new ArrayList<String>();
+            String err1 = "non esistono domande";
+            String err2 = "non tutte le domande hanno il titolo";
+            String err3 = "Una tua domanda chiusa ha meno di due opzioni";
+            String err4 = "Un qualche vincolo impostato non è valido (controlla domande aperte con risposta breve o lunga)";
+            if(domande.isEmpty()){
+                errors.add(err1);
+            } else {
+                for (int i = 0; i < domande.size(); i++){
+                    Domanda d = domande.get(i);
+                    if(d.getTitolo().isBlank()){
+                        if(!errors.contains(err2)){
+                            errors.add(err2);
+                        }
+                    }
+                    if (d.getTipo().equals("closeSingle") || d.getTipo().equals("closeMultiple")){
+                        JSONArray opzioni = d.getOpzioni().getJSONArray("opzioni");
+                        if(opzioni.length()<2){
+                            if(!errors.contains(err3)){
+                                errors.add(err3);
+                            }
+                        }
+                    }
+                    if (d.getTipo().equals("openShort")){
+                        if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
+                            Pattern p = Pattern.compile("\\d+");
+                            Matcher m = p.matcher(d.getVincolo());
+                            if(m.find(0)){
+                                String constraint = m.group(0);
+                                int value = Integer.parseInt(constraint);
+                                if(value > 64){
+                                    if(!errors.contains(err4)){
+                                        errors.add(err4);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (d.getTipo().equals("openLong")){
+                        if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
+                            Pattern p = Pattern.compile("\\d+");
+                            Matcher m = p.matcher(d.getVincolo());
+                            if(m.find(0)){
+                                String constraint = m.group(0);
+                                int value = Integer.parseInt(constraint);
+                                if(value > 256){
+                                    if(!errors.contains(err4)){
+                                        errors.add(err4);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(!errors.isEmpty()){
+                request.setAttribute("errors", errors);
+                Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
+                if(sondaggio.isVisibilita()){
+                    sondaggio.setVisibilita(false);
+                }
+                dl.getSondaggioDAO().storeSondaggio(sondaggio);
+            }
             request.setAttribute("domande", domande);
             res.activate("MakerPoll/confirmSection.ftl", request, response);
             return;

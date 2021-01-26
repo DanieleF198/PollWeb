@@ -219,14 +219,18 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             
                 uSondaggio.setInt(1, sondaggio.getIdUtente()); //update
                 uSondaggio.setString(2, sondaggio.getTitolo());
-                if(!sondaggio.getTestoApertura().isEmpty()){
-                    uSondaggio.setString(3, sondaggio.getTestoApertura());
+                if(sondaggio.getTestoApertura()!=null){
+                    if(!sondaggio.getTestoApertura().isEmpty()){
+                        uSondaggio.setString(3, sondaggio.getTestoApertura());
+                    }
                 }
                 else{
                     uSondaggio.setString(3, null);
                 }
-                if(!sondaggio.getTestoChiusura().isEmpty()){
-                    uSondaggio.setString(4, sondaggio.getTestoChiusura());
+                if(sondaggio.getTestoChiusura() != null){
+                    if(!sondaggio.getTestoChiusura().isEmpty()){
+                        uSondaggio.setString(4, sondaggio.getTestoChiusura());
+                    }
                 }
                 else{
                     uSondaggio.setString(4, null);
