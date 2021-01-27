@@ -175,7 +175,7 @@
                             <#if listaUtentiVuota?? && listaUtentiVuota!="">
                             <div class="row mt-3">
                                 <div class="col-lg-12">
-                                    <h2>Nessun utente da OBLITERARE!</h2>
+                                    <h2>Nessun utente da STERMINARE!</h2>
                                 </div>
                             </div>
                             <div class="row">

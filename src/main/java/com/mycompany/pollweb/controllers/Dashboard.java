@@ -88,6 +88,9 @@ public class Dashboard extends BaseController {
                 
                 ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
                 request.setAttribute("sondaggi", sondaggi);
+                if( sondaggi.isEmpty() ){
+                    request.setAttribute("noTuoiSondaggi", "yes");
+                }
 
                 res.activate("dashboard.ftl", request, response);
                 

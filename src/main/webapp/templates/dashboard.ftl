@@ -109,6 +109,13 @@
                                     <a href="#" class="btn btn-light">Crea un sondaggio</a>
                                 </div>
                             </div>
+                            <#if noTuoiSondaggi?? && noTuoiSondaggi!="">
+                                <div class="row mt-3">
+                                    <div class="col-lg-12">
+                                        <h2>I Tuoi sondaggi</h2>
+                                    </div>
+                                </div>
+                            <#else>
                             
                             <#assign js = "yes">
                             <noscript>
@@ -221,6 +228,8 @@
                                 </#if>
                             </#if>
                             </#if>
+                            </#if>
+                            
                             
                             
                             <div class="margin-pagination-scroll-bar"></div>      
