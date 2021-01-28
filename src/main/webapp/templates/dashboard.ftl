@@ -119,7 +119,7 @@
                             
                             <#assign js = "yes">
                             <noscript>
-                                <#assign js = "no">
+                                <#assign js = "yes">
                             </noscript>
                             <#if js == "yes">
                             <div class="row mt-3">
