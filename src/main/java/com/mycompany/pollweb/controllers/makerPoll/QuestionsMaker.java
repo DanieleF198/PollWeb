@@ -1450,6 +1450,7 @@ public class QuestionsMaker extends BaseController {
     private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         try {
             request.setAttribute("urlrequest", request.getRequestURL());
+            request.setAttribute("urlMakerPoll", "yes");
             RequestDispatcher rd = request.getRequestDispatcher("/login");
             rd.forward(request, response);
         } catch (ServletException e) {

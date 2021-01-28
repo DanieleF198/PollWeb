@@ -1,13 +1,22 @@
 <#macro style imagePath stylePath bootstrapPath>
     <!-- Style -->
-    <link rel="stylesheet" type="text/css" href="${stylePath}">
-    <link rel="stylesheet" type="text/css" href="${bootstrapPath}">
-    <link rel="shortcut icon" href="${imagePath}">
+        <link rel="stylesheet" type="text/css" href="${stylePath}">
+        <link rel="stylesheet" type="text/css" href="${bootstrapPath}">
+        <link rel="shortcut icon" href="${imagePath}">
     <!-- little piece that i need to manage javascript disabled -->
+    <style>
+        .javascriptNoVisibility{
+            display: none;
+        }
+    </style>
     <noscript>
       <style>
         .javaScriptVisibility{
             display: none;
+        }
+        
+        .javascriptNoVisibility{
+            display: inline
         }
       </style>
     </noscript>
