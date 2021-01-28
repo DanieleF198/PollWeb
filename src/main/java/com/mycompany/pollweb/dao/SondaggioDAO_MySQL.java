@@ -35,6 +35,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     
     private PreparedStatement sSondaggioByID;
     private PreparedStatement sSondaggioByIDUtente;
+    private PreparedStatement sSondaggiByIDUtente;
     private PreparedStatement sSondaggi;
     private PreparedStatement iSondaggio;
     private PreparedStatement uSondaggio;
@@ -55,6 +56,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             
             sSondaggioByID = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idSondaggio=?");
             sSondaggioByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
+            sSondaggiByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
             sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio");
             
             iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,quiz,visibilita,dataCreazione,dataChiusura,privato,modificabile) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -79,6 +81,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             
             sSondaggioByID.close();
             sSondaggioByIDUtente.close();
+            sSondaggiByIDUtente.close();
             searchSondaggiTitolo.close();
             searchSondaggiDataCreazione.close();
             searchSondaggiDataChiusura.close();
@@ -188,16 +191,19 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     @Override
     public ArrayList<Sondaggio> getSondaggiByIdUtente(int idUtente) throws DataException {
         ArrayList<Sondaggio> sondaggi = new ArrayList();
-
-        try (ResultSet rs = sSondaggi.executeQuery()) {
-            while (rs.next()) {
-                sondaggi.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
+        try {
+            sSondaggiByIDUtente.setInt(1, idUtente);
+            try (ResultSet rs = sSondaggiByIDUtente.executeQuery()) {
+                while (rs.next()) {
+                    sondaggi.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
+                }
             }
         } catch (SQLException ex) {
             throw new DataException("Unable to load Sondaggi", ex);
         }
         return sondaggi;
     }
+
 
     @Override
     public void storeSondaggio (Sondaggio sondaggio) throws DataException {
