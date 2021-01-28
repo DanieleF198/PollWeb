@@ -277,7 +277,6 @@ public class QuestionsMaker extends BaseController {
                 
                 request.setAttribute("noError", "yes");
                 request.setAttribute("noPrev", "yes");
-                request.setAttribute("noConf", "yes");
                 
             }
             System.out.println("valore update:" + s.getAttribute("updateDomanda"));

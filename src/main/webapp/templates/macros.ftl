@@ -3,6 +3,14 @@
     <link rel="stylesheet" type="text/css" href="${stylePath}">
     <link rel="stylesheet" type="text/css" href="${bootstrapPath}">
     <link rel="shortcut icon" href="${imagePath}">
+    <!-- little piece that i need to manage javascript disabled -->
+    <noscript>
+      <style>
+        .javaScriptVisibility{
+            display: none;
+        }
+      </style>
+    </noscript>
     <!-- End style -->
 </#macro>
     

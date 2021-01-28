@@ -108,13 +108,55 @@
                                     <p class="text-danger mb-1"><b>-</b>${error}</p>
                                 </#list>
                             </#if>
-                            <div class="row mt-3">
+                            <div class="row mt-3 javaScriptVisibility">
                                 <div class="col-lg-12">
-                                    <p><b>Partecipanti da invitare</b></p>
-                                    <p><b>Attenzione</b> il file da caricare deve essere un file con estenzione .csv</p>
-                                    <input type="file" id="partecipants" class="form-control-file" id="exampleFormControlFile1">
+                                    <div class="row mb-2">
+                                        <div class="col-lg-11 col-md-10 col-sx-9 col-9">
+                                            <p><b>Inserimento partecipanti</b> - manuale</p>
+                                        </div>
+                                        <div class="col-lg-1 col-md-1 col-sx-1 col-1">
+                                            <button type="button" id="addMore" class="btn btn-warning" title="aggiungi utente">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="fieldList" class="row mb-3">
+                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                            <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente" onkeyup="disabled()">
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                            <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente" onkeyup="disabled()">
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                            <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente" onkeyup="disabled()">
+                                        </div>
+                                        <div class="col-12 border-bottom mb-2"></div>
+                                    </div>
+                                    <p><b>Inserimento partecipanti</b> - tramite csv</p>
+                                    <div class="row">
+                                        <div class="col-11">
+                                            <input type="file" id="partecipants" class="form-control-file" id="exampleFormControlFile1">
+                                        </div>
+                                        <div class="col-1">
+                                            <label class="checkbox">
+                                                <input type="checkbox" name="withCSV" id="withCSV" value="withCSV" onclick="disable()">
+                                                <span class="warning"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3"><b>Attenzione</b> se si decide di invitare i partecipanti tramite file csv, i partecipanti inseriti nell'inserimento manuale saranno ignorati</p>
                                 </div>
                             </div>
+                            <noscript>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <p><b>Inserimento partecipanti</b> - tramite csv</p>
+                                        <input type="file" id="partecipants" class="form-control-file" id="exampleFormControlFile1">
+                                    </div>
+                                </div>
+                            </noscript>
                         </form>
                         <form id="returnQuestions" action="questionsMaker" method="GET"></form>
                             <div class="row mt-3">
@@ -157,6 +199,34 @@
             </main>
     <@macros.footer />
     <@macros.script />
+            <script>
+                $(function() {
+                    $("#addMore").click(function(e) {
+                        e.preventDefault();
+                        if(document.getElementById('firstUserName').disabled === false){
+                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersName[]' class='form-control' placeholder='Nome Utente'></div>");
+                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersMail[]' class='form-control' placeholder='E-mail utente'></div>"); 
+                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersPass[]' class='form-control' placeholder='Password utente'></div>"); 
+                            $("#fieldList").append("<div class='col-12 border-bottom mb-2'></div>"); 
+                        } else {
+                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersName[]' class='form-control' placeholder='Nome Utente' disabled></div>");
+                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersMail[]' class='form-control' placeholder='E-mail utente' disabled></div>"); 
+                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersPass[]' class='form-control' placeholder='Password utente' disabled></div>"); 
+                            $("#fieldList").append("<div class='col-12 border-bottom mb-2'></div>"); 
+                        }
+                    });
+                });    
+                function disable(){
+                    $(document).ready(function(){
+                        if(document.getElementById('firstUserName').disabled === false){
+                            $("input[type=text]").prop("disabled", true);
+                                
+                        } else {
+                            $("input[type=text]").prop("disabled", false);
+                        }
+                    });
+                }
+            </script>
         </div>
     </body>
 </html>
