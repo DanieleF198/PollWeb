@@ -67,6 +67,19 @@ public class FirstSection extends BaseController {
                     }
                     response.sendRedirect("firstSection"); //caso in cui arriva da firstSectionWarning e decide di continuare
                     return;
+                } else if(("GET".equals(request.getMethod())) && (request.getParameter("returnInfo") != null)){ //sto tornando indietro da questionMaker o confirmSection da bottone
+                    s.setAttribute("continue", "yes");
+                    s.setAttribute("sondaggio-in-conferma", "no");
+                    s.setAttribute("domanda-in-creazione", 0);
+                    PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                    Domanda controlDomanda = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), 0);
+                    if(controlDomanda == null){
+                        if(s.getAttribute("updateDomanda")!= null){
+                            s.removeAttribute("updateDomanda");
+                        }
+                    }
+                    response.sendRedirect("firstSection");
+                    return;
                 }
                 else if (("POST".equals(request.getMethod())) && (request.getParameter("buttonNew") != null)){
                     s.setAttribute("sondaggio-in-creazione", 0); //caso in cui arriva da firstSectionWarning e decide di creare nuovo sondaggio.

@@ -113,6 +113,9 @@ public class QuestionsMaker extends BaseController {
                     System.out.println("caso 6");
                     action_remove_case(request, response);
                     return;
+                } else if (request.getParameter("confirm") != null && s.getAttribute("sondaggio-in-conferma").equals("no")){
+                    action_confirm_redirect(request,response);
+                    return;
                 } else {
                     System.out.println("caso 7");
                     response.sendRedirect("firstSection");
@@ -1437,6 +1440,194 @@ public class QuestionsMaker extends BaseController {
         } catch (TemplateManagerException ex) {
             Logger.getLogger(QuestionsMaker.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void action_confirm_redirect(HttpServletRequest request, HttpServletResponse response)throws IOException, ServletException, TemplateManagerException, DataException{
+        //prima di andare avanti salviamo l'ultima domanda (quella da cui ha cliccato "conferma").
+        //nota, in questo caso, assumiamo che se la domanda è vuota allora non la vuole caricare, se invece anche un solo campo tra "titolo", "descrizione" e "obbligatoria" è riempito/checkato
+        //allora assumiamo che la domanda vuole essere caricata
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        HttpSession s = checkSession(request);
+        if((request.getParameter("questionTitle") != null && !request.getParameter("questionTitle").equals("")) || (request.getParameter("questionDescription") != null && !request.getParameter("questionDescription").equals("")) || (request.getParameter("questionObbligatory") != null && !request.getParameter("questionObbligatory").equals("")) || (request.getParameter("openShortConstraint") != null && !request.getParameter("openShortConstraint").equals("")) || (request.getParameter("openLongConstraint") != null && !request.getParameter("openLongConstraint").equals("")) || (request.getParameter("openNumberConstraintMin") != null && !request.getParameter("openNumberConstraintMin").equals("")) || (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").equals("")) || (request.getParameter("openDateConstraintMin") != null && !request.getParameter("openDateConstraintMin").equals("")) || (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").equals(""))){
+            String title = "";
+            String description = "";
+            String tipo = request.getParameter("tabGroup");
+            boolean obbligatory = false;
+
+            if(request.getParameter("questionTitle") != null){
+                title = SecurityLayer.addSlashes(request.getParameter("questionTitle"));
+                title = SecurityLayer.stripSlashes(title);
+            }
+
+            if(request.getParameter("questionDescription") != null){
+                description = SecurityLayer.addSlashes(request.getParameter("questionDescription"));
+                description = SecurityLayer.stripSlashes(description);
+            }
+
+            if(request.getParameter("questionObbligatory") != null){
+                if(request.getParameter("questionObbligatory").equals("obbligatory")){
+                    obbligatory = true;
+                }
+            }
+
+            Domanda newDomanda = dl.getDomandaDAO().createDomanda();
+            
+            newDomanda.setIdSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
+            newDomanda.setTitolo(title);
+            newDomanda.setDescrizione(description);
+            newDomanda.setObbligatoria(obbligatory);
+
+
+            if(tipo.equals("openShort")){
+                newDomanda.setTipo("openShort");
+                if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
+                    String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
+                    newDomanda.setVincolo(vincolo);
+                }
+            } else if (tipo.equals("openLong")) {
+                newDomanda.setTipo("openLong");
+                if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
+                    String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
+                    newDomanda.setVincolo(vincolo);
+                }
+            } else if (tipo.equals("openNumber")) {
+                newDomanda.setTipo("openNumber");
+                if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
+                    if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                        String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
+                        newDomanda.setVincolo(vincolo);
+                    } else {
+                        String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
+                        newDomanda.setVincolo(vincolo);
+                    }
+                } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
+                    String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
+                    newDomanda.setVincolo(vincolo);
+                }
+            } else if (tipo.equals("openDate")) {
+                newDomanda.setTipo("openDate");
+                if(request.getParameter("openDateConstraintMin")!=null && !request.getParameter("openDateConstraintMin").isEmpty()){
+                    if(request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                        String strMinDate = request.getParameter("openDateConstraintMin");
+                        String strMaxDate = request.getParameter("openDateConstraintMax");
+                        String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
+                        newDomanda.setVincolo(vincolo);
+                    } else { 
+                        String strMinDate = request.getParameter("openDateConstraintMin");
+                        String vincolo = "Constraint: " +strMinDate;
+                        newDomanda.setVincolo(vincolo);
+                    }
+                } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
+                    String strMaxDate = request.getParameter("openDateConstraintMax");
+                    String vincolo = "Constraint: null -- " +strMaxDate;
+                    newDomanda.setVincolo(vincolo);
+                }
+            } else if (tipo.equals("closeSingle")) {
+                newDomanda.setTipo("closeSingle");
+                JSONObject opzioni = new JSONObject();
+                ArrayList<String> listOpzioni = new ArrayList<String>();
+                if(request.getParameter("option1")!=null && !request.getParameter("option1").isEmpty()){
+                    listOpzioni.add(request.getParameter("option1"));
+                }
+                if(request.getParameter("option2")!=null && !request.getParameter("option2").isEmpty()){
+                    listOpzioni.add(request.getParameter("option2"));
+                }
+                if(request.getParameter("option3")!=null && !request.getParameter("option3").isEmpty()){
+                    listOpzioni.add(request.getParameter("option3"));
+                }
+                if(request.getParameter("option4")!=null && !request.getParameter("option4").isEmpty()){
+                    listOpzioni.add(request.getParameter("option4"));
+                }
+                if(request.getParameter("option5")!=null && !request.getParameter("option5").isEmpty()){
+                    listOpzioni.add(request.getParameter("option5"));
+                }
+                if(request.getParameter("option6")!=null && !request.getParameter("option6").isEmpty()){
+                    listOpzioni.add(request.getParameter("option6"));
+                }
+                if(request.getParameter("option7")!=null && !request.getParameter("option7").isEmpty()){
+                    listOpzioni.add(request.getParameter("option7"));
+                }
+                if(request.getParameter("option8")!=null && !request.getParameter("option8").isEmpty()){
+                    listOpzioni.add(request.getParameter("option8"));
+                }
+                if(request.getParameter("option9")!=null && !request.getParameter("option9").isEmpty()){
+                    listOpzioni.add(request.getParameter("option9"));
+                }
+                if(request.getParameter("option10")!=null && !request.getParameter("option10").isEmpty()){
+                    listOpzioni.add(request.getParameter("option10"));
+                }
+                if(request.getParameter("option11")!=null && !request.getParameter("option11").isEmpty()){
+                    listOpzioni.add(request.getParameter("option11"));
+                }
+                if(request.getParameter("option12")!=null && !request.getParameter("option12").isEmpty()){
+                    listOpzioni.add(request.getParameter("option12"));
+                }
+                opzioni.put("opzioni", new JSONArray(listOpzioni));
+                newDomanda.setOpzioni(opzioni);
+            } else if (tipo.equals("closeMultiple")) {
+                newDomanda.setTipo("closeMultiple");
+                JSONObject opzioni = new JSONObject();
+                ArrayList<String> listOpzioni = new ArrayList<String>();
+                if(request.getParameter("option1m")!=null && !request.getParameter("option1m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option1m"));
+                }
+                if(request.getParameter("option2m")!=null && !request.getParameter("option2m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option2m"));
+                }
+                if(request.getParameter("option3m")!=null && !request.getParameter("option3m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option3m"));
+                }
+                if(request.getParameter("option4m")!=null && !request.getParameter("option4m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option4m"));
+                }
+                if(request.getParameter("option5m")!=null && !request.getParameter("option5m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option5m"));
+                }
+                if(request.getParameter("option6m")!=null && !request.getParameter("option6m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option6m"));
+                }
+                if(request.getParameter("option7m")!=null && !request.getParameter("option7m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option7m"));
+                }
+                if(request.getParameter("option8m")!=null && !request.getParameter("option8m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option8m"));
+                }
+                if(request.getParameter("option9m")!=null && !request.getParameter("option9m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option9m"));
+                }
+                if(request.getParameter("option10m")!=null  && !request.getParameter("option10m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option10m"));
+                }
+                if(request.getParameter("option11m")!=null && !request.getParameter("option11m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option11m"));
+                }
+                if(request.getParameter("option12m")!=null && !request.getParameter("option12m").isEmpty()){
+                    listOpzioni.add(request.getParameter("option12m"));
+                }
+                opzioni.put("opzioni", new JSONArray(listOpzioni));
+                newDomanda.setOpzioni(opzioni);
+            }
+
+            //caso in cui l'utente ha creato il sondaggio (non confermato o quel che vuoi, ma creato si) e ritorna qui da firstSection per modificare le domande
+            //in questo caso, quando passerà per l'ultima domanda effettivamente creata, vedra che non esiste la prossima domanda, ma questo non vuol dire che che 
+            //la domanda corrente và "creata", ma va solo aggiornato. Data la gestione fatta fin'ora con "update-domanda" nel sessionamento me la gestiro con un if
+
+            Domanda domandaE = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("domanda-in-creazione"));
+
+            newDomanda.setPosizione((int)s.getAttribute("domanda-in-creazione"));
+            System.out.println(s.getAttribute("updateDomanda"));
+            if(s.getAttribute("updateDomanda")!=null){
+                newDomanda.setKey((int)s.getAttribute("updateDomanda"));
+                s.removeAttribute("updateDomanda");
+            }
+            if(domandaE!=null){
+                newDomanda.setKey(domandaE.getKey());
+            }
+
+            dl.getDomandaDAO().storeDomanda(newDomanda);
+        }
+        response.sendRedirect("confirmSection");
+        return;
     }
     
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
