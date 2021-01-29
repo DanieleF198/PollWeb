@@ -41,8 +41,18 @@ public class AdminDashboard extends BaseController {
          try {
             HttpSession s = checkSession(request); //in teoria il controllo avviene prima ma lo eseguiamo comunque
             if (s!= null) {
+                if(request.getParameter("header-search-sondaggi") != null){
+                    action_sondaggi_search(request, response);
+                    return;
+                }
                 if ((request.getParameter("btnDeleteUser") != null)) {          
                    action_delete_user(request);
+                }
+                if ((request.getParameter("btnBanUser") != null)) {          
+                   action_ban_user(request);
+                }
+                if ((request.getParameter("btnSbanUser") != null)) {          
+                   action_sban_user(request);
                 }
                 if ((request.getParameter("btnDeleteSondaggio") != null)) {          
                    action_delete_sondaggio(request);
@@ -79,7 +89,7 @@ public class AdminDashboard extends BaseController {
             request.setAttribute("eta", (Integer)s.getAttribute("eta"));
             request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
             
-            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
+            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi();
             request.setAttribute("sondaggi", sondaggi);
             
             List<Utente> utenti = dl.getUtenteDAO().getUtenti();
@@ -90,17 +100,56 @@ public class AdminDashboard extends BaseController {
                 System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
             }
             else{
-                request.setAttribute("LISTA SONDAGGI VUOTA: " + "listaTuoiSondaggiVuota", "");
+                request.setAttribute("listaTuoiSondaggiVuota", "");
                 System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
             }
             
-            if(sondaggi.isEmpty()){ 
+            if(utenti.isEmpty()){ 
                 request.setAttribute("listaUtentiVuota", "yes");  
                 System.out.println("LISTA UTENTI VUOTA: " + request.getAttribute("listaUtentiVuota"));
             }
             else{
-                request.setAttribute("LISTA UTENTI VUOTA: " + "listaUtentiVuota", "");
+                request.setAttribute("listaUtentiVuota", "");
                 System.out.println("LISTA UTENTI VUOTA: " + request.getAttribute("listaUtentiVuota"));
+            }
+            
+            res.activate("adminDashboard.ftl", request, response);
+        }
+    }
+    
+    private void action_sondaggi_search(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+        if(!(SecurityLayer.checkSession(request) != null)){
+            action_redirect_login(request,response);
+        }else{
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+            TemplateResult res = new TemplateResult(getServletContext());
+            HttpSession s = request.getSession(false);
+            GruppoImpl g = new GruppoImpl();
+            request.setAttribute("username", (String)s.getAttribute("username"));
+            request.setAttribute("email", (String)s.getAttribute("email"));
+            request.setAttribute("nome", (String)s.getAttribute("nome"));
+            request.setAttribute("cognome", (String)s.getAttribute("cognome"));
+            request.setAttribute("eta", (Integer)s.getAttribute("eta"));
+            request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
+            
+            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi();
+            sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("header-search-sondaggi"));
+            request.setAttribute("sondaggi", sondaggi);
+            
+            if(!request.getParameter("header-search-sondaggi").isEmpty()){
+                request.setAttribute("ricercaTuoiSondaggi", "yes");
+            }
+            else{
+                request.setAttribute("ricercaTuoiSondaggi", "");
+            }
+            
+            if(sondaggi.isEmpty()){
+                request.setAttribute("listaTuoiSondaggiVuota", "yes");
+                System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
+            }
+            else{
+                request.setAttribute("listaTuoiSondaggiVuota", "");
+                System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
             }
             
             res.activate("adminDashboard.ftl", request, response);
@@ -136,6 +185,34 @@ public class AdminDashboard extends BaseController {
         catch (NumberFormatException e){
         }
         dl.getUtenteDAO().deleteUtente(userId);
+    }
+    
+    private void action_ban_user(HttpServletRequest request) throws  IOException, DataException {
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        int userId = 0;
+        request.getParameter("btnBanUser");
+        try{
+        userId = Integer.parseInt(request.getParameter("btnBanUser"));
+        }
+        catch (NumberFormatException e){
+        }
+        Utente userBan = dl.getUtenteDAO().getUtente(userId);
+        userBan.setBloccato(true);
+        dl.getUtenteDAO().storeUtente(userBan);
+    }
+    
+    private void action_sban_user(HttpServletRequest request) throws  IOException, DataException {
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        int userId = 0;
+        request.getParameter("btnSbanUser");
+        try{
+        userId = Integer.parseInt(request.getParameter("btnSbanUser"));
+        }
+        catch (NumberFormatException e){
+        }
+        Utente userSban = dl.getUtenteDAO().getUtente(userId);
+        userSban.setBloccato(false);
+        dl.getUtenteDAO().storeUtente(userSban);
     }
     
     private void action_delete_sondaggio(HttpServletRequest request) throws  IOException, DataException {

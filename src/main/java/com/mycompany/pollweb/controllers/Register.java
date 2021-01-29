@@ -245,6 +245,7 @@ public class Register extends BaseController {
                         
                         Utente newUtente = dl.getUtenteDAO().createUtente();
                         
+                        newUtente.setIdGruppo(2);
                         newUtente.setNome(firstName);
                         newUtente.setCognome(lastName);
                         newUtente.setDataNascita(birthDateTemp);

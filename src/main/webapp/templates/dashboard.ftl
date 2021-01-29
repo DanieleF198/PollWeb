@@ -29,7 +29,7 @@
                                     <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
                                     <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, e se sei abilitato alla creazione dei sondaggi, gestire i tuoi sondaggi.</p>
                                     
-                                        <p>Non sei ancora abilitato alla creazione di sondaggi? <a href="sendRespRequest" class="text-muted">clicca qui</a> per mandare la richiesta, richieder&#224; solo l'aggiunta del tuo codice fiscale!</p>
+                                        <p>PENSARE AD UNA FRASE DECENTE DA METTERE QUI O ELIMINARE LA SEZIONE</p>
                                     
                                     <p><b>I tuoi dati personali:</b></p>
                                     <div class="row">
@@ -112,9 +112,9 @@
                                         <p class="h4 text-muted">Ops! pare che tu non abbia mai creato un tuo sondaggio</h2>
                                     </div>
                                 </div>
-                            <#else>gitgit 
+                            <#else>
                                 <div class="row mt-3 javaScriptVisibility">
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-12 mb-2">
                                         <div class="table-responsive">
                                             <table id='table-sondaggi' class="table table-striped table-curved">
                                                 <thead>
@@ -138,7 +138,14 @@
                                                             <#else>
                                                                 <td>Indeterminata</td>
                                                             </#if>
-                                                            <td>da fare</td>
+                                                            <td>
+                                                                <button name="#" value="${sondaggio.getKey()}" class="btn brn-lg btn-warning" type="submit">modifica</button>
+                                                                <#if sondaggio.isVisibilita()>
+                                                                    <button name="#" value="${sondaggio.getKey()}" class="btn brn-lg btn-warning" type="submit">disattiva</button>
+                                                                <#else>
+                                                                    <button name="#" value="${sondaggio.getKey()}" class="btn brn-lg btn-warning" type="submit">attiva</button>
+                                                                </#if>
+                                                            </td>
                                                         </tr>
                                                         <#assign c = c + 1> <!--non è l'ID-->
                                                     </#list>
@@ -202,7 +209,14 @@
                                                                     <#else>
                                                                         <td>Indeterminata</td>
                                                                     </#if>
-                                                                    <td>da fare</td>
+                                                                    <td>
+                                                                        <button name="#" value="${sondaggio.getKey()}" class="btn brn-lg btn-warning" type="submit">modifica</button>
+                                                                        <#if sondaggio.isVisibilita()>
+                                                                            <button name="#" value="${sondaggio.getKey()}" class="btn brn-lg btn-warning" type="submit">disattiva</button>
+                                                                        <#else>
+                                                                            <button name="#" value="${sondaggio.getKey()}" class="btn brn-lg btn-warning" type="submit">attiva</button>
+                                                                        </#if>
+                                                                    </td>
                                                                 </tr>
                                                                 <#assign c = c + 1> <!--non è l'ID-->
                                                             </#list>
@@ -423,7 +437,8 @@
                 "bInfo": false,
                 "bAutoWidth": false,
                 "language": {
-                    "search": "", 
+                    "search": "",
+                    "zeroRecords": "Pare che non ci sia nessun sondaggio attribuito alla tua ricerca",
                     "paginate": {
                     "previous": "<",
                     "next": ">"

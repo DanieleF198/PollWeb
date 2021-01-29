@@ -86,7 +86,13 @@ public class Login extends BaseController {
 
                     if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
                         Utente utente = ((PollWebDataLayer)request.getAttribute("datalayer")).getUtenteDAO().getUtenteLogin(username, password);
+
                         if(utente != null){
+                            if(utente.isBloccato()){
+                            request.setAttribute("error", "ban");
+                            res.activate("login.ftl", request, response);
+                            return;
+                            }
                             if (username.equals(utente.getUsername())){
                                 if(request.getParameter("remember") == null){
                                     SecurityLayer.createSession(request, utente, false);

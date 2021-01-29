@@ -31,6 +31,7 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     private String email;
     private Gruppo gruppo;
     private int idGruppo;
+    private boolean bloccato;
     private List <SondaggioImpl> sondaggi = new ArrayList<>();
     private List <RispostaImpl> risposte = new ArrayList<>();
     
@@ -43,6 +44,7 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
         this.email = "";
         this.idGruppo = 1;
         this.username = "";
+        this.bloccato = false;
     }
     
     
@@ -97,6 +99,11 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     }
     
     @Override
+    public boolean isBloccato() {
+        return bloccato;
+    }
+    
+    @Override
     public void setNome(String newNome){ //setter
 	this.nome = newNome;
     }
@@ -144,6 +151,11 @@ public class UtenteImpl extends DataItemImpl<Integer> implements Utente  {
     @Override
     public void setUsername(String username) {
         this.username = username;
+    }
+    
+    @Override
+    public void setBloccato(boolean b) {
+        this.bloccato = b;
     }
 
     @Override
