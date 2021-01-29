@@ -112,7 +112,7 @@
                                         <p class="h4 text-muted">Ops! pare che tu non abbia mai creato un tuo sondaggio</h2>
                                     </div>
                                 </div>
-                            <#else>
+                            <#else>gitgit 
                                 <div class="row mt-3 javaScriptVisibility">
                                     <div class="col-lg-12">
                                         <div class="table-responsive">
