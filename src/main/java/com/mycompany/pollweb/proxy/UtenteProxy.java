@@ -121,6 +121,12 @@ public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
         super.setEmail(email);
         this.modified = true;
     }
+    
+    @Override
+    public void setBloccato(boolean b) {
+        super.setBloccato(b);
+        this.modified = true;
+    }
 
     //METODI ESCLUSIVI DEL PROXY
     @Override

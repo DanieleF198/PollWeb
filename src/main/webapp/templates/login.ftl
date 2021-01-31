@@ -58,6 +58,11 @@
                     <p class="text-danger d-flex justify-content-center">credenziali errate</p>
                 </div>
             </#if>
+            <#if error?? && error=="ban">
+                <div>
+                    <p class="text-danger d-flex justify-content-center">Il tuo account &#232; temporaneamente bloccato</p>
+                </div>
+            </#if>
             <label for="inputUsername" class="sr-only">Username</label>
             <input type="text" id="inputUsername" name="inputUsername" class="form-control" placeholder="Indirizzo e-mail" required autofocus>
             <label for="inputPassword" class="sr-only">Password</label>

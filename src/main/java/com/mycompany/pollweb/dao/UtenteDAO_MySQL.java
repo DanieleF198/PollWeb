@@ -55,8 +55,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             sUtenteExistByEmail = connection.prepareStatement("SELECT * FROM Utente WHERE email=?");
             sUtenti = connection.prepareStatement("SELECT * FROM Utente");   
             
-            iUtente = connection.prepareStatement("INSERT INTO Utente (idGruppo,nome,cognome,dataNascita,username,password,email) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,dataNascita=?,username=?,password=?,email=? WHERE idUtente=?");
+            iUtente = connection.prepareStatement("INSERT INTO Utente (idGruppo,nome,cognome,dataNascita,username,password,email,bloccato) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,dataNascita=?,username=?,password=?,email=?,bloccato=? WHERE idUtente=?");
             dUtente = connection.prepareStatement("DELETE FROM Utente WHERE idUtente=?");
 
             
@@ -104,6 +104,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             u.setUsername(rs.getString("username"));
             u.setPassword(rs.getString("password"));
             u.setEmail(rs.getString("email"));
+            u.setBloccato(rs.getBoolean("bloccato"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Utente object form ResultSet", ex);
         }
@@ -132,6 +133,23 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             }
         }
         return u;
+    }
+    
+    @Override
+    public void banUtente(int idUtente) throws DataException {
+        Utente u = null;
+            try {
+                sUtenteByID.setInt(1, idUtente);
+                try (ResultSet rs = sUtenteByID.executeQuery()) {
+                    if (rs.next()) {
+                        u = createUtente(rs);
+                        //e lo mettiamo anche nella cache
+                        dataLayer.getCache().add(Utente.class, u);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Utente by idUtente", ex);
+            }
     }
     
     @Override
@@ -218,7 +236,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 uUtente.setString(5, utente.getUsername());
                 uUtente.setString(6, utente.getPassword());
                 uUtente.setString(7, utente.getEmail());
-                uUtente.setInt(8, utente.getKey());
+                uUtente.setBoolean(8, utente.isBloccato());
+                uUtente.setInt(9, utente.getKey());
 
 
                 if (uUtente.executeUpdate() == 0) {
@@ -240,6 +259,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 iUtente.setString(5, utente.getUsername());
                 iUtente.setString(6, utente.getPassword());
                 iUtente.setString(7, utente.getEmail());
+                iUtente.setBoolean(8, utente.isBloccato());
                 
                 if (iUtente.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

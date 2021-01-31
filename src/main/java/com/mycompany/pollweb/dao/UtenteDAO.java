@@ -20,6 +20,8 @@ public interface UtenteDAO {
     
     public Utente getUtente(int idUtente) throws DataException;
     
+    public void banUtente(int idUtente) throws DataException;
+    
     public Utente getUtenteLogin(String username, String password) throws DataException;
     
     public String checkIfExist (String username, String email) throws DataException;

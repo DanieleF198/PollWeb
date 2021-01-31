@@ -19,6 +19,7 @@ import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.impl.GruppoImpl;
 import com.mycompany.pollweb.model.Gruppo;
 import com.mycompany.pollweb.model.Sondaggio;
+import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
@@ -71,10 +72,11 @@ public class Dashboard extends BaseController {
     }
 
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
-       try {
+        try {
             if(!(SecurityLayer.checkSession(request) != null)){ //controllo in più per essere sicuri
                 action_redirect_login(request,response);
-            }else{
+            }
+            else{
                 PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
                 TemplateResult res = new TemplateResult(getServletContext());
                 HttpSession s = request.getSession(false);
@@ -85,16 +87,13 @@ public class Dashboard extends BaseController {
                 request.setAttribute("cognome", (String)s.getAttribute("cognome"));
                 request.setAttribute("eta", (Integer)s.getAttribute("eta"));
                 request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
-                
+
                 ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
                 request.setAttribute("sondaggi", sondaggi);
                 if( sondaggi.isEmpty() ){
                     request.setAttribute("noTuoiSondaggi", "yes");
                 }
-
                 res.activate("dashboard.ftl", request, response);
-                
-                
             }
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
@@ -102,7 +101,7 @@ public class Dashboard extends BaseController {
     }
     
     private void action_tuoi_sondaggi_search(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
-       try {
+        try {
             if(!(SecurityLayer.checkSession(request) != null)){ //controllo in più per essere sicuri
                 action_redirect_login(request,response);
             }else{
@@ -133,7 +132,7 @@ public class Dashboard extends BaseController {
                     System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
                 }
                 else{
-                    request.setAttribute("LISTA SONDAGGI VUOTA: " + "listaTuoiSondaggiVuota", "");
+                    request.setAttribute("listaTuoiSondaggiVuota", "");
                     System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
                 }
 
@@ -162,6 +161,12 @@ public class Dashboard extends BaseController {
         } catch (ServletException e) {
             e.printStackTrace();
         }
+    }
+    
+    private void action_ban(HttpServletRequest request, HttpServletResponse response) throws  IOException, TemplateManagerException {
+        TemplateResult res = new TemplateResult(getServletContext());
+        SecurityLayer.disposeSession(request);
+        res.activate("ban.ftl", request, response);
     }
     
     private void action_redirect_adminDashboard(HttpServletRequest request, HttpServletResponse response) throws  IOException {
