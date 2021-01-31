@@ -102,15 +102,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <#if errors??>
+                            <#if errors?? || partecipantsError??>
                                 <#if private?? && private=="yes">
                                     <p class="text-danger mb-1"><b>Pare che ci siano dei problemi:</b> finch&#233; non li avrai risolti non potrai rendere pubblico il sondaggio (ma potrai salvarlo) e non potrai invitare alcun partecipante.</p>
                                 <#else>
                                     <p class="text-danger mb-1"><b>Pare che ci siano dei problemi:</b> finch&#233; non li avrai risolti non potrai rendere pubblico il sondaggio (ma potrai salvarlo).</p>                                
                                 </#if>
-                                <#list errors as error>
-                                    <p class="text-danger mb-1"><b>-</b>${error}</p>
-                                </#list>
+                                <#if errors??>
+                                    <#list errors as error>
+                                        <p class="text-danger mb-1"><b>-</b>${error}</p>
+                                    </#list>
+                                </#if>
+                                <#if partecipantsError??>
+                                    <p class="text-danger mb-1"><b>-</b>Per ogni partecipante invitato manualmente devi inserire tutti i campi, inoltre le email e le password (che devono rispettare i requisiti posti durante la registrazione) devono essere tutte differenti tra di loro.</p>
+                                    <p class="text-danger mb-1"><b>NOTA: </b>I partecipanti che non verranno corretti non verranno invitati, inclusi le coppie di utenti con medesima email e/o password</p>
+                                </#if>
+                                <#if errors?? && partecipantsError??>
+                                    <p class="text-danger mb-1"><b>ATTENZIONE: </b>Pare che tu abbia degli errori sia relativi alle domande che ai partecipanti. In questo caso dovrai prima risolvere i problemi relativi alle domande, e soltanto dopo reinserire correttamente i partecipanti.</p>
+                                </#if>
                             </#if>
                             <#if private?? && private=="yes">
                                 <#if errors??>
@@ -352,7 +361,7 @@
                         <form id="returnFirstSection" action="firstSection" method="GET"></form>
                         <div class="row mt-3">
                             <div class="col-lg-6 mb-2 pr-1 pl-1 custom-left">
-                                <button type="submit" name="createOnly" value="create"  form="confirmForm" class="btn btn-lg btn-warning btn-block">
+                                    <button type="submit" name="createOnly" value="create"  form="confirmForm" class="btn btn-lg btn-warning btn-block">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
                                         <path d="M4 0h5.5v1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h1V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
                                         <path d="M9.5 3V0L14 4.5h-3A1.5 1.5 0 0 1 9.5 3z"/>

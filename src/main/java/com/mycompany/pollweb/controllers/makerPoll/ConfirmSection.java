@@ -203,35 +203,83 @@ public class ConfirmSection extends BaseController {
                 request.setAttribute("private", "yes");
             }
             request.setAttribute("domande", domande);
-            if(request.getParameter("usersName[]")!=null || request.getParameter("usersMail[]")!=null || request.getParameter("usersPass[]")!=null){
-                String[] name = request.getParameterValues("usersName[]");
-                String[] mail = request.getParameterValues("usersMail[]");
-                String[] pass = request.getParameterValues("usersPass[]");
-                int maxIndex; 
-                maxIndex = Integer.max(name.length, mail.length);
-                maxIndex = Integer.max(maxIndex, pass.length);
-                ArrayList<Utente> partecipants = new ArrayList<Utente>();
-                for(int i = 0; i < maxIndex; i++){
-                    Utente u = new UtenteImpl();
-                    if(name.length > i){
-                        u.setNome(name[i]);
-                    } else {
-                        u.setNome("");
+            if(request.getParameter("withCSV") != null && request.getParameter("withCSV").equals("withCSV")){
+                System.out.println("TODO");
+            } else {
+                if(request.getParameter("usersName[]")!=null || request.getParameter("usersMail[]")!=null || request.getParameter("usersPass[]")!=null){
+                    String[] name = request.getParameterValues("usersName[]");
+                    String[] mail = request.getParameterValues("usersMail[]");
+                    String[] pass = request.getParameterValues("usersPass[]");
+                    int maxIndex; 
+                    maxIndex = Integer.max(name.length, mail.length);
+                    maxIndex = Integer.max(maxIndex, pass.length);
+                    ArrayList<Utente> partecipants = new ArrayList<Utente>();
+                    for(int i = 0; i < maxIndex; i++){
+                        System.out.println("primo for, ciclo " + i);
+                        Utente u = new UtenteImpl();
+                        if(name.length > i){
+                            u.setNome(name[i]);
+                        } else {
+                            u.setNome("");
+                        }
+                        if(mail.length > i){
+                            u.setEmail(mail[i]);
+                        } else {
+                            u.setEmail("");
+                        }
+                        if(pass.length > i){
+                            u.setPassword(pass[i]);
+                        } else {
+                            u.setPassword("");
+                        }
+                        partecipants.add(u);
                     }
-                    if(mail.length > i){
-                        u.setEmail(mail[i]);
-                    } else {
-                        u.setEmail("");
+                    if(!partecipants.isEmpty()){
+                        ArrayList<Utente> tempPartecipants = new ArrayList<Utente>();
+                        System.out.println("numero inserimenti" + partecipants.size());
+                        for(int k = partecipants.size()-1; k >= 0 ; k--){
+                            System.out.println("K = " + k);
+                            System.out.println("Nome utente = " + partecipants.get(k).getNome());
+                            if (partecipants.get(k).getNome().isBlank() && partecipants.get(k).getEmail().isBlank() && partecipants.get(k).getPassword().isBlank()){
+                                System.out.println("sono passato di qui");
+                                partecipants.remove(k); 
+                            }
+                        }
+                        for(int k = 0; k < partecipants.size(); k++){
+                            tempPartecipants.add(partecipants.get(k));
+                        }
+                        for(int j = 0; j < partecipants.size(); j++){
+                            System.out.println("secondo for, ciclo " + j);
+                            Utente checkU = partecipants.get(j);
+                            if(checkU.getNome().isBlank() || checkU.getEmail().isBlank() || checkU.getPassword().isBlank()){
+                                System.out.println("sono passato di qui");
+                                request.setAttribute("partecipantsError", "yes");
+                            }
+                            String passwordOfU = checkU.getPassword();
+                            Pattern specailCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+                            Pattern UpperCasePatten = Pattern.compile("[A-Z ]");
+                            Pattern lowerCasePatten = Pattern.compile("[a-z ]");
+                            Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+                            Pattern emailPattern = Pattern.compile("^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
+                            if(passwordOfU.length()<8 || !UpperCasePatten.matcher(passwordOfU).find() || !lowerCasePatten.matcher(passwordOfU).find() || !digitCasePatten.matcher(passwordOfU).find() || !specailCharPatten.matcher(passwordOfU).find()){
+                                System.out.println("errore password");
+                                request.setAttribute("partecipantsError", "yes");
+                            }
+                            if (!emailPattern.matcher(checkU.getEmail()).find()) {
+                                System.out.println("errore mail");
+                                request.setAttribute("partecipantsError", "yes");
+                            }
+                            tempPartecipants.remove(0);
+                            for(int k = 0; k < tempPartecipants.size(); k++){
+                                System.out.println("terzo ciclo for, ciclo " + k);
+                                Utente tempUtente = tempPartecipants.get(k);
+                                if(tempUtente.getEmail().equals(checkU.getEmail()) || tempUtente.getPassword().equals(checkU.getPassword())){
+                                    request.setAttribute("partecipantsError", "yes");
+                                }
+                            }
+                        }
+                        request.setAttribute("partecipants", partecipants);
                     }
-                    if(pass.length > i){
-                        u.setPassword(pass[i]);
-                    } else {
-                        u.setPassword("");
-                    }
-                    partecipants.add(u);
-                }
-                if(!partecipants.isEmpty()){
-                    request.setAttribute("partecipants", partecipants);
                 }
             }
             res.activate("MakerPoll/confirmSection.ftl", request, response);
