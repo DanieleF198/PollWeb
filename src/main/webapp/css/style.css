@@ -665,3 +665,32 @@ input[type=number] {
 .label-width-searchBox{
     width: 100%;
 }
+
+.particular-width{
+    box-sizing: border-box;
+    width: 100%
+}
+@media screen and (max-width: 1200px){
+    .particular-width{
+        width: 75%
+    }
+}
+
+@media screen and (max-width: 992px){
+    .particular-width{
+        width: 50%
+    }
+}
+
+@media screen and (max-width: 768px){
+    .particular-width{
+        width: 25%
+    }
+}
+
+@media screen and (max-width: 576px){
+    .particular-width{
+        width: 0%
+    }
+}
+
