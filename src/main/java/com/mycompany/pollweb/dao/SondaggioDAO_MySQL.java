@@ -59,8 +59,8 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
             sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio");
             
-            iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,quiz,visibilita,dataCreazione,dataChiusura,privato,modificabile) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,quiz=?,visibilita=?,dataCreazione=?,dataChiusura=?, privato=?,modificabile=? WHERE idSondaggio=?");
+            iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,visibilita,dataCreazione,dataChiusura,privato,modificabile) VALUES(?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataCreazione=?,dataChiusura=?, privato=?,modificabile=? WHERE idSondaggio=?");
             dSondaggio = connection.prepareStatement("DELETE FROM Sondaggio WHERE idSondaggio=?");
             searchSondaggiTitolo = connection.prepareStatement("SELECT * FROM Sondaggio WHERE titolo LIKE ?");
             searchSondaggiDataCreazione = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataCreazione = ?");
@@ -114,7 +114,6 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             s.setTestoApertura(rs.getString("testoApertura"));
             s.setTestoChiusura(rs.getString("testoChiusura"));
             s.setCompleto(rs.getBoolean("completo"));
-            s.setQuiz(rs.getBoolean("quiz"));
             s.setVisibilita(rs.getBoolean("visibilita"));
             s.setCreazione(rs.getDate("dataCreazione"));
             s.setScadenza(rs.getDate("dataChiusura"));
@@ -217,10 +216,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 java.sql.Date sqlCreazione = new java.sql.Date( sondaggio.getCreazione().getTime() );
                 if(sondaggio.getScadenza() != null){
                     java.sql.Date sqlScadenza = new java.sql.Date( sondaggio.getScadenza().getTime() );
-                    uSondaggio.setDate(9, sqlScadenza);
+                    uSondaggio.setDate(8, sqlScadenza);
                 }
                 else{
-                    uSondaggio.setDate(9, null);
+                    uSondaggio.setDate(8, null);
                 }
             
                 uSondaggio.setInt(1, sondaggio.getIdUtente()); //update
@@ -249,12 +248,11 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                     uSondaggio.setString(4, null);
                 }
                 uSondaggio.setBoolean(5, sondaggio.isCompleto());
-                uSondaggio.setBoolean(6, sondaggio.isQuiz());
-                uSondaggio.setBoolean(7, sondaggio.isVisibilita());
-                uSondaggio.setDate(8, sqlCreazione);
-                uSondaggio.setBoolean(10, sondaggio.isPrivato());
-                uSondaggio.setBoolean(11, sondaggio.isModificabile());
-                uSondaggio.setInt(12, sondaggio.getKey());
+                uSondaggio.setBoolean(6, sondaggio.isVisibilita());
+                uSondaggio.setDate(7, sqlCreazione);
+                uSondaggio.setBoolean(9, sondaggio.isPrivato());
+                uSondaggio.setBoolean(10, sondaggio.isModificabile());
+                uSondaggio.setInt(11, sondaggio.getKey());
 
                 if (uSondaggio.executeUpdate() == 0) {
                     throw new OptimisticLockException(sondaggio);
@@ -265,10 +263,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 java.sql.Date sqlCreazione = new java.sql.Date( sondaggio.getCreazione().getTime() );
                 if(sondaggio.getScadenza() != null){
                     java.sql.Date sqlScadenza = new java.sql.Date( sondaggio.getScadenza().getTime() );
-                    iSondaggio.setDate(9, sqlScadenza);
+                    iSondaggio.setDate(8, sqlScadenza);
                 }
                 else{
-                    iSondaggio.setDate(9, null);
+                    iSondaggio.setDate(8, null);
                 }
                 
                 iSondaggio.setInt(1, sondaggio.getIdUtente()); //insert
@@ -286,11 +284,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                     iSondaggio.setString(4, null);
                 }
                 iSondaggio.setBoolean(5, sondaggio.isCompleto());
-                iSondaggio.setBoolean(6, sondaggio.isQuiz());
-                iSondaggio.setBoolean(7, sondaggio.isVisibilita());
-                iSondaggio.setDate(8, sqlCreazione);
-                iSondaggio.setBoolean(10, sondaggio.isPrivato());
-                iSondaggio.setBoolean(11, sondaggio.isModificabile());
+                iSondaggio.setBoolean(6, sondaggio.isVisibilita());
+                iSondaggio.setDate(7, sqlCreazione);
+                iSondaggio.setBoolean(9, sondaggio.isPrivato());
+                iSondaggio.setBoolean(10, sondaggio.isModificabile());
                 
                 if (iSondaggio.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

@@ -38,6 +38,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     private PreparedStatement iUtente;
     private PreparedStatement uUtente;
     private PreparedStatement dUtente;
+    private PreparedStatement iUtenteListaPartecipanti;
+    private PreparedStatement iUtenteListaPartecipanti2;
 
     UtenteDAO_MySQL(DataLayer d) {
         super(d);
@@ -58,6 +60,9 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             iUtente = connection.prepareStatement("INSERT INTO Utente (idGruppo,nome,cognome,dataNascita,username,password,email,bloccato) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,dataNascita=?,username=?,password=?,email=?,bloccato=? WHERE idUtente=?");
             dUtente = connection.prepareStatement("DELETE FROM Utente WHERE idUtente=?");
+            
+            iUtenteListaPartecipanti = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,nome,email,password) VALUES(?,?,?,?)");
+            iUtenteListaPartecipanti2 = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,idUtente,nome,email,password) VALUES(?,?,?,?,?)");
 
             
         } catch (SQLException ex) {
@@ -193,13 +198,13 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             sUtenteExistByUsername.setString(1, username);
             sUtenteExistByEmail.setString(1, email);
             try (ResultSet rs = sUtenteExistByUsername.executeQuery(); ResultSet rs2 = sUtenteExistByEmail.executeQuery()) {
-                    if (rs.next()) {
-                        usernameExist = "username";
-                    }
-                    if (rs2.next()) {
-                        emailExist = "email";
-                    }
+                if (rs.next()) {
+                    usernameExist = "username";
                 }
+                if (rs2.next()) {
+                    emailExist = "email";
+                }
+            }
         } catch (SQLException ex) {
             Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }  
@@ -320,6 +325,32 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             dUtente.execute();
         } catch (SQLException ex) {
             throw new DataException("Unable to delete Utente By ID", ex);
+        }
+    }
+
+    @Override
+    public void insertUtenteListaPartecipanti(Utente partecipant, int idSondaggio) throws DataException {
+        try {
+            sUtenteExistByEmail.setString(1, partecipant.getEmail());
+            try(ResultSet rs = sUtenteExistByEmail.executeQuery()){
+                if (rs.next()) {
+                    Utente u = createUtente(rs);
+                    iUtenteListaPartecipanti2.setInt(1, idSondaggio);
+                    iUtenteListaPartecipanti2.setInt(2, u.getKey());
+                    iUtenteListaPartecipanti2.setString(3, u.getNome());
+                    iUtenteListaPartecipanti2.setString(4, u.getEmail());
+                    iUtenteListaPartecipanti2.setString(5, u.getPassword());
+                    iUtenteListaPartecipanti2.executeUpdate();
+                } else {
+                    iUtenteListaPartecipanti.setInt(1, idSondaggio);
+                    iUtenteListaPartecipanti.setString(2, partecipant.getNome());
+                    iUtenteListaPartecipanti.setString(3, partecipant.getEmail());
+                    iUtenteListaPartecipanti.setString(4, partecipant.getPassword());
+                    iUtenteListaPartecipanti.executeUpdate();
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

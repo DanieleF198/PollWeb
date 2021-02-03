@@ -21,7 +21,6 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     private int idUtente;
     private Utente utente;
     private String titolo;
-    private boolean quiz;
     private boolean completo; //true= completo, false= non completo
     private boolean visibilita; //true= attivato, false= non attivato
     private boolean privato; //true= privato, false= pubblico
@@ -37,7 +36,6 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
         this.idUtente = 0;
         this.utente = null;
         this.titolo = null;
-        this.quiz = false;
         this.completo = false;
         this.privato = false;
         this.visibilita = false;
@@ -47,11 +45,7 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
         this.testoApertura = "";
         this.testoChiusura = "";
     }
-    
-    @Override
-    public boolean isQuiz(){
-	return quiz;
-    }
+
 
     @Override
     public List<DomandaImpl> getDomande() {
@@ -128,10 +122,6 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
         return visibilita;
     }
 
-    @Override
-    public void setQuiz(boolean quiz) {
-        this.quiz = quiz;
-    }
 
     @Override
     public void setDomande(List<DomandaImpl> domande) {

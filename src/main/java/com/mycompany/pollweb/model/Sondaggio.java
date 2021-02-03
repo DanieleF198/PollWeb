@@ -16,8 +16,6 @@ import java.util.List;
  */
 public interface Sondaggio extends DataItem<Integer> {
     
-    public boolean isQuiz();
-
     public List<DomandaImpl> getDomande();
 
     public int getIdUtente();
@@ -45,8 +43,6 @@ public interface Sondaggio extends DataItem<Integer> {
     public void setModificabile(boolean modificabile);
    
     public void setPrivato(boolean privato);
-
-    public void setQuiz(boolean quiz);
 
     public void setDomande(List<DomandaImpl> domande);
 

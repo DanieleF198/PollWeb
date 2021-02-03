@@ -70,12 +70,7 @@ public class SondaggioProxy extends SondaggioImpl implements DataItemProxy   {
         super.setKey(key);
         this.modified = true;
     }
-    
-    @Override
-    public void setQuiz(boolean quiz) {
-        super.setQuiz(quiz);
-        this.modified = true;
-    }
+
 
     @Override
     public void setDomande(List<DomandaImpl> domande) {

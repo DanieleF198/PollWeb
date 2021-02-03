@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <context-param>
+        <param-name>uploads.directory</param-name>
+        <!-- Tomcat must have write permissions on this folder -->
+        <param-value>C:\Users\joker\Documents\NetBeansProjects\PollWeb\src\main\webapp\uploads</param-value>
+    </context-param>
     <servlet>
         <servlet-name>Homepage</servlet-name>
         <servlet-class>com.mycompany.pollweb.controllers.Homepage</servlet-class>
@@ -51,6 +56,10 @@
     <servlet>
         <servlet-name>ConfirmSection</servlet-name>
         <servlet-class>com.mycompany.pollweb.controllers.makerPoll.ConfirmSection</servlet-class>
+        <multipart-config>
+            <max-file-size>3145728</max-file-size>
+            <max-request-size>5242880</max-request-size>
+        </multipart-config>
     </servlet>
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>

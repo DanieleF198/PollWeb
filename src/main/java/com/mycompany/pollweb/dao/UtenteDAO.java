@@ -8,6 +8,7 @@ package com.mycompany.pollweb.dao;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.proxy.UtenteProxy;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,5 +32,7 @@ public interface UtenteDAO {
     public void storeUtente(Utente utente) throws DataException;
     
     public void deleteUtente(int idUtente) throws DataException;
+    
+    public void insertUtenteListaPartecipanti (Utente partecipant, int idSondaggio) throws DataException;
     
 }
