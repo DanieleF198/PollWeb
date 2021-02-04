@@ -35,4 +35,8 @@ public interface UtenteDAO {
     
     public void insertUtenteListaPartecipanti (Utente partecipant, int idSondaggio) throws DataException;
     
+    public List<Utente> getListaPartecipantiBySondaggioId (int idSondaggio) throws DataException;
+    
+    public void deleteListaPartecipanti (int idSondaggio) throws DataException;
+    
 }

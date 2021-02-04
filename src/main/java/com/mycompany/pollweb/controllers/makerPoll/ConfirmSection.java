@@ -506,6 +506,9 @@ public class ConfirmSection extends BaseController {
                     }
                 }
             }
+            if(s.getAttribute("modVersion") != null && s.getAttribute("modVersion").equals("yes")){
+                request.setAttribute("modVersion", s.getAttribute("modVersion"));
+            }
             res.activate("MakerPoll/confirmSection.ftl", request, response);
             return;
         } catch (TemplateManagerException ex) {

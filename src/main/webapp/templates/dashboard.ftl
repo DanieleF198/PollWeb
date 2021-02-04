@@ -123,7 +123,7 @@
                                                         <th scope="col">Titolo</th>
                                                         <th scope="col">Data creazione</th>
                                                         <th scope="col">Data scadenza </th>
-                                                        <th scope="col" class="w-25"style="min-width:126px"></th>
+                                                        <th scope="col" class="w-25" style="min-width:126px"></th>
                                                         <th scope="col" class="particular-width"></th>
                                                     </tr>
                                                 </thead>

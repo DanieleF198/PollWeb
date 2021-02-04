@@ -40,6 +40,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     private PreparedStatement dUtente;
     private PreparedStatement iUtenteListaPartecipanti;
     private PreparedStatement iUtenteListaPartecipanti2;
+    private PreparedStatement sListaPartecipantiBySondaggio;
+    private PreparedStatement dListaPartecipanti;
 
     UtenteDAO_MySQL(DataLayer d) {
         super(d);
@@ -61,9 +63,10 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,dataNascita=?,username=?,password=?,email=?,bloccato=? WHERE idUtente=?");
             dUtente = connection.prepareStatement("DELETE FROM Utente WHERE idUtente=?");
             
-            iUtenteListaPartecipanti = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,nome,email,password) VALUES(?,?,?,?)");
-            iUtenteListaPartecipanti2 = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,idUtente,nome,email,password) VALUES(?,?,?,?,?)");
-
+            iUtenteListaPartecipanti = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,nome,email,password,scaduto,emailMandata) VALUES(?,?,?,?,?,?)");
+            iUtenteListaPartecipanti2 = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,idUtente,nome,email,password,scaduto,emailMandata) VALUES(?,?,?,?,?,?,?)");
+            sListaPartecipantiBySondaggio = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idSondaggio=?");
+            dListaPartecipanti = connection.prepareStatement("DELETE FROM ListaPartecipanti WHERE idSondaggio=?");
             
         } catch (SQLException ex) {
             throw new DataException("Error initializing PollWebdb data layer", ex);
@@ -340,15 +343,48 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                     iUtenteListaPartecipanti2.setString(3, u.getNome());
                     iUtenteListaPartecipanti2.setString(4, u.getEmail());
                     iUtenteListaPartecipanti2.setString(5, u.getPassword());
+                    iUtenteListaPartecipanti2.setBoolean(6, false);
+                    iUtenteListaPartecipanti2.setBoolean(7, false);
                     iUtenteListaPartecipanti2.executeUpdate();
                 } else {
                     iUtenteListaPartecipanti.setInt(1, idSondaggio);
                     iUtenteListaPartecipanti.setString(2, partecipant.getNome());
                     iUtenteListaPartecipanti.setString(3, partecipant.getEmail());
                     iUtenteListaPartecipanti.setString(4, partecipant.getPassword());
+                    iUtenteListaPartecipanti.setBoolean(5, false);
+                    iUtenteListaPartecipanti.setBoolean(6, false);
                     iUtenteListaPartecipanti.executeUpdate();
                 }
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public List<Utente> getListaPartecipantiBySondaggioId(int idSondaggio) throws DataException {
+        List<Utente> result = new ArrayList();
+        
+        try {
+            sListaPartecipantiBySondaggio.setInt(1, idSondaggio);
+            try (ResultSet rs = sListaPartecipantiBySondaggio.executeQuery()) {
+                while (rs.next()) {
+                    result.add((Utente) getUtente(rs.getInt("idUtente")));
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Utenti", ex);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    @Override
+    public void deleteListaPartecipanti(int idSondaggio) throws DataException {
+        try {
+            dListaPartecipanti.setInt(1, idSondaggio);
+            dListaPartecipanti.execute();
         } catch (SQLException ex) {
             Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }

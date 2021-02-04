@@ -53,6 +53,8 @@ CREATE TABLE Utente (
     nome varchar(45) NOT NULL,
     email varchar(45) NOT NULL,
     password varchar(45) NOT NULL,
+    scaduto boolean NOT NULL,
+    emailMandata boolean NOT NULL,
     PRIMARY KEY (idListaPartecipanti),
     FOREIGN KEY (idUtente) REFERENCES Utente (idUtente) on update cascade on delete cascade,
     FOREIGN KEY (idSondaggio) REFERENCES Sondaggio (idSondaggio) on update cascade on delete cascade

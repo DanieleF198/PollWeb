@@ -104,6 +104,11 @@
                                     </div>
                                     <br>
                                     <p>In caso di sondaggio privato nella sezione finale ti verr&#224; chiesto di caricare un file .csv contenente le email delle persone che intendi invitare.</p>
+                                    <#if modVersion?? && modVersion=="yes">
+                                        <#if private?? && private=="yes"> 
+                                            <p class="text-danger"><b>ATTENZIONE: </b>Se si converte il sondaggio da privato a pubblico, i partecipanti memorizzati verranno cancellati (poich&#232; il sondaggio sar&#224; aperto a tutti). Se in un secondo momento il sondaggio torner&#224; ad essere privato, si dovranno invitare nuovamente i partecipanti dalla sezione apposita nella dashboard.</p>
+                                        </#if>
+                                    </#if>
                                 </div>
                             </div>
                             <div class="row">

@@ -60,7 +60,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio");
             
             iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,visibilita,dataCreazione,dataChiusura,privato,modificabile) VALUES(?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataCreazione=?,dataChiusura=?, privato=?,modificabile=? WHERE idSondaggio=?");
+            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?, privato=?,modificabile=? WHERE idSondaggio=?");
             dSondaggio = connection.prepareStatement("DELETE FROM Sondaggio WHERE idSondaggio=?");
             searchSondaggiTitolo = connection.prepareStatement("SELECT * FROM Sondaggio WHERE titolo LIKE ?");
             searchSondaggiDataCreazione = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataCreazione = ?");
@@ -216,10 +216,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 java.sql.Date sqlCreazione = new java.sql.Date( sondaggio.getCreazione().getTime() );
                 if(sondaggio.getScadenza() != null){
                     java.sql.Date sqlScadenza = new java.sql.Date( sondaggio.getScadenza().getTime() );
-                    uSondaggio.setDate(8, sqlScadenza);
+                    uSondaggio.setDate(7, sqlScadenza);
                 }
                 else{
-                    uSondaggio.setDate(8, null);
+                    uSondaggio.setDate(7, null);
                 }
             
                 uSondaggio.setInt(1, sondaggio.getIdUtente()); //update
@@ -249,10 +249,9 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 }
                 uSondaggio.setBoolean(5, sondaggio.isCompleto());
                 uSondaggio.setBoolean(6, sondaggio.isVisibilita());
-                uSondaggio.setDate(7, sqlCreazione);
-                uSondaggio.setBoolean(9, sondaggio.isPrivato());
-                uSondaggio.setBoolean(10, sondaggio.isModificabile());
-                uSondaggio.setInt(11, sondaggio.getKey());
+                uSondaggio.setBoolean(8, sondaggio.isPrivato());
+                uSondaggio.setBoolean(9, sondaggio.isModificabile());
+                uSondaggio.setInt(10, sondaggio.getKey());
 
                 if (uSondaggio.executeUpdate() == 0) {
                     throw new OptimisticLockException(sondaggio);

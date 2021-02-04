@@ -54,7 +54,10 @@ public class Dashboard extends BaseController {
                     } else if(request.getParameter("changeVisibility")!=null){
                         System.out.println("changeVisibility Cliccato");
                     } else if(request.getParameter("modSurvey")!=null){
-                        System.out.println("modSurvey Cliccato");
+                        s.setAttribute("sondaggio-in-creazione", Integer.parseInt(request.getParameter("modSurvey")));
+                        s.setAttribute("continue", "yes");
+                        s.setAttribute("modVersion", "yes");
+                        response.sendRedirect("./makerPoll/firstSection");
                     } else if(request.getParameter("changePartecipants")!=null){
                         System.out.println("changePartecipants Cliccato");
                     } else if(request.getParameter("removeSurvey")!=null){
