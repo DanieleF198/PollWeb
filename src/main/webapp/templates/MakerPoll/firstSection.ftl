@@ -150,24 +150,6 @@
                                     <p>In ogni caso potrai modificare o annullare tale data nella tua pagina personale dopo aver finito di creare il sondaggio.</p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 mb-2">
-                                    <p><b>Quiz (a tua scelta)</b></p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div>
-                                        <label class="checkbox mb-3">
-                                            <input type="checkbox" name="quiz" value="quiz"/>
-                                            <span class="warning"></span>
-                                        </label>
-                                        &nbspRendi il sondaggio un quiz!
-                                    </div>
-                                    <br>
-                                    <p>In questo caso, oltre a non poter usare domande a risposta aperta, ti verr&#224; chiesto di (in maniera x) segnalarci le risposte corrette</p>
-                                </div>
-                            </div>
                             <button name ="buttonFirstSection" value="firstSection" class="btn btn-lg btn-warning" type="submit">Inizia con le domande</button>
                         </form>
                     </div>

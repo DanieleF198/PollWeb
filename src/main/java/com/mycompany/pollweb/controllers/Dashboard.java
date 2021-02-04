@@ -51,7 +51,15 @@ public class Dashboard extends BaseController {
                         System.out.println("REQUEST HEADER_SEARCH: " + request.getParameter("header-search-tuoi-sondaggi"));
                         action_tuoi_sondaggi_search(request, response);
                         return;
-                    }
+                    } else if(request.getParameter("changeVisibility")!=null){
+                        System.out.println("changeVisibility Cliccato");
+                    } else if(request.getParameter("modSurvey")!=null){
+                        System.out.println("modSurvey Cliccato");
+                    } else if(request.getParameter("changePartecipants")!=null){
+                        System.out.println("changePartecipants Cliccato");
+                    } else if(request.getParameter("removeSurvey")!=null){
+                        System.out.println("removeSurvey Cliccato");
+                    } 
                     action_default(request, response);
                     return;
                 }
