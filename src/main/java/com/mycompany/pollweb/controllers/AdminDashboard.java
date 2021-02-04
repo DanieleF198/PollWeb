@@ -45,17 +45,24 @@ public class AdminDashboard extends BaseController {
                     action_sondaggi_search(request, response);
                     return;
                 }
-                if ((request.getParameter("btnDeleteUser") != null)) {          
-                   action_delete_user(request);
+                if ((request.getParameter("btnDeleteUser") != null)) {
+                    System.out.println("Delete cliccato");
+                    action_delete_user(request);
+                    return;
                 }
-                if ((request.getParameter("btnBanUser") != null)) {          
-                   action_ban_user(request);
+                if ((request.getParameter("btnBanUser") != null)) {  
+                    System.out.println("Ban cliccato");
+                    action_ban_user(request);
+                    return;
                 }
-                if ((request.getParameter("btnSbanUser") != null)) {          
-                   action_sban_user(request);
+                if ((request.getParameter("btnSbanUser") != null)) { 
+                    System.out.println("Sban cliccato");
+                    action_sban_user(request);
+                    return;
                 }
                 if ((request.getParameter("btnDeleteSondaggio") != null)) {          
                    action_delete_sondaggio(request);
+                   return;
                 }
                 action_default(request, response);
             } else {
