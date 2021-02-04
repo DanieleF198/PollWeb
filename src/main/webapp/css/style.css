@@ -668,23 +668,23 @@ input[type=number] {
 
 .particular-width{
     box-sizing: border-box;
-    width: 100%
+    width: 10%
 }
 @media screen and (max-width: 1200px){
     .particular-width{
-        width: 75%
+        width: 7.5%
     }
 }
 
 @media screen and (max-width: 992px){
     .particular-width{
-        width: 50%
+        width: 5%
     }
 }
 
 @media screen and (max-width: 768px){
     .particular-width{
-        width: 25%
+        width: 2.5%
     }
 }
 
