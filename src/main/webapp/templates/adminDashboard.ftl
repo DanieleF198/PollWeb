@@ -263,9 +263,8 @@
                                                 <tbody>
                                                     <#list utenti as utente>  
                                                         <#if utente.getIdGruppo()!= 3>
-                                                            <form>
+                                                            
                                                                 <tr>
-                                                                    <form method="post" action="firstSection" class="update">
                                                                     <th scope="row">${c}</th>
                                                                     <td>${utente.getNome()}</td>
                                                                     <td>${utente.getCognome()}</td>
@@ -276,15 +275,19 @@
                                                                         <td>responsabile</td>
                                                                     </#if>
                                                                     <td>
-                                                                        <button name="btnDeleteUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">elimina</button>
-                                                                        <#if utente.isBloccato()>
-                                                                            <button name="btnSbanUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">sblocca</button>
-                                                                        <#else>
-                                                                            <button name="btnBanUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">blocca</button>
-                                                                        </#if>
+                                                                        <form id="paperaSbadata">
+                                                                            <button name="btnDeleteUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">elimina</button>
+                                                                        </form>
+                                                                        <form id="paperaSdata">
+                                                                            <#if utente.isBloccato()>
+                                                                                <button name="btnSbanUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">sblocca</button>
+                                                                            <#else>
+                                                                                <button name="btnBanUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">blocca</button>
+                                                                            </#if>
+                                                                        </form>
                                                                     </td>
                                                                 </tr>
-                                                            </form>
+                                                            
                                                             <#assign c = c + 1> <!--non è l'ID-->
                                                         </#if>
                                                     </#list>
@@ -340,32 +343,31 @@
                                                         <#assign c = 1>
                                                         <tbody>
                                                             <#list utenti as utente>  
-                                                        <#if utente.getIdGruppo()!= 3>
-                                                            <form>
-                                                                <tr>
-                                                                    <form method="post" action="firstSection" class="update">
-                                                                    <th scope="row">${c}</th>
-                                                                    <td>${utente.getNome()}</td>
-                                                                    <td>${utente.getCognome()}</td>
-                                                                    <td>${utente.getEmail()}</td>
-                                                                    <#if utente.getIdGruppo()== 1>
-                                                                        <td>utente base</td>
-                                                                    <#else>
-                                                                        <td>responsabile</td>
-                                                                    </#if>
-                                                                    <td>
-                                                                        <button name="btnDeleteUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">elimina</button>
-                                                                        <#if utente.isBloccato()>
-                                                                            <button name="btnSbanUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">sblocca</button>
-                                                                        <#else>
-                                                                            <button name="btnBanUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">blocca</button>
-                                                                        </#if>
-                                                                    </td>
-                                                                </tr>
-                                                            </form>
-                                                            <#assign c = c + 1> <!--non è l'ID-->
-                                                        </#if>
-                                                    </#list>
+                                                                <#if utente.getIdGruppo()!= 3>
+                                                                    <form>
+                                                                        <tr>
+                                                                            <th scope="row">${c}</th>
+                                                                            <td>${utente.getNome()}</td>
+                                                                            <td>${utente.getCognome()}</td>
+                                                                            <td>${utente.getEmail()}</td>
+                                                                            <#if utente.getIdGruppo()== 1>
+                                                                                <td>utente base</td>
+                                                                            <#else>
+                                                                                <td>responsabile</td>
+                                                                            </#if>
+                                                                            <td>
+                                                                                <button name="btnDeleteUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">elimina</button>
+                                                                                <#if utente.isBloccato()>
+                                                                                    <button name="btnSbanUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">sblocca</button>
+                                                                                <#else>
+                                                                                    <button name="btnBanUser" value="${utente.getKey()}" class="btn brn-lg btn-warning" type="submit">blocca</button>
+                                                                                </#if>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </form>
+                                                                    <#assign c = c + 1> <!--non è l'ID-->
+                                                                </#if>
+                                                            </#list>
                                                         </tbody>
                                                     </table>
                                                 </div>
