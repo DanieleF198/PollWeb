@@ -81,6 +81,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             sUtenteExistByUsername.close();
             sUtenteExistByEmail.close();
             sUtenti.close();
+            iUtenteListaPartecipanti.close();
+            iUtenteListaPartecipanti2.close();
             
             iUtente.close();
             uUtente.close();

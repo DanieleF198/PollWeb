@@ -48,9 +48,14 @@ public class Dashboard extends BaseController {
                 }
                 else{
                     if(request.getParameter("header-search-tuoi-sondaggi") != null){
-                        System.out.println("REQUEST HEADER_SEARCH: " + request.getParameter("header-search-tuoi-sondaggi"));
+                        System.out.println("REQUEST HEADER_SEARCH (tuoi): " + request.getParameter("header-search-tuoi-sondaggi"));
                         action_tuoi_sondaggi_search(request, response);
                         return;
+                    }else if(request.getParameter("header-search-sondaggi-privati") != null){
+                        System.out.println("REQUEST HEADER_SEARCH(privati): " + request.getParameter("header-search-sondaggi-privati"));
+                        action_sondaggi_privati_search(request, response);
+                        return;
+                        
                     } else if(request.getParameter("changeVisibility")!=null){
                         System.out.println("changeVisibility Cliccato");
                     } else if(request.getParameter("modSurvey")!=null){
@@ -96,11 +101,21 @@ public class Dashboard extends BaseController {
                 request.setAttribute("eta", (Integer)s.getAttribute("eta"));
                 request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
 
-                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid")); //Lista di tutti i sondaggi
+                if(request.getParameter("header-search-tuoi-sondaggi") != null){
+                    sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("header-search-tuoi-sondaggi"));
+                }
                 request.setAttribute("sondaggi", sondaggi);
                 if( sondaggi.isEmpty() ){
                     request.setAttribute("noTuoiSondaggi", "yes");
                 }
+                
+                ArrayList<Sondaggio> sondaggiPriv = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPrivati((Integer)s.getAttribute("userid")); //Lista dei sondaggi privati
+                request.setAttribute("sondaggiPriv", sondaggiPriv);
+                if( sondaggiPriv.isEmpty() ){
+                    request.setAttribute("noSondaggiPriv", "yes");
+                }
+                
                 res.activate("dashboard.ftl", request, response);
             }
         } catch (TemplateManagerException ex) {
@@ -143,6 +158,12 @@ public class Dashboard extends BaseController {
                     request.setAttribute("listaTuoiSondaggiVuota", "");
                     System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
                 }
+                
+                ArrayList<Sondaggio> sondaggiPriv = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPrivati((Integer)s.getAttribute("userid")); //Lista dei sondaggi privati
+                request.setAttribute("sondaggiPriv", sondaggiPriv);
+                if( sondaggiPriv.isEmpty() ){
+                    request.setAttribute("noSondaggiPriv", "yes");
+                }
 
                 res.activate("dashboard.ftl", request, response);
                 
@@ -152,6 +173,64 @@ public class Dashboard extends BaseController {
             Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private void action_sondaggi_privati_search(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+        try {
+            if(!(SecurityLayer.checkSession(request) != null)){ //controllo in più per essere sicuri
+                action_redirect_login(request,response);
+            }else{
+                PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                TemplateResult res = new TemplateResult(getServletContext());
+                HttpSession s = request.getSession(false);
+                GruppoImpl g = new GruppoImpl();
+                request.setAttribute("username", (String)s.getAttribute("username"));
+                request.setAttribute("email", (String)s.getAttribute("email"));
+                request.setAttribute("nome", (String)s.getAttribute("nome"));
+                request.setAttribute("cognome", (String)s.getAttribute("cognome"));
+                request.setAttribute("eta", (Integer)s.getAttribute("eta"));
+                request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
+                
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
+                request.setAttribute("sondaggi", sondaggi);
+                
+                ArrayList<Sondaggio> sondaggiPriv = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPrivati((Integer)s.getAttribute("userid")); //Lista dei sondaggi privati
+                sondaggiPriv = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("header-search-sondaggi-privati"));
+                request.setAttribute("sondaggiPriv", sondaggiPriv);
+                
+                if( sondaggiPriv.isEmpty() ){
+                    request.setAttribute("noSondaggiPriv", "yes");
+                }
+                
+                if(!request.getParameter("header-search-sondaggi-privati").isEmpty()){
+                    request.setAttribute("ricercaSondaggiPrivati", "yes");
+                }
+                else{
+                    request.setAttribute("ricercaSondaggiPrivati", "");
+                }
+                
+                if(sondaggi.isEmpty()){ 
+                    request.setAttribute("listaSondaggiPrivatiVuota", "yes");  
+                    System.out.println("LISTA SONDAGGI VUOTA (privati): " + request.getAttribute("listaSondaggiPrivatiVuota"));
+                }
+                else{
+                    request.setAttribute("listaSondaggiPrivatiVuota", "");
+                    System.out.println("LISTA SONDAGGI VUOTA (privati): " + request.getAttribute("listaSondaggiPrivatiVuota"));
+                }
+                
+                
+
+                res.activate("dashboard.ftl", request, response);
+                
+                
+            }
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
+    
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
         if (request.getAttribute("exception") != null) {

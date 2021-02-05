@@ -10,6 +10,7 @@ import com.mycompany.pollweb.data.DataLayer;
 import com.mycompany.pollweb.model.Domanda;
 import com.mycompany.pollweb.model.Gruppo;
 import com.mycompany.pollweb.model.Risposta;
+import com.mycompany.pollweb.model.RispostaDomanda;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.model.Utente;
 import java.sql.SQLException;
@@ -32,6 +33,7 @@ public class PollWebDataLayer extends DataLayer {
         registerDAO(Domanda.class, new DomandaDAO_MySQL(this));
         registerDAO(Sondaggio.class, new SondaggioDAO_MySQL(this));
         registerDAO(Risposta.class, new RispostaDAO_MySQL(this));
+        registerDAO(RispostaDomanda.class, new RispostaDomandaDAO_MySQL(this));
     }
     
     //helpers 
@@ -54,5 +56,9 @@ public class PollWebDataLayer extends DataLayer {
     
     public RispostaDAO getRispostaDAO() {
         return (RispostaDAO) getDAO(Risposta.class);
+    }
+    
+    public RispostaDomandaDAO getRispostaDomandaDAO() {
+        return (RispostaDomandaDAO) getDAO(RispostaDomanda.class);
     }
 }

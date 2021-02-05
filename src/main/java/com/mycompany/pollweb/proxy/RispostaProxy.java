@@ -35,7 +35,6 @@ public class RispostaProxy extends RispostaImpl implements DataItemProxy {
     
     @Override
     public Utente getUtente() {
-        //notare come il Gruppo in relazione venga caricato solo su richiesta
         if (super.getUtente() == null && idUtente > 0) {
             try {
                 super.setUtente(((UtenteDAO) dataLayer.getDAO(Utente.class)).getUtente(idUtente));
@@ -63,12 +62,6 @@ public class RispostaProxy extends RispostaImpl implements DataItemProxy {
     @Override
     public void setIdUtente(int idUtente) {
         super.setIdUtente(idUtente);
-        this.modified = true;
-    }
-
-    @Override
-    public void setPunteggio(int punteggio) {
-        super.setPunteggio(punteggio);
         this.modified = true;
     }
 

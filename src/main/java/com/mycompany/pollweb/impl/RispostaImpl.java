@@ -18,14 +18,12 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     
     private int idUtente;
     private Utente utente;
-    private int punteggio;
     private Date data;
     private String nomeUtenteRisposta;
 
     public RispostaImpl() {
         super();
         this.utente = null;
-        this.punteggio = 0;
         this.data = null;
         this.nomeUtenteRisposta = "";
     }
@@ -38,11 +36,6 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     @Override
     public Utente getUtente() {
         return utente;
-    }
-
-    @Override
-    public int getPunteggio() {
-        return punteggio;
     }
 
     @Override
@@ -63,11 +56,6 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     @Override
     public void setUtente(Utente utente) {
         this.utente = utente;
-    }
-
-    @Override
-    public void setPunteggio(int punteggio) {
-        this.punteggio = punteggio;
     }
 
     @Override

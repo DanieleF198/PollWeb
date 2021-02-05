@@ -44,6 +44,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     private PreparedStatement searchSondaggiDataCreazione;
     private PreparedStatement searchSondaggiDataChiusura;
     private PreparedStatement searchSondaggiNoData;
+    private PreparedStatement sSondaggiPrivatiByIdUtente;
     
     SondaggioDAO_MySQL(DataLayer d) {
         super(d);
@@ -67,6 +68,8 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             searchSondaggiDataChiusura = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataChiusura = ?");
             searchSondaggiNoData = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataChiusura IS NULL");
             
+            sSondaggiPrivatiByIdUtente = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idUtente=?");
+            
             
             
         } catch (SQLException ex) {
@@ -86,6 +89,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             searchSondaggiDataCreazione.close();
             searchSondaggiDataChiusura.close();
             searchSondaggiNoData.close();
+            sSondaggiPrivatiByIdUtente.close();
             
             sSondaggi.close();
             
@@ -336,6 +340,27 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
         } catch (SQLException | OptimisticLockException ex) {
             throw new DataException("Unable to store sondaggio", ex);
         }
+    }
+    
+    @Override
+    public ArrayList<Sondaggio> getSondaggiPrivati(int idUtente) throws DataException{
+        ArrayList<Sondaggio> sp = new ArrayList();
+        Sondaggio s = null;
+        int idSondaggio; 
+        
+        try {
+            sSondaggiPrivatiByIdUtente.setInt(1, idUtente);
+            try (ResultSet rs = sSondaggiPrivatiByIdUtente.executeQuery()) {
+                while (rs.next()) {
+                    idSondaggio = rs.getInt("idSondaggio");
+                    s = getSondaggio(idSondaggio);
+                    sp.add(s);
+                }
+            }
+            } catch (SQLException ex) {
+                //
+            }
+        return sp;
     }
     
     

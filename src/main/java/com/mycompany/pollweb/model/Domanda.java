@@ -24,8 +24,6 @@ public interface Domanda extends DataItem<Integer>, Comparable<Domanda> {
     
     String getTipo();
     
-    JSONObject getRispostaCorretta();
-    
     public JSONObject getOpzioni();
     
     public int getPosizione();
@@ -44,8 +42,6 @@ public interface Domanda extends DataItem<Integer>, Comparable<Domanda> {
 
     void setTipo(String tipo);
 
-    void setRispostaCorretta(JSONObject rispostaCorretta);
-    
     public void setOpzioni(JSONObject opzioni);
     
     public void setPosizione(int posizione);
