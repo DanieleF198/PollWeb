@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -86,6 +87,9 @@ public class FirstSection extends BaseController {
                     s.setAttribute("continue", "no");            //in questo caso resetto il sessionamento per il nuovo sondaggio
                     s.setAttribute("sondaggio-in-conferma", "no");
                     s.setAttribute("domanda-in-creazione", 0);
+                    if(s.getAttribute("modVersion")!=null){
+                        s.removeAttribute("modVersion");
+                    }
                     if(s.getAttribute("updateDomanda")!= null){
                         s.removeAttribute("updateDomanda");
                     }
@@ -202,6 +206,9 @@ public class FirstSection extends BaseController {
                 request.setAttribute("error", s.getAttribute("error"));
                 s.removeAttribute("error");
             }
+            if(s.getAttribute("modVersion") != null && s.getAttribute("modVersion").equals("yes")){
+                request.setAttribute("modVersion", s.getAttribute("modVersion"));
+            }
             res.activate("MakerPoll/firstSection.ftl", request, response);
             return;
         } catch (TemplateManagerException ex) {
@@ -282,6 +289,18 @@ public class FirstSection extends BaseController {
                         return;
                     }
                     privateSurvey = true;
+                }  else {
+                    ArrayList<Utente> listaPartecipantiToCheck = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiBySondaggioId((int)s.getAttribute("sondaggio-in-creazione"));
+                    if(!(listaPartecipantiToCheck.isEmpty())){
+                        System.out.println("sono entrato nell'eliminazione di listaPartecipanti 1");
+                        dl.getUtenteDAO().deleteListaPartecipanti((int)s.getAttribute("sondaggio-in-creazione"));
+                    }
+                }
+            } else {
+                ArrayList<Utente> listaPartecipantiToCheck = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiBySondaggioId((int)s.getAttribute("sondaggio-in-creazione"));
+                if(!(listaPartecipantiToCheck.isEmpty())){
+                    System.out.println("sono entrato nell'eliminazione di listaPartecipanti 2");
+                    dl.getUtenteDAO().deleteListaPartecipanti((int)s.getAttribute("sondaggio-in-creazione"));
                 }
             }
             System.out.println(request.getParameter("modificable"));

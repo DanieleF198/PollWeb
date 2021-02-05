@@ -68,7 +68,8 @@
                             <div class="row mb-2">
                                 <div class="col-lg-12">
                                     <#if numeroDomanda??>
-                                        <p class="h5 font-weight-normal">domanda #${numeroDomanda}</h1>
+                                        <#assign valore = numeroDomanda + 1>
+                                        <p class="h5 font-weight-normal">domanda #${valore}</h1>
                                     </#if>
                                 </div>
                             </div>

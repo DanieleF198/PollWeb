@@ -122,239 +122,249 @@
                                     <p class="text-danger mb-1"><b>ATTENZIONE: </b>Pare che tu abbia degli errori sia relativi alle domande che ai partecipanti. In questo caso dovrai prima risolvere i problemi relativi alle domande, e soltanto dopo reinserire correttamente i partecipanti.</p>
                                 </#if>
                             </#if>
-                            <#if private?? && private=="yes">
-                                <#if errors??>
-                                    <div class="row mt-3 javaScriptVisibility">
-                                        <div class="col-lg-12">
-                                            <div class="row mb-2">
-                                                <div class="col-lg-11 col-md-10 col-sx-9 col-9">
-                                                    <p><b>Inserimento partecipanti</b> - manuale</p>
-                                                </div>
-                                                <div class="col-lg-1 col-md-1 col-sx-1 col-1">
-                                                    <button type="button" id="addMore" class="btn btn-warning" title="aggiungi utente" disabled>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <#if partecipants??>
-                                                <div id="fieldList" class="row mb-3">
-                                                    <#list partecipants as partecipant>
-                                                        <#if partecipant_has_next>
-                                                            <#if partecipant.getNome()?? && partecipant.getNome()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersName[]" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}" disabled>
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersName[]" class="form-control" placeholder="Nome Utente" disabled>
-                                                                </div>
-                                                            </#if>
-                                                            <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersMail[]" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}" disabled>
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersMail[]" class="form-control" placeholder="E-mail utente"  disabled>
-                                                                </div>
-                                                            </#if>
-                                                            <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersPass[]" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}" disabled>
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersPass[]" class="form-control" placeholder="Password utente"  disabled>
-                                                                </div>
-                                                            </#if>
-                                                            <div class="col-12 border-bottom mb-2"></div>
-                                                        <#else>
-                                                            <#if partecipant.getNome()?? && partecipant.getNome()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}" onkeyup="disabled()" disabled>
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  onkeyup="disabled()" disabled>
-                                                                </div>
-                                                            </#if>
-                                                            <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}" onkeyup="disabled()" disabled>
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  onkeyup="disabled()" disabled>
-                                                                </div>
-                                                            </#if>
-                                                            <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}" onkeyup="disabled()" disabled>
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  onkeyup="disabled()" disabled>
-                                                                </div>
-                                                            </#if>
-                                                            <div class="col-12 border-bottom mb-2"></div>
-                                                        </#if>
-                                                    </#list>
-                                                </div>
-                                            <#else>
-                                                <div id="fieldList" class="row mb-3">
-                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                        <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  onkeyup="disabled()" disabled>
-                                                    </div>
-                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                        <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  onkeyup="disabled()" disabled>
-                                                    </div>
-                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                        <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  onkeyup="disabled()" disabled>
-                                                    </div>
-                                                    <div class="col-12 border-bottom mb-2"></div>
-                                                </div>
-                                            </#if>
-                                            <p><b>Inserimento partecipanti</b> - tramite csv</p>
-                                            <div class="row">
-                                                <div class="col-11">
-                                                    <input type="file" name="file" id="file" class="form-control-file" disabled>
-                                                </div>
-                                                <div class="col-1">
-                                                    <label class="checkbox">
-                                                        <input type="checkbox" name="withCSV" id="withCSV" value="withCSV" onclick="disable()" disabled>
-                                                        <span class="warning"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <p class="mt-3"><b>Attenzione: il file CSV verrà considerato solo se il check alla sua destra sarà spuntato</b>. Se si decide di invitare i partecipanti tramite file csv, i partecipanti inseriti nell'inserimento manuale saranno ignorati</p>
+                            <#if modVersion?? && modVersion=="yes">
+                                <#if private?? && private=="yes">
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <p class="text-muted mb-1"><b>NOTA:</b> Se hai intenzione di modificare i partecipanti invitati precedentemente (manualmente o tramite CSV) dovrai farlo cercando la sezione apposita nella tua dashboard.</p>    
                                         </div>
                                     </div>
-                                    <noscript>
-                                        <div class="row mb-3">
-                                            <div class="col-12">
+                                </#if>
+                            <#else>
+                                <#if private?? && private=="yes">
+                                    <#if errors??>
+                                        <div class="row mt-3 javaScriptVisibility">
+                                            <div class="col-lg-12">
+                                                <div class="row mb-2">
+                                                    <div class="col-lg-11 col-md-10 col-sx-9 col-9">
+                                                        <p><b>Inserimento partecipanti</b> - manuale</p>
+                                                    </div>
+                                                    <div class="col-lg-1 col-md-1 col-sx-1 col-1">
+                                                        <button type="button" id="addMore" class="btn btn-warning" title="aggiungi utente" disabled>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <#if partecipants??>
+                                                    <div id="fieldList" class="row mb-3">
+                                                        <#list partecipants as partecipant>
+                                                            <#if partecipant_has_next>
+                                                                <#if partecipant.getNome()?? && partecipant.getNome()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersName[]" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}" disabled>
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersName[]" class="form-control" placeholder="Nome Utente" disabled>
+                                                                    </div>
+                                                                </#if>
+                                                                <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersMail[]" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}" disabled>
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersMail[]" class="form-control" placeholder="E-mail utente"  disabled>
+                                                                    </div>
+                                                                </#if>
+                                                                <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersPass[]" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}" disabled>
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersPass[]" class="form-control" placeholder="Password utente"  disabled>
+                                                                    </div>
+                                                                </#if>
+                                                                <div class="col-12 border-bottom mb-2"></div>
+                                                            <#else>
+                                                                <#if partecipant.getNome()?? && partecipant.getNome()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}" onkeyup="disabled()" disabled>
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  onkeyup="disabled()" disabled>
+                                                                    </div>
+                                                                </#if>
+                                                                <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}" onkeyup="disabled()" disabled>
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  onkeyup="disabled()" disabled>
+                                                                    </div>
+                                                                </#if>
+                                                                <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}" onkeyup="disabled()" disabled>
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  onkeyup="disabled()" disabled>
+                                                                    </div>
+                                                                </#if>
+                                                                <div class="col-12 border-bottom mb-2"></div>
+                                                            </#if>
+                                                        </#list>
+                                                    </div>
+                                                <#else>
+                                                    <div id="fieldList" class="row mb-3">
+                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                            <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  onkeyup="disabled()" disabled>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                            <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  onkeyup="disabled()" disabled>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                            <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  onkeyup="disabled()" disabled>
+                                                        </div>
+                                                        <div class="col-12 border-bottom mb-2"></div>
+                                                    </div>
+                                                </#if>
                                                 <p><b>Inserimento partecipanti</b> - tramite csv</p>
-                                                <input type="file" name="file" id="file" class="form-control-file" disabled>
+                                                <div class="row">
+                                                    <div class="col-11">
+                                                        <input type="file" name="file" id="file" class="form-control-file" disabled>
+                                                    </div>
+                                                    <div class="col-1">
+                                                        <label class="checkbox">
+                                                            <input type="checkbox" name="withCSV" id="withCSV" value="withCSV" onclick="disable()" disabled>
+                                                            <span class="warning"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <p class="mt-3"><b>Attenzione: il file CSV verr&#224; considerato solo se il check alla sua destra sar&#224; spuntato</b>. Se si decide di invitare i partecipanti tramite file csv, i partecipanti inseriti nell'inserimento manuale saranno ignorati</p>
                                             </div>
                                         </div>
-                                    </noscript>
-                                    <p class="text-muted"><b>Nota:</b> i partecipanti verranno invitati effettivamente soltanto quando il sondaggio diventa pubblico per la prima volta</p>
-                                <#else>
-                                    <div class="row mt-3 javaScriptVisibility">
-                                        <div class="col-lg-12">
-                                            <div class="row mb-2">
-                                                <div class="col-lg-11 col-md-10 col-sx-9 col-9">
-                                                    <p><b>Inserimento partecipanti</b> - manuale</p>
-                                                </div>
-                                                <div class="col-lg-1 col-md-1 col-sx-1 col-1">
-                                                    <button type="button" id="addMore" class="btn btn-warning" title="aggiungi utente">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <#if partecipants??>
-                                                <div id="fieldList" class="row mb-3">
-                                                    <#list partecipants as partecipant>
-                                                        <#if partecipant_has_next>
-                                                            <#if partecipant.getNome()?? && partecipant.getNome()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersName[]" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}">
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersName[]" class="form-control" placeholder="Nome Utente" >
-                                                                </div>
-                                                            </#if>
-                                                            <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersMail[]" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}">
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersMail[]" class="form-control" placeholder="E-mail utente" >
-                                                                </div>
-                                                            </#if>
-                                                            <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersPass[]" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}">
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersPass[]" class="form-control" placeholder="Password utente" >
-                                                                </div>
-                                                            </#if>
-                                                            <div class="col-12 border-bottom mb-2"></div>
-                                                        <#else>
-                                                            <#if partecipant.getNome()?? && partecipant.getNome()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}" onkeyup="disabled()">
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  onkeyup="disabled()">
-                                                                </div>
-                                                            </#if>
-                                                            <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}" onkeyup="disabled()">
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  onkeyup="disabled()">
-                                                                </div>
-                                                            </#if>
-                                                            <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}" onkeyup="disabled()">
-                                                                </div>
-                                                            <#else>
-                                                                <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                                    <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  onkeyup="disabled()">
-                                                                </div>
-                                                            </#if>
-                                                            <div class="col-12 border-bottom mb-2"></div>
-                                                        </#if>
-                                                    </#list>
-                                                </div>
-                                            <#else>
-                                                <div id="fieldList" class="row mb-3">
-                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                        <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  onkeyup="disabled()">
-                                                    </div>
-                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                        <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  onkeyup="disabled()">
-                                                    </div>
-                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                        <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  onkeyup="disabled()">
-                                                    </div>
-                                                    <div class="col-12 border-bottom mb-2"></div>
-                                                </div>
-                                            </#if>
-                                            <p><b>Inserimento partecipanti</b> - tramite csv</p>
-                                            <div class="row">
-                                                <div class="col-11">
+                                        <noscript>
+                                            <div class="row mb-3">
+                                                <div class="col-12">
+                                                    <p><b>Inserimento partecipanti</b> - tramite csv</p>
                                                     <input type="file" name="file" id="file" class="form-control-file" disabled>
                                                 </div>
-                                                <div class="col-1">
-                                                    <label class="checkbox">
-                                                        <input type="checkbox" name="withCSV" id="withCSV" value="withCSV" onclick="disable()">
-                                                        <span class="warning"></span>
-                                                    </label>
+                                            </div>
+                                        </noscript>
+                                        <p class="text-muted"><b>Nota:</b> i partecipanti verranno invitati effettivamente soltanto quando il sondaggio diventa pubblico per la prima volta</p>
+                                    <#else>
+                                        <div class="row mt-3 javaScriptVisibility">
+                                            <div class="col-lg-12">
+                                                <div class="row mb-2">
+                                                    <div class="col-lg-11 col-md-10 col-sx-9 col-9">
+                                                        <p><b>Inserimento partecipanti</b> - manuale</p>
+                                                    </div>
+                                                    <div class="col-lg-1 col-md-1 col-sx-1 col-1">
+                                                        <button type="button" id="addMore" class="btn btn-warning" title="aggiungi utente">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <#if partecipants??>
+                                                    <div id="fieldList" class="row mb-3">
+                                                        <#list partecipants as partecipant>
+                                                            <#if partecipant_has_next>
+                                                                <#if partecipant.getNome()?? && partecipant.getNome()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersName[]" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}">
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersName[]" class="form-control" placeholder="Nome Utente" >
+                                                                    </div>
+                                                                </#if>
+                                                                <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersMail[]" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}">
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersMail[]" class="form-control" placeholder="E-mail utente" >
+                                                                    </div>
+                                                                </#if>
+                                                                <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersPass[]" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}">
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersPass[]" class="form-control" placeholder="Password utente" >
+                                                                    </div>
+                                                                </#if>
+                                                                <div class="col-12 border-bottom mb-2"></div>
+                                                            <#else>
+                                                                <#if partecipant.getNome()?? && partecipant.getNome()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}" onkeyup="disabled()">
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  onkeyup="disabled()">
+                                                                    </div>
+                                                                </#if>
+                                                                <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}" onkeyup="disabled()">
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  onkeyup="disabled()">
+                                                                    </div>
+                                                                </#if>
+                                                                <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}" onkeyup="disabled()">
+                                                                    </div>
+                                                                <#else>
+                                                                    <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                                        <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  onkeyup="disabled()">
+                                                                    </div>
+                                                                </#if>
+                                                                <div class="col-12 border-bottom mb-2"></div>
+                                                            </#if>
+                                                        </#list>
+                                                    </div>
+                                                <#else>
+                                                    <div id="fieldList" class="row mb-3">
+                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                            <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  onkeyup="disabled()">
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                            <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  onkeyup="disabled()">
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                            <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  onkeyup="disabled()">
+                                                        </div>
+                                                        <div class="col-12 border-bottom mb-2"></div>
+                                                    </div>
+                                                </#if>
+                                                <p><b>Inserimento partecipanti</b> - tramite csv</p>
+                                                <div class="row">
+                                                    <div class="col-11">
+                                                        <input type="file" name="file" id="file" class="form-control-file" disabled>
+                                                    </div>
+                                                    <div class="col-1">
+                                                        <label class="checkbox">
+                                                            <input type="checkbox" name="withCSV" id="withCSV" value="withCSV" onclick="disable()">
+                                                            <span class="warning"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <p class="mt-3"><b>Attenzione: il file CSV verr&#224; considerato solo se il check alla sua destra sar&#224; spuntato</b>. Se si decide di invitare i partecipanti tramite file csv, i partecipanti inseriti nell'inserimento manuale saranno ignorati</p>
+                                            </div>
+                                        </div>
+                                        <noscript>
+                                            <div class="row mb-3">
+                                                <div class="col-12">
+                                                    <p><b>Inserimento partecipanti</b> - tramite csv</p>
+                                                    <input type="file" name="file" id="file" class="form-control-file" disabled>
                                                 </div>
                                             </div>
-                                            <p class="mt-3"><b>Attenzione: il file CSV verrà considerato solo se il check alla sua destra sarà spuntato</b>. Se si decide di invitare i partecipanti tramite file csv, i partecipanti inseriti nell'inserimento manuale saranno ignorati</p>
-                                        </div>
-                                    </div>
-                                    <noscript>
-                                        <div class="row mb-3">
-                                            <div class="col-12">
-                                                <p><b>Inserimento partecipanti</b> - tramite csv</p>
-                                                <input type="file" name="file" id="file" class="form-control-file" disabled>
-                                            </div>
-                                        </div>
-                                    </noscript>
-                                    <p class="text-muted"><b>Nota:</b> i partecipanti verranno invitati effettivamente soltanto quando il sondaggio diventa pubblico per la prima volta. Cliccato su "Torna alle domande" o "torna alle informazioni generali" i partecipanti immessi fin'ora non verranno salvati.</p>
+                                        </noscript>
+                                        <p class="text-muted"><b>Nota:</b> i partecipanti verranno invitati effettivamente soltanto quando il sondaggio diventa pubblico per la prima volta. Cliccato su "Torna alle domande" o "torna alle informazioni generali" i partecipanti immessi fin'ora non verranno salvati.</p>
+                                    </#if>
                                 </#if>
                             </#if>
                         </form>
