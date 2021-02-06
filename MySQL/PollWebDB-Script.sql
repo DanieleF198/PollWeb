@@ -98,7 +98,7 @@ INSERT INTO `pollwebdb`.`Gruppo`(`idGruppo`,`nomeGruppo`)VALUES('1','Utente base
 INSERT INTO `pollwebdb`.`Gruppo`(`idGruppo`,`nomeGruppo`)VALUES('2','Responsabile');
 INSERT INTO `pollwebdb`.`Gruppo`(`idGruppo`,`nomeGruppo`)VALUES('3','Admin');
 
-INSERT INTO `pollwebdb`.`Utente`(`idUtente`,`idGruppo`,`nome`,`cognome`,`dataNascita`,`username`,`password`,`email`)VALUES('1','2','Arturito', 'benedito', '2000-12-12', 'artrito', 'password', 'arturitoBenedito@gmail.com');
+INSERT INTO `pollwebdb`.`Utente`(`idUtente`,`idGruppo`,`nome`,`cognome`,`dataNascita`,`username`,`password`,`email`)VALUES('1','2','Arturito', 'benedito', '2000-12-12', 'artrito', 'Pass2021!', 'arturitoBenedito@gmail.com');
 INSERT INTO `pollwebdb`.`Utente`(`idUtente`,`idGruppo`,`nome`,`cognome`,`dataNascita`,`username`,`password`,`email`)VALUES('2','2','Rinaldo', 'baualdo', '1999-12-12', 'zawardo', 'mudamuda', 'dioBrando@gmail.com');
   
 INSERT INTO `pollwebdb`.`Sondaggio`(`idSondaggio`,`idUtente`,`titolo`,`testoApertura`,`testoChiusura`,`completo`,`visibilita`,`dataCreazione`,`dataChiusura`,`privato`,`modificabile`)VALUES('1','2','Prova 1', 'Hey questo è il primo sondaggio di prova guardatemiiiii', 'Bravo che hai concluso con successo questo sondaggio di prova..Ah ma non vedrai mai questo messaggio...eh vab', true, true,'2021-01-11','2021-02-12',false,false);

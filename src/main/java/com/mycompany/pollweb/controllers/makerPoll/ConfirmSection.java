@@ -25,6 +25,7 @@ import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import java.io.BufferedReader;
 import java.io.File;
@@ -78,6 +79,7 @@ public class ConfirmSection extends BaseController {
                         ArrayList<Utente> partecipants = new ArrayList<Utente>();   
                         if (request.getContentType() != null && request.getContentType().toLowerCase().contains("multipart/form-data")) {
                             System.out.println("passato enctype");
+                            boolean checkError = false;
                             if(request.getParameter("withCSV") != null){    
                                 Part filePart = request.getPart("file");
                                 File uploaded_file = File.createTempFile("upload_", "", new File(getServletContext().getInitParameter("uploads.directory")));
@@ -91,7 +93,7 @@ public class ConfirmSection extends BaseController {
                                 }
                                 List<String[]> r = new ArrayList<String[]>();
                                 
-                                try (CSVReader reader = new CSVReader(new FileReader(uploaded_file))) {
+                                try (CSVReader reader = new CSVReaderBuilder(new FileReader(uploaded_file)).withSkipLines(1).build()) {
                                     r = reader.readAll();
                                     System.out.println("lettura riuscita - 2");
                                 }
@@ -129,7 +131,7 @@ public class ConfirmSection extends BaseController {
                                             ArrayList<Utente> tempPartecipants = new ArrayList<Utente>();
                                             for(int k = partecipants.size()-1; k >= 0 ; k--){
                                                 if (partecipants.get(k).getNome().isBlank() && partecipants.get(k).getEmail().isBlank() && partecipants.get(k).getPassword().isBlank()){
-                                                    partecipants.remove(k); 
+                                                    partecipants.remove(k);
                                                 }
                                             }
                                             for(int k = 0; k < partecipants.size(); k++){
@@ -139,6 +141,8 @@ public class ConfirmSection extends BaseController {
                                                 Utente checkU = partecipants.get(j);
                                                 if(checkU.getNome().isBlank() || checkU.getEmail().isBlank() || checkU.getPassword().isBlank()){
                                                     partecipants.remove(checkU);
+                                                    checkError = true;
+                                                    request.setAttribute("CSVerror", "yes");
                                                 }
                                                 String passwordOfU = checkU.getPassword();
                                                 Pattern specailCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
@@ -148,9 +152,13 @@ public class ConfirmSection extends BaseController {
                                                 Pattern emailPattern = Pattern.compile("^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
                                                 if(passwordOfU.length()<8 || !UpperCasePatten.matcher(passwordOfU).find() || !lowerCasePatten.matcher(passwordOfU).find() || !digitCasePatten.matcher(passwordOfU).find() || !specailCharPatten.matcher(passwordOfU).find()){
                                                     partecipants.remove(checkU);
+                                                    checkError = true;
+                                                    request.setAttribute("CSVerror", "yes");
                                                 }
                                                 if (!emailPattern.matcher(checkU.getEmail()).find()) {
                                                     partecipants.remove(checkU);
+                                                    checkError = true;
+                                                    request.setAttribute("CSVerror", "yes");
                                                 }
                                                 tempPartecipants.remove(0);
                                                 for(int k = 0; k < tempPartecipants.size(); k++){
@@ -158,6 +166,8 @@ public class ConfirmSection extends BaseController {
                                                     if(tempUtente.getEmail().equals(checkU.getEmail()) || tempUtente.getPassword().equals(checkU.getPassword())){
                                                         partecipants.remove(checkU);
                                                         partecipants.remove(tempUtente);
+                                                        checkError = true;
+                                                        request.setAttribute("CSVerror", "yes");
                                                     }
                                                 }
                                             }
@@ -212,7 +222,7 @@ public class ConfirmSection extends BaseController {
                                         for(int j = 0; j < partecipants.size(); j++){
                                             Utente checkU = partecipants.get(j);
                                             if(checkU.getNome().isBlank() || checkU.getEmail().isBlank() || checkU.getPassword().isBlank()){
-                                                partecipants.remove(checkU);
+                                                checkError = true;
                                             }
                                             String passwordOfU = checkU.getPassword();
                                             Pattern specailCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
@@ -221,22 +231,26 @@ public class ConfirmSection extends BaseController {
                                             Pattern digitCasePatten = Pattern.compile("[0-9 ]");
                                             Pattern emailPattern = Pattern.compile("^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
                                             if(passwordOfU.length()<8 || !UpperCasePatten.matcher(passwordOfU).find() || !lowerCasePatten.matcher(passwordOfU).find() || !digitCasePatten.matcher(passwordOfU).find() || !specailCharPatten.matcher(passwordOfU).find()){
-                                                partecipants.remove(checkU);
+                                                checkError = true;
                                             }
                                             if (!emailPattern.matcher(checkU.getEmail()).find()) {
-                                                partecipants.remove(checkU);
+                                                checkError = true;
                                             }
                                             tempPartecipants.remove(0);
                                             for(int k = 0; k < tempPartecipants.size(); k++){
                                                 System.out.println("terzo ciclo for, ciclo " + k);
                                                 Utente tempUtente = tempPartecipants.get(k);
                                                 if(tempUtente.getEmail().equals(checkU.getEmail()) || tempUtente.getPassword().equals(checkU.getPassword())){
-                                                    partecipants.remove(checkU);
+                                                    checkError = true;
                                                 }
                                             }
                                         }
                                     }
                                 }    
+                            }
+                            if(checkError){
+                                action_default(request, response);
+                                return;
                             }
                             if(!partecipants.isEmpty()){
                                 for(int i = 0; i < partecipants.size(); i++){

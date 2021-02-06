@@ -61,5 +61,5 @@ public interface Utente extends DataItem<Integer> {
     
     public void setBloccato (boolean b);
     
-    public int calculateAge ();         
+    public int calculateAge ();   
 }

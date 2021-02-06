@@ -61,7 +61,9 @@ public class Dashboard extends BaseController {
                     } else if(request.getParameter("changePartecipants")!=null){
                         System.out.println("changePartecipants Cliccato");
                     } else if(request.getParameter("removeSurvey")!=null){
-                        System.out.println("removeSurvey Cliccato");
+                        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                        dl.getSondaggioDAO().deleteSondaggio(Integer.parseInt(request.getParameter("removeSurvey")));
+                        response.sendRedirect("dashboard");
                     } 
                     action_default(request, response);
                     return;
