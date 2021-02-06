@@ -24,6 +24,7 @@ import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,6 +119,24 @@ public class Dashboard extends BaseController {
                 if( sondaggiPriv.isEmpty() ){
                     request.setAttribute("noSondaggiPriv", "yes");
                 }
+                
+                
+                
+                ArrayList<Sondaggio> sondaggiComp= (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiCompilati((Integer)s.getAttribute("userid")); //Lista dei sondaggi privati
+                request.setAttribute("sondaggiComp", sondaggiComp);
+                
+                Iterator<Sondaggio> itr = sondaggiComp.iterator(); 
+                Sondaggio it;
+                while(itr.hasNext()){
+                    it = itr.next();
+                    System.out.println("sondaggiComp: " + it.getTitolo());
+                }
+                
+                if( sondaggiComp.isEmpty() ){
+                    request.setAttribute("noSondaggiComp", "yes");
+                }
+                
+                
                 
                 res.activate("dashboard.ftl", request, response);
             }
