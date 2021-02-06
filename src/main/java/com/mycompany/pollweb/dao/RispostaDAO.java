@@ -18,7 +18,7 @@ public interface RispostaDAO {
     
     public RispostaProxy createRisposta();
     
-    Risposta getRisposta(int article_key) throws DataException;
+    Risposta getRisposta(int idRisposta) throws DataException;
     
     public Risposta getRispostaByIdUtente(int idUtente) throws DataException;
     

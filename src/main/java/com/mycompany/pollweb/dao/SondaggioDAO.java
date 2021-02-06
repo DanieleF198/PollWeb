@@ -29,6 +29,10 @@ public interface SondaggioDAO {
     
     public void storeSondaggio(Sondaggio sondaggio) throws DataException;
     
+    public ArrayList<Sondaggio> getSondaggiPrivati(int idUtente) throws DataException;
+    
+    public ArrayList<Sondaggio> getSondaggiCompilati(int idUtente) throws DataException;
+    
     public ArrayList<Sondaggio> searchSondaggi(ArrayList<Sondaggio> sondaggi, String ricerca) throws DataException;
     
     public void deleteSondaggio(int idSondaggio) throws DataException;

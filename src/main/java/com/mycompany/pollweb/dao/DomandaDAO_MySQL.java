@@ -95,8 +95,6 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
             String jsonString = rs.getObject("opzioni").toString().replaceAll("\"", "\\\"");
             JSONObject opzioni = new JSONObject(jsonString);
             d.setOpzioni(opzioni);
-            JSONObject rispostaCorretta = (JSONObject) rs.getObject("rispostaCorretta");
-            d.setRispostaCorretta(rispostaCorretta);
             d.setTipo(rs.getString("tipo"));
             d.setVincolo(rs.getString("vincolo"));
         } catch (SQLException ex) {

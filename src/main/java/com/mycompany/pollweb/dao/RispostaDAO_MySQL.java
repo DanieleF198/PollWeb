@@ -46,7 +46,7 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             sRispostaByIDUtente = connection.prepareStatement("SELECT * FROM Risposta WHERE idUtente=?");
             sRisposte = connection.prepareStatement("SELECT * FROM Risposta");
             
-            iRisposta = connection.prepareStatement("INSERT INTO Risposta (idRisposta,idUtente,dataCreazione,punteggio,nomeUtenteRisposta) VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            iRisposta = connection.prepareStatement("INSERT INTO Risposta (idRisposta,idUtente,dataCreazione,nomeUtenteRisposta) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             uRisposta = connection.prepareStatement("UPDATE Risposta SET idRisposta=?,idUtente=?,dataCreazione=?,punteggio=?,nomeUtenteRisposta=? WHERE idRisposta=?");
             dRisposta = connection.prepareStatement("DELETE FROM Risposta WHERE idRisposta=?");
             
@@ -82,13 +82,12 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     }
     
     //helper
-    private RispostaProxy createSondaggio(ResultSet rs) throws DataException {
+    private RispostaProxy createRisposta(ResultSet rs) throws DataException {
         RispostaProxy r = createRisposta();
         try {
             r.setKey(rs.getInt("idRisposta"));
             r.setIdUtente(rs.getInt("idUtente"));
             r.setData(rs.getDate("dataCreazione"));
-            r.setPunteggio(rs.getInt("punteggio"));
             r.setNomeUtenteRisposta(rs.getString("nomeUtenteRisposta"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Risposta object form ResultSet", ex);
@@ -108,7 +107,7 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
                 sRispostaByID.setInt(1, idRisposta);
                 try (ResultSet rs = sRispostaByID.executeQuery()) {
                     if (rs.next()) {
-                        r = createSondaggio(rs);
+                        r = createRisposta(rs);
                         //e lo mettiamo anche nella cache
                         dataLayer.getCache().add(Risposta.class, r);
                     }
@@ -132,7 +131,7 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
                 sRispostaByIDUtente.setInt(1, idUtente);
                 try (ResultSet rs = sRispostaByIDUtente.executeQuery()) {
                     if (rs.next()) {
-                        r = createSondaggio(rs);
+                        r = createRisposta(rs);
                         //e lo mettiamo anche nella cache
                         dataLayer.getCache().add(Risposta.class, r);
                     }
@@ -169,9 +168,8 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
                 }
                 uRisposta.setInt(1, risposta.getIdUtente());
                 uRisposta.setDate(2, (Date) risposta.getData());
-                uRisposta.setInt(3, risposta.getPunteggio());
-                uRisposta.setString(4, risposta.getNomeUtenteRisposta());
-                uRisposta.setInt(5, risposta.getKey());
+                uRisposta.setString(3, risposta.getNomeUtenteRisposta());
+                uRisposta.setInt(4, risposta.getKey());
 
                 if (uRisposta.executeUpdate() == 0) {
                     throw new OptimisticLockException(risposta);
@@ -180,9 +178,8 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             else { //insert
                 iRisposta.setInt(1, risposta.getIdUtente());
                 iRisposta.setDate(2, (Date) risposta.getData());
-                iRisposta.setInt(3, risposta.getPunteggio());
-                iRisposta.setString(4, risposta.getNomeUtenteRisposta());
-                iRisposta.setInt(5, risposta.getKey());
+                iRisposta.setString(3, risposta.getNomeUtenteRisposta());
+                iRisposta.setInt(4, risposta.getKey());
                 
                 if (iRisposta.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

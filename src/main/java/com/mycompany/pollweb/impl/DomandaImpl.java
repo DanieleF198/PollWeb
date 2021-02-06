@@ -25,8 +25,7 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     private String tipo;
     private int posizione;
     public boolean obbligatoria;
-    private JSONObject opzioni = new JSONObject();   
-    private JSONObject rispostaCorretta = new JSONObject();   
+    private JSONObject opzioni = new JSONObject();      
     private String vincolo;
 
     public DomandaImpl() {
@@ -39,7 +38,6 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
         this.posizione = 0;
         this.obbligatoria = false;
         this.opzioni = null;
-        this.rispostaCorretta = null;
         this.vincolo = "";
     }
 
@@ -66,11 +64,6 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     @Override
     public String getTipo() {
         return tipo;
-    }
-
-    @Override
-    public JSONObject getRispostaCorretta() {
-        return rispostaCorretta;
     }
 
     @Override
@@ -116,11 +109,6 @@ public class DomandaImpl extends DataItemImpl<Integer> implements Domanda {
     @Override
     public void setTipo(String tipo) {
         this.tipo = tipo;
-    }
-
-    @Override
-    public void setRispostaCorretta(JSONObject rispostaCorretta) {
-        this.rispostaCorretta = rispostaCorretta;
     }
 
     @Override

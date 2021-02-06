@@ -82,12 +82,6 @@ public class DomandaProxy extends DomandaImpl implements DataItemProxy {
     }
 
     @Override
-    public void setRispostaCorretta(JSONObject rispostaCorretta) {
-        super.setRispostaCorretta(rispostaCorretta);
-        this.modified = true;
-    }
-
-    @Override
     public void setOpzioni(JSONObject opzioni) {
         super.setOpzioni(opzioni);
         this.modified = true;

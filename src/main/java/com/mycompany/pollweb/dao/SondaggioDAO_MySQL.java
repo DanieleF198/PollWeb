@@ -44,6 +44,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     private PreparedStatement searchSondaggiDataCreazione;
     private PreparedStatement searchSondaggiDataChiusura;
     private PreparedStatement searchSondaggiNoData;
+    private PreparedStatement sSondaggiPrivatiByIdUtente;
+    private PreparedStatement sSondaggiCompilati;
+    private PreparedStatement sSondaggiCompilati2;
+    private PreparedStatement sSondaggiCompilati3;
     
     SondaggioDAO_MySQL(DataLayer d) {
         super(d);
@@ -67,6 +71,13 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             searchSondaggiDataChiusura = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataChiusura = ?");
             searchSondaggiNoData = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataChiusura IS NULL");
             
+            sSondaggiPrivatiByIdUtente = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idUtente=?");
+            
+            //ora concentrazione
+            sSondaggiCompilati = connection.prepareStatement("SELECT * FROM Risposta WHERE idUtente=?");
+            sSondaggiCompilati2 = connection.prepareStatement("SELECT * FROM RispostaDomanda WHERE idRisposta=?");
+            sSondaggiCompilati3 = connection.prepareStatement("SELECT * FROM Domanda WHERE idDomanda=?");
+            
             
             
         } catch (SQLException ex) {
@@ -86,6 +97,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             searchSondaggiDataCreazione.close();
             searchSondaggiDataChiusura.close();
             searchSondaggiNoData.close();
+            sSondaggiPrivatiByIdUtente.close();
+            sSondaggiCompilati.close();
+            sSondaggiCompilati2.close();
+            sSondaggiCompilati3.close();
             
             sSondaggi.close();
             
@@ -335,6 +350,68 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
         } catch (SQLException | OptimisticLockException ex) {
             throw new DataException("Unable to store sondaggio", ex);
         }
+    }
+    
+    @Override
+    public ArrayList<Sondaggio> getSondaggiPrivati(int idUtente) throws DataException{
+        ArrayList<Sondaggio> sp = new ArrayList();
+        Sondaggio s;
+        int idSondaggio; 
+        
+        try {
+            sSondaggiPrivatiByIdUtente.setInt(1, idUtente);
+            try (ResultSet rs = sSondaggiPrivatiByIdUtente.executeQuery()) {
+                while (rs.next()) {
+                    idSondaggio = rs.getInt("idSondaggio");
+                    s = getSondaggio(idSondaggio);
+                    sp.add(s);
+                }
+            }
+            } catch (SQLException ex) {
+                //
+            }
+        return sp;
+    }
+    
+    @Override
+    public ArrayList<Sondaggio> getSondaggiCompilati(int idUtente) throws DataException{
+        ArrayList<Sondaggio> sp = new ArrayList();
+        Sondaggio s;
+        int idRisposta; 
+        int idDomanda; 
+        int idSondaggio; 
+        
+        try {
+            sSondaggiCompilati.setInt(1, idUtente);
+            try(ResultSet rs = sSondaggiCompilati.executeQuery()) { //prendiamo l'id delle risposte che ci interessano
+                while (rs.next()) {
+                    idRisposta = rs.getInt("idRisposta");
+                    sSondaggiCompilati2.setInt(1, idRisposta);
+                    try (ResultSet rs2 = sSondaggiCompilati2.executeQuery()) { //prendiamo un solo idDomanda per ogni idRisposta che abbiamo (tanto ogni domanda per quell'id è riferita allo stesso sondaggio)
+                        if (rs2.next()) {
+                            System.out.println("rs2 - idDomanda: " + rs2.getInt("idDomanda"));
+                            idDomanda = rs2.getInt("idDomanda");
+                            
+                            sSondaggiCompilati3.setInt(1, idDomanda);
+                            try (ResultSet rs3 = sSondaggiCompilati3.executeQuery()) { //prendiamo tutta la domanda che conterrà l'idSondaggio al quale è riferita
+                                if (rs3.next()) {
+                                    System.out.println("rs3 - idSondaggio: " + rs3.getInt("idSondaggio"));
+                                    idSondaggio = rs3.getInt("idSondaggio");
+                                    s = getSondaggio(idSondaggio);
+                                    sp.add(s);
+                                }
+                            }  
+                        }
+                    }   
+                }
+            } catch (SQLException ex) {
+                //
+            }
+        
+        }catch (SQLException ex) {
+            Logger.getLogger(SondaggioDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sp;
     }
     
     
