@@ -56,7 +56,12 @@ public class Dashboard extends BaseController {
                         System.out.println("REQUEST HEADER_SEARCH(privati): " + request.getParameter("header-search-sondaggi-privati"));
                         action_sondaggi_privati_search(request, response);
                         return;
-                        
+
+                    }else if(request.getParameter("header-search-sondaggi-compilati") != null){
+                        System.out.println("REQUEST HEADER_SEARCH(compilati): " + request.getParameter("header-search-sondaggi-compilati"));
+                        action_sondaggi_compilati_search(request, response);
+                        return;
+
                     } else if(request.getParameter("changeVisibility")!=null){
                         System.out.println("changeVisibility Cliccato");
                     } else if(request.getParameter("modSurvey")!=null){
@@ -106,9 +111,6 @@ public class Dashboard extends BaseController {
                 request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
 
                 ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid")); //Lista di tutti i sondaggi
-                if(request.getParameter("header-search-tuoi-sondaggi") != null){
-                    sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("header-search-tuoi-sondaggi"));
-                }
                 request.setAttribute("sondaggi", sondaggi);
                 if( sondaggi.isEmpty() ){
                     request.setAttribute("noTuoiSondaggi", "yes");
@@ -120,18 +122,8 @@ public class Dashboard extends BaseController {
                     request.setAttribute("noSondaggiPriv", "yes");
                 }
                 
-                
-                
-                ArrayList<Sondaggio> sondaggiComp= (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiCompilati((Integer)s.getAttribute("userid")); //Lista dei sondaggi privati
+                ArrayList<Sondaggio> sondaggiComp = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiCompilati((Integer)s.getAttribute("userid")); //Lista dei sondaggi compilati
                 request.setAttribute("sondaggiComp", sondaggiComp);
-                
-                Iterator<Sondaggio> itr = sondaggiComp.iterator(); 
-                Sondaggio it;
-                while(itr.hasNext()){
-                    it = itr.next();
-                    System.out.println("sondaggiComp: " + it.getTitolo());
-                }
-                
                 if( sondaggiComp.isEmpty() ){
                     request.setAttribute("noSondaggiComp", "yes");
                 }
@@ -161,7 +153,7 @@ public class Dashboard extends BaseController {
                 request.setAttribute("eta", (Integer)s.getAttribute("eta"));
                 request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
                 
-                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid")); //Lista di tutti i sondaggi
                 sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("header-search-tuoi-sondaggi"));
                 request.setAttribute("sondaggi", sondaggi);
                 
@@ -185,6 +177,12 @@ public class Dashboard extends BaseController {
                 request.setAttribute("sondaggiPriv", sondaggiPriv);
                 if( sondaggiPriv.isEmpty() ){
                     request.setAttribute("noSondaggiPriv", "yes");
+                }
+                
+                ArrayList<Sondaggio> sondaggiComp = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiCompilati((Integer)s.getAttribute("userid")); //Lista dei sondaggi compilati
+                request.setAttribute("sondaggiComp", sondaggiComp);
+                if( sondaggiComp.isEmpty() ){
+                    request.setAttribute("noSondaggiComp", "yes");
                 }
 
                 res.activate("dashboard.ftl", request, response);
@@ -212,7 +210,7 @@ public class Dashboard extends BaseController {
                 request.setAttribute("eta", (Integer)s.getAttribute("eta"));
                 request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
                 
-                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid"));
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid")); //Lista di tutti i sondaggi
                 request.setAttribute("sondaggi", sondaggi);
                 
                 ArrayList<Sondaggio> sondaggiPriv = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPrivati((Integer)s.getAttribute("userid")); //Lista dei sondaggi privati
@@ -230,13 +228,75 @@ public class Dashboard extends BaseController {
                     request.setAttribute("ricercaSondaggiPrivati", "");
                 }
                 
-                if(sondaggi.isEmpty()){ 
+                if(sondaggiPriv.isEmpty()){ 
                     request.setAttribute("listaSondaggiPrivatiVuota", "yes");  
                     System.out.println("LISTA SONDAGGI VUOTA (privati): " + request.getAttribute("listaSondaggiPrivatiVuota"));
                 }
                 else{
                     request.setAttribute("listaSondaggiPrivatiVuota", "");
                     System.out.println("LISTA SONDAGGI VUOTA (privati): " + request.getAttribute("listaSondaggiPrivatiVuota"));
+                }
+                
+                ArrayList<Sondaggio> sondaggiComp = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiCompilati((Integer)s.getAttribute("userid")); //Lista dei sondaggi compilati
+                request.setAttribute("sondaggiComp", sondaggiComp);
+                if( sondaggiComp.isEmpty() ){
+                    request.setAttribute("noSondaggiComp", "yes");
+                }
+                
+
+                res.activate("dashboard.ftl", request, response);
+                
+                
+            }
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void action_sondaggi_compilati_search(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+        try {
+            if(!(SecurityLayer.checkSession(request) != null)){ //controllo in più per essere sicuri
+                action_redirect_login(request,response);
+            }else{
+                PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                TemplateResult res = new TemplateResult(getServletContext());
+                HttpSession s = request.getSession(false);
+                GruppoImpl g = new GruppoImpl();
+                request.setAttribute("username", (String)s.getAttribute("username"));
+                request.setAttribute("email", (String)s.getAttribute("email"));
+                request.setAttribute("nome", (String)s.getAttribute("nome"));
+                request.setAttribute("cognome", (String)s.getAttribute("cognome"));
+                request.setAttribute("eta", (Integer)s.getAttribute("eta"));
+                request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
+                
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiByIdUtente((Integer)s.getAttribute("userid")); //Lista di tutti i sondaggi
+                request.setAttribute("sondaggi", sondaggi);
+                
+                ArrayList<Sondaggio> sondaggiPriv = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPrivati((Integer)s.getAttribute("userid")); //Lista dei sondaggi privati
+                request.setAttribute("sondaggiPriv", sondaggiPriv);
+                
+                ArrayList<Sondaggio> sondaggiComp= (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiCompilati((Integer)s.getAttribute("userid")); //Lista dei sondaggi compilati
+                sondaggiComp = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggiComp, (String)request.getParameter("header-search-sondaggi-compilati"));
+                request.setAttribute("sondaggiComp", sondaggiComp);
+                
+                if( sondaggiPriv.isEmpty() ){
+                    request.setAttribute("noSondaggiComp", "yes");
+                }
+                
+                if(!request.getParameter("header-search-sondaggi-compilati").isEmpty()){
+                    request.setAttribute("ricercaSondaggiCompilati", "yes");
+                }
+                else{
+                    request.setAttribute("ricercaSondaggiCompilati", "");
+                }
+                
+                if(sondaggiComp.isEmpty()){ 
+                    request.setAttribute("listaSondaggiCompilatiVuota", "yes");  
+                    System.out.println("LISTA SONDAGGI VUOTA (compilati): " + request.getAttribute("listaSondaggiCompilatiVuota"));
+                }
+                else{
+                    request.setAttribute("listaSondaggiCompilatiVuota", "");
+                    System.out.println("LISTA SONDAGGI VUOTA (compilati): " + request.getAttribute("listaSondaggiCompilatiVuota"));
                 }
                 
                 
@@ -249,8 +309,6 @@ public class Dashboard extends BaseController {
             Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
     
     
 

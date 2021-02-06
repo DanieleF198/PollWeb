@@ -375,7 +375,6 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     
     @Override
     public ArrayList<Sondaggio> getSondaggiCompilati(int idUtente) throws DataException{
-        System.out.println("siamo dentro");
         ArrayList<Sondaggio> sp = new ArrayList();
         Sondaggio s;
         int idRisposta; 
@@ -387,18 +386,15 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             try(ResultSet rs = sSondaggiCompilati.executeQuery()) { //prendiamo l'id delle risposte che ci interessano
                 while (rs.next()) {
                     idRisposta = rs.getInt("idRisposta");
-                    System.out.println("1 while");
                     sSondaggiCompilati2.setInt(1, idRisposta);
                     try (ResultSet rs2 = sSondaggiCompilati2.executeQuery()) { //prendiamo un solo idDomanda per ogni idRisposta che abbiamo (tanto ogni domanda per quell'id è riferita allo stesso sondaggio)
                         if (rs2.next()) {
-                            System.out.println("2 if");
                             System.out.println("rs2 - idDomanda: " + rs2.getInt("idDomanda"));
                             idDomanda = rs2.getInt("idDomanda");
                             
                             sSondaggiCompilati3.setInt(1, idDomanda);
                             try (ResultSet rs3 = sSondaggiCompilati3.executeQuery()) { //prendiamo tutta la domanda che conterrà l'idSondaggio al quale è riferita
                                 if (rs3.next()) {
-                                    System.out.println("3 if");
                                     System.out.println("rs3 - idSondaggio: " + rs3.getInt("idSondaggio"));
                                     idSondaggio = rs3.getInt("idSondaggio");
                                     s = getSondaggio(idSondaggio);
