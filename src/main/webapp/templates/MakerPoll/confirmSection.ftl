@@ -103,7 +103,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <#if errors?? || partecipantsError?? || CSVerror??>
+                            <#if errors?? || partecipantsError?? || CSVerror?? || notCSVError??>
                                 <#if private?? && private=="yes">
                                     <p class="text-danger mb-1"><b>Pare che ci siano dei problemi:</b> finch&#233; non li avrai risolti non potrai rendere pubblico il sondaggio (ma potrai salvarlo) e non potrai invitare alcun partecipante.</p>
                                 <#else>
@@ -119,6 +119,9 @@
                                 </#if>
                                 <#if errors?? && (partecipantsError?? || CSVerror??)>
                                     <p class="text-danger mb-1"><b>ATTENZIONE: </b>Pare che tu abbia degli errori sia relativi alle domande che ai partecipanti. In questo caso dovrai prima risolvere i problemi relativi alle domande, e soltanto dopo reinserire correttamente i partecipanti.</p>
+                                </#if>
+                                <#if notCSVError??>
+                                    <p class="text-danger mb-1"><b>ATTENZIONE: </b>Si accettano solo file con estenzione csv, con header "Nome,Mail,Password"</p>
                                 </#if>
                             </#if>
                             <#if modVersion?? && modVersion=="yes">
@@ -361,7 +364,7 @@
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <p class="mt-3"><b>Attenzione: il file CSV verr&#224; considerato solo se il check alla sua destra sar&#224; spuntato</b>. Se si decide di invitare i partecipanti tramite file csv, i partecipanti inseriti nell'inserimento manuale saranno ignorati</p>
+                                                <p class="mt-3"><b>Attenzione: il file CSV verr&#224; considerato solo se il check alla sua destra sar&#224; spuntato</b>. Se si decide di invitare i partecipanti tramite file csv, i partecipanti inseriti nell'inserimento manuale saranno ignorati. Si accettano solo file con estenzione csv, con header "Nome,Mail,Password"</p>
                                             </div>
                                         </div>
                                         <noscript>
@@ -372,7 +375,7 @@
                                                 </div>
                                             </div>
                                         </noscript>
-                                        <p class="text-muted"><b>Nota:</b> i partecipanti verranno invitati effettivamente soltanto quando il sondaggio diventa pubblico per la prima volta. Cliccato su "Torna alle domande" o "torna alle informazioni generali" i partecipanti immessi fin'ora non verranno salvati.</p>
+                                        <p class="text-muted"><b>Nota:</b> i partecipanti verranno invitati effettivamente soltanto quando il sondaggio diventa pubblico per la prima volta. Cliccato su "Torna alle domande" o "torna alle informazioni generali" i partecipanti immessi fin'ora non verranno salvati. Si accettano solo file con estenzione csv, con header "Nome,Mail,Password"</p>
                                     </#if>
                                 </#if>
                             </#if>

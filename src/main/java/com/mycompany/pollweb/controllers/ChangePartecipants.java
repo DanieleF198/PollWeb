@@ -210,6 +210,32 @@ public class ChangePartecipants extends BaseController {
                     }
                 }
                 List<String[]> r = new ArrayList<String[]>();
+                
+                List<String[]> rH = new ArrayList<String[]>();
+                                
+                try (CSVReader readerHeader = new CSVReaderBuilder(new FileReader(uploaded_file)).withSkipLines(0).build()) {
+                    rH = readerHeader.readAll();
+                    System.out.println("lettura riuscita - header");
+                }
+
+                if(!(rH.isEmpty())){
+                    String[] header = rH.get(0);
+                    if(header.length == 3){
+                        if((!(header[0].toLowerCase().equals("nome"))) || (!(header[1].toLowerCase().equals("mail"))) || (!(header[2].toLowerCase().equals("password")))){
+                            request.setAttribute("notCSVError", "yes");
+                            action_default(request, response);
+                            return;
+                        }
+                    } else {
+                        request.setAttribute("notCSVError", "yes");
+                        action_default(request, response);
+                        return;
+                    }
+                } else{
+                    request.setAttribute("notCSVError", "yes");
+                    action_default(request, response);
+                    return;
+                }
 
                 try (CSVReader reader = new CSVReaderBuilder(new FileReader(uploaded_file)).withSkipLines(1).build()) {
                     r = reader.readAll();
@@ -371,9 +397,7 @@ public class ChangePartecipants extends BaseController {
                 return;
             }
             if(!partecipants.isEmpty()){
-                for(int i = 0; i < partecipants.size(); i++){
-                    dl.getUtenteDAO().updateUtenteListaPartecipanti(partecipants, Integer.parseInt(request.getParameter("changePartecipants")));
-                }
+                dl.getUtenteDAO().updateUtenteListaPartecipanti(partecipants, Integer.parseInt(request.getParameter("changePartecipants")));
             }
             response.sendRedirect("dashboard");
             return;

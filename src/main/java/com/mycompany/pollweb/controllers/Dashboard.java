@@ -23,14 +23,22 @@ import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
-
+import javax.mail.*;
+import javax.mail.internet.*;
 /**
  *
  * @author joker
@@ -63,7 +71,83 @@ public class Dashboard extends BaseController {
                         return;
 
                     } else if(request.getParameter("changeVisibility")!=null){
-                        System.out.println("changeVisibility Cliccato");
+                        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                        Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(Integer.parseInt(request.getParameter("changeVisibility")));
+                        if(!(sondaggio.isVisibilita())){
+                            sondaggio.setVisibilita(true);
+                            dl.getSondaggioDAO().storeSondaggio(sondaggio);
+                            if(sondaggio.isPrivato()){
+                                //simulazione invio della email (il codice è questo, solo non vi è un server locale per il SMTP, quindi stampiamo su file esterno il risultato finale
+                                ArrayList<Utente> partecipants = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiWithMailToSendBySondaggioId(Integer.parseInt(request.getParameter("changeVisibility")));
+                                String from = "daniele.fossemo@outlook.it";
+                                String host = "localhost";
+                                Properties properties = System.getProperties();
+                                properties.setProperty("mail.smtp.host", host);
+                                Session session = Session.getDefaultInstance(properties);
+                                response.setContentType("text/html");
+                                PrintWriter out = response.getWriter();
+                                Utente u = dl.getUtenteDAO().getUtente(sondaggio.getIdUtente());
+                                
+                                for(int i = 0; i < partecipants.size(); i++){
+                                    try {
+                                        String to = partecipants.get(i).getEmail();
+                                        
+                                        String password = partecipants.get(i).getPassword();
+                                        
+                                        MimeMessage message = new MimeMessage(session);
+
+                                        message.setFrom(new InternetAddress(from));
+
+                                        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                                        message.setSubject("This is the Subject Line!");
+
+                                        message.setText("This is actual message");
+
+                                        //Transport.send(message);
+                                        File f = new File("C:\\Users\\joker\\Documents\\NetBeansProjects\\PollWeb\\src\\main\\webapp\\emails\\emailSurvey"+Integer.parseInt(request.getParameter("changeVisibility"))+".txt"); 
+                                        if (!f.createNewFile()) { System.out.println("File already exists"); }
+                                        PrintStream standard = System.out;
+                                        PrintStream fileStream = new PrintStream(new FileOutputStream("C:\\Users\\joker\\Documents\\NetBeansProjects\\PollWeb\\src\\main\\webapp\\emails\\emailSurvey"+Integer.parseInt(request.getParameter("changeVisibility"))+".txt", true));
+                                        System.setOut(fileStream);
+                                        
+                                        String title = "Invito Sondaggio privato Quack, Duck, Poll";
+                                        String res = 
+                                                "Salve\n" + "sei stato invitato a partecipare ad un sondaggio privato su Quack, Duck, Poll dall\'utente " + u.getUsername() + "\n" +
+                                                "Le tue credenziali di accesso al sondaggio sono:\n" + "Email: " + to + "\n" + "Password: " + password + "\n" +
+                                                "Puoi effettuare il login al seguente link: http://localhost:8080/PollWeb/loginForPartecipants \n" + "\n" +
+                                                "Questa mail viene inviata automaticamente dal sito Quack, Duck, Poll tramite la richiesta d\'invito da parte dell\'utente " + u.getUsername() + ", se pensi che la tua privacy sia stata lesa in un qualche modo contattaci all\'indirizzo: Quack@Duck.poll\n";
+//                                        Come sarebbe l'invio (esempio) vero
+//                                        out.println(docType +
+//                                           "<html>\n" +
+//                                              "<head><title>" + title + "</title></head>\n" +
+//                                                "<body bgcolor = \"#f0f0f0\">\n" +
+//                                                    "<h1 align = \"center\">" + title + "</h1>\n" +
+//                                                    "<p align = \"center\">" + res + "</p>\n" +
+//                                                "</body>\n" +
+//                                            "</html>\n" +
+//                                            "---------------------"
+//                                        );
+                                        System.out.println(
+                                           "Mail inviata da: "+ from + "\n" +
+                                           "Mail ricevuta da: "+ to + "\n" +
+                                           "Oggetto: " + title + "\n" +
+                                           "Testo:\n" + res + "\n" + 
+                                           "---------------------"
+                                        );
+                                        System.setOut(standard);  
+                                    } catch (MessagingException mex) {
+                                        mex.printStackTrace();
+                                    }
+                                }
+                                dl.getUtenteDAO().ListaPartecipantiSetMailSend(Integer.parseInt(request.getParameter("changeVisibility")));
+                            }
+                        } else {
+                            sondaggio.setVisibilita(false);
+                            dl.getSondaggioDAO().storeSondaggio(sondaggio);
+                        }
+                        response.sendRedirect("dashboard");
+                        return;
                     } else if(request.getParameter("modSurvey")!=null){
                         s.setAttribute("sondaggio-in-creazione", Integer.parseInt(request.getParameter("modSurvey")));
                         s.setAttribute("continue", "yes");

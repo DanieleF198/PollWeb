@@ -115,7 +115,7 @@
                                                     </#if>
                                                     <div class="col-lg-1 col-md-1 col-sx-12 col-12 mb-1">
                                                         <div class="row pl-0 pr-0 pt-0 pb-0 ml-0 mr-0 mt-0 mb-0 justify-content-end">
-                                                            <button type="button" id="removeLast" class="btn btn-danger" title="rimuovi utente" onClick="removeLast()">
+                                                            <button type="button" id="removeLastOne" class="btn btn-danger" title="rimuovi utente" onClick="removeLast()">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
                                                                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
                                                                     <path fill-rule="evenodd" d="M12.146 5.146a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
@@ -263,7 +263,7 @@
                 };
                     
                 function removeLast(){
-                    if(document.getElementById('#firstUserName').disabled === true){
+                    if(document.getElementById('firstUserName').disabled === true){
                         $('#firstUserName').prop("disabled", false);
                         $('#firstUserMail').prop("disabled", false);
                         $('#firstUserPass').prop("disabled", false);
@@ -272,7 +272,7 @@
                         $('#firstUserMail').prop("disabled", true);
                         $('#firstUserPass').prop("disabled", true);
                     }
-                } 
+                }
             </script>
         </div>
     </body>

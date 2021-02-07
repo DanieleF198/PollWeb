@@ -34,6 +34,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -45,10 +46,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpSession;
@@ -80,9 +87,16 @@ public class ConfirmSection extends BaseController {
                         if (request.getContentType() != null && request.getContentType().toLowerCase().contains("multipart/form-data")) {
                             System.out.println("passato enctype");
                             boolean checkError = false;
-                            if(request.getParameter("withCSV") != null){    
+                            if(request.getParameter("withCSV") != null){
                                 Part filePart = request.getPart("file");
                                 File uploaded_file = File.createTempFile("upload_", "", new File(getServletContext().getInitParameter("uploads.directory")));
+                                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                                System.out.println("FILENAME: " + fileName + "CON LUNGHEZZA: " + fileName.length() +"ESTENZIONE: " + fileName.substring(fileName.length()-3));
+                                if(!"csv".equals(fileName.substring(fileName.length()-3))){
+                                    request.setAttribute("notCSVError", "yes");
+                                    action_default(request, response);
+                                    return;
+                                }
                                 try (InputStream is = filePart.getInputStream();
                                         OutputStream os = new FileOutputStream(uploaded_file)) {
                                     byte[] buffer = new byte[1024];
@@ -92,6 +106,34 @@ public class ConfirmSection extends BaseController {
                                     }
                                 }
                                 List<String[]> r = new ArrayList<String[]>();
+                                List<String[]> rH = new ArrayList<String[]>();
+                                
+                                try (CSVReader readerHeader = new CSVReaderBuilder(new FileReader(uploaded_file)).withSkipLines(0).build()) {
+                                    rH = readerHeader.readAll();
+                                    System.out.println("lettura riuscita - header");
+                                }
+                                
+                                if(!(rH.isEmpty())){
+                                    String[] header = rH.get(0);
+                                    if(header.length == 3){
+                                        if((!(header[0].toLowerCase().equals("nome"))) || (!(header[1].toLowerCase().equals("mail"))) || (!(header[2].toLowerCase().equals("password")))){
+                                            request.setAttribute("notCSVError", "yes");
+                                            action_default(request, response);
+                                            return;
+                                        }
+                                    } else {
+                                        request.setAttribute("notCSVError", "yes");
+                                        action_default(request, response);
+                                        return;
+                                    }
+                                } else{
+                                    request.setAttribute("notCSVError", "yes");
+                                    action_default(request, response);
+                                    return;
+                                }
+                                
+
+                                
                                 
                                 try (CSVReader reader = new CSVReaderBuilder(new FileReader(uploaded_file)).withSkipLines(1).build()) {
                                     r = reader.readAll();
@@ -263,6 +305,72 @@ public class ConfirmSection extends BaseController {
                                 sondaggio.setVisibilita(false);
                             } else {
                                 sondaggio.setVisibilita(true);
+                                dl.getSondaggioDAO().storeSondaggio(sondaggio);
+                                if(sondaggio.isPrivato()){
+                                    //simulazione invio della email (il codice è questo, solo non vi è un server locale per il SMTP, quindi stampiamo su file esterno il risultato finale
+                                    String from = "daniele.fossemo@outlook.it";
+                                    String host = "localhost";
+                                    Properties properties = System.getProperties();
+                                    properties.setProperty("mail.smtp.host", host);
+                                    Session session = Session.getDefaultInstance(properties);
+                                    response.setContentType("text/html");
+                                    PrintWriter out = response.getWriter();
+                                    Utente u = dl.getUtenteDAO().getUtente(sondaggio.getIdUtente());
+
+                                    for(int i = 0; i < partecipants.size(); i++){
+                                        try {
+                                            String to = partecipants.get(i).getEmail();
+
+                                            String password = partecipants.get(i).getPassword();
+
+                                            MimeMessage message = new MimeMessage(session);
+
+                                            message.setFrom(new InternetAddress(from));
+
+                                            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                                            message.setSubject("This is the Subject Line!");
+
+                                            message.setText("This is actual message");
+
+                                            //Transport.send(message);
+                                            File f = new File("C:\\Users\\joker\\Documents\\NetBeansProjects\\PollWeb\\src\\main\\webapp\\emails\\emailSurvey"+(int)s.getAttribute("sondaggio-in-creazione")+".txt"); 
+                                            if (!f.createNewFile()) { System.out.println("File already exists"); }
+                                            PrintStream standard = System.out;
+                                            PrintStream fileStream = new PrintStream(new FileOutputStream("C:\\Users\\joker\\Documents\\NetBeansProjects\\PollWeb\\src\\main\\webapp\\emails\\emailSurvey"+(int)s.getAttribute("sondaggio-in-creazione")+".txt", true));
+                                            System.setOut(fileStream);
+
+                                            String title = "Invito Sondaggio privato Quack, Duck, Poll";
+                                            String res = 
+                                                    "Salve\n" + "sei stato invitato a partecipare ad un sondaggio privato su Quack, Duck, Poll dall\'utente " + u.getUsername() + "\n" +
+                                                    "Le tue credenziali di accesso al sondaggio sono:\n" + "Email: " + to + "\n" + "Password: " + password + "\n" +
+                                                    "Puoi effettuare il login al seguente link: http://localhost:8080/PollWeb/loginForPartecipants \n" + "\n" +
+                                                    "Questa mail viene inviata automaticamente dal sito Quack, Duck, Poll tramite la richiesta d\'invito da parte dell\'utente " + u.getUsername() + ", se pensi che la tua privacy sia stata lesa in un qualche modo contattaci all\'indirizzo: Quack@Duck.poll\n";
+    //                                        Come sarebbe l'invio (esempio) vero
+    //                                        out.println(docType +
+    //                                           "<html>\n" +
+    //                                              "<head><title>" + title + "</title></head>\n" +
+    //                                                "<body bgcolor = \"#f0f0f0\">\n" +
+    //                                                    "<h1 align = \"center\">" + title + "</h1>\n" +
+    //                                                    "<p align = \"center\">" + res + "</p>\n" +
+    //                                                "</body>\n" +
+    //                                            "</html>\n" +
+    //                                            "---------------------"
+    //                                        );
+                                            System.out.println(
+                                               "Mail inviata da: "+ from + "\n" +
+                                               "Mail ricevuta da: "+ to + "\n" +
+                                               "Oggetto: " + title + "\n" +
+                                               "Testo:\n" + res + "\n" + 
+                                               "---------------------"
+                                            );
+                                            System.setOut(standard);  
+                                        } catch (MessagingException mex) {
+                                            mex.printStackTrace();
+                                        }
+                                    }
+                                    dl.getUtenteDAO().ListaPartecipantiSetMailSend((int)s.getAttribute("sondaggio-in-creazione"));
+                                }
                             }
                             sondaggio.setCompleto(true);
                             dl.getSondaggioDAO().storeSondaggio(sondaggio);

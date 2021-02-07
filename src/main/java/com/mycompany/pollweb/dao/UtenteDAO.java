@@ -39,6 +39,10 @@ public interface UtenteDAO {
     
     public List<Utente> getListaPartecipantiBySondaggioId (int idSondaggio, boolean allPartecipants) throws DataException;
     
+    public List<Utente> getListaPartecipantiWithMailToSendBySondaggioId (int idSondaggio) throws DataException;
+    
+    public void ListaPartecipantiSetMailSend (int idSondaggio) throws DataException;
+    
     public void deleteListaPartecipanti (int idSondaggio) throws DataException;
     
 }
