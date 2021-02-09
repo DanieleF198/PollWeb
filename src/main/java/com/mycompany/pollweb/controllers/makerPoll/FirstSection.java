@@ -321,7 +321,9 @@ public class FirstSection extends BaseController {
             System.out.println(request.getParameter("modificable"));
             if(request.getParameter("modificable") != null){
                 if(request.getParameter("modificable").equals("modificable")){
-                    modificableSurvey = true;
+                    if(!(privateSurvey)){
+                        modificableSurvey = true;
+                    }
                 }
             }
             
