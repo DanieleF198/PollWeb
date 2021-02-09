@@ -275,7 +275,7 @@
                             <#else>
                                 <div class="carousel-item">
                             </#if>
-
+                                    
                                 <div class="card-deck mr-1 ml-1">
                                     <div class="col-lg-4 mb-3 variable-height">
                                         <div class="card h-100">

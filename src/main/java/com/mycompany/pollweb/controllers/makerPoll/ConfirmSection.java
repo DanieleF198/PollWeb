@@ -303,6 +303,7 @@ public class ConfirmSection extends BaseController {
                                 }
                             }
                             Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
+                            System.out.println("IdUtente + IdSondaggio: " + sondaggio.getIdUtente() + " , " + sondaggio.getKey());
                             sondaggio.setCompleto(true);
                             if(request.getParameter("createOnly")!=null){
                                 sondaggio.setVisibilita(false);
@@ -312,7 +313,6 @@ public class ConfirmSection extends BaseController {
                                 if(sondaggio.isPrivato()){
                                 //simulazione invio della email (il codice è questo, solo non vi è un server locale per il SMTP, quindi stampiamo su file esterno il risultato finale
                                 final String from = "daniele.fossemo@outlook.it";
-                                String to = "jokeritaliano98@outlook.it";
                                 final String pass = "Password2021!";
                                 String host = "localhost";
                                 Properties properties = System.getProperties();
@@ -335,6 +335,7 @@ public class ConfirmSection extends BaseController {
                                 for(int i = 0; i < partecipants.size(); i++){
                                     try {
                                         
+                                        String to = partecipants.get(i).getEmail();
                                         
                                         String password = partecipants.get(i).getPassword();
                                         
@@ -352,10 +353,11 @@ public class ConfirmSection extends BaseController {
                                         transport.connect(host, from, pass);
                                         transport.sendMessage(message, message.getAllRecipients());
                                         transport.close();
-                                        File f = new File("C:\\Users\\joker\\Documents\\NetBeansProjects\\PollWeb\\src\\main\\webapp\\emails\\emailSurvey"+(int)s.getAttribute("sondaggio-in-creazione")+".txt"); 
+                                        String contextPath = getServletContext().getRealPath("/");
+                                        File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+(int)s.getAttribute("sondaggio-in-creazione")+".txt"); //daniele -> joker; Davide-> Cronio
                                         if (!f.createNewFile()) { System.out.println("File already exists"); }
                                         PrintStream standard = System.out;
-                                        PrintStream fileStream = new PrintStream(new FileOutputStream("C:\\Users\\joker\\Documents\\NetBeansProjects\\PollWeb\\src\\main\\webapp\\emails\\emailSurvey"+(int)s.getAttribute("sondaggio-in-creazione")+".txt", true));
+                                        PrintStream fileStream = new PrintStream(new FileOutputStream(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+(int)s.getAttribute("sondaggio-in-creazione")+".txt", true));
                                         System.setOut(fileStream);
                                         
                                         String title = "Invito Sondaggio privato Quack, Duck, Poll";

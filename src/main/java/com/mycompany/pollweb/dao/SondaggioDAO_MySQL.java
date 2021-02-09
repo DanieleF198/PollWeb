@@ -143,7 +143,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             s.setScadenza(rs.getDate("dataChiusura"));
             s.setPrivato(rs.getBoolean("privato"));
             s.setModificabile(rs.getBoolean("modificabile"));
-            s.setIdUtente(rs.getInt("compilazioni"));
+            s.setCompilazioni(rs.getInt("compilazioni"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Sondaggio object form ResultSet", ex);
         }
@@ -290,6 +290,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 }
             
                 uSondaggio.setInt(1, sondaggio.getIdUtente()); //update
+                System.out.println("IDUTENTE: " + sondaggio.getIdUtente());
                 uSondaggio.setString(2, sondaggio.getTitolo());
                 if(sondaggio.getTestoApertura()!=null){
                     if(!sondaggio.getTestoApertura().isBlank()){
@@ -353,9 +354,9 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 iSondaggio.setBoolean(5, sondaggio.isCompleto());
                 iSondaggio.setBoolean(6, sondaggio.isVisibilita());
                 iSondaggio.setDate(7, sqlCreazione);
-                iSondaggio.setBoolean(8, sondaggio.isPrivato());
-                iSondaggio.setBoolean(9, sondaggio.isModificabile());
-                uSondaggio.setInt(10, sondaggio.getCompilazioni());
+                iSondaggio.setBoolean(9, sondaggio.isPrivato());
+                iSondaggio.setBoolean(10, sondaggio.isModificabile());
+                iSondaggio.setInt(11, sondaggio.getCompilazioni());
                 
                 if (iSondaggio.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database
