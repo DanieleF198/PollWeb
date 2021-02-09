@@ -5,6 +5,7 @@
  */
 package com.mycompany.pollweb.controllers;
 
+import com.mycompany.pollweb.dao.PollWebDataLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -15,7 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,8 +30,9 @@ import java.util.logging.Logger;
 public class PublicPolls extends BaseController {
 
     @Override
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
+            
             action_default(request, response);
 
         } catch (IOException ex) {
@@ -42,9 +46,41 @@ public class PublicPolls extends BaseController {
         }
     }
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
+    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
        try {
+           
             TemplateResult res = new TemplateResult(getServletContext());
+            
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                    
+            if(request.getParameter("search-sondaggio") != null){
+                System.out.println("search-sondaggi cliccato");
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPopolari();
+                sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("search-sondaggio"));
+                request.setAttribute("sondaggi", sondaggi);
+            }
+            
+            else if(request.getParameter("btnPopolari") != null){
+                System.out.println("btnPopolari cliccato");
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPopolari();
+                request.setAttribute("sondaggi", sondaggi);
+            }
+            else if(request.getParameter("btnRecenti") != null){
+                System.out.println("btnRecenti cliccato");
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiRecenti();
+                request.setAttribute("sondaggi", sondaggi);
+            }
+            else if(request.getParameter("btnMenoRecenti") != null){
+                System.out.println("btnMenoRecenti cliccato");
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiMenoRecenti();
+                request.setAttribute("sondaggi", sondaggi);
+            }
+
+            else{
+                ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi();//Lista di tutti i sondaggi
+                request.setAttribute("sondaggi", sondaggi);
+            }
+            
             res.activate("publicPolls.ftl", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(PublicPolls.class.getName()).log(Level.SEVERE, null, ex);

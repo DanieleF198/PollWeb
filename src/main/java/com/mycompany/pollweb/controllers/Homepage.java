@@ -5,6 +5,7 @@
  */
 package com.mycompany.pollweb.controllers;
 
+import com.mycompany.pollweb.dao.PollWebDataLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -15,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -30,7 +33,7 @@ import javax.servlet.http.HttpSession;
 public class Homepage extends BaseController {
 
     @Override
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
@@ -51,10 +54,16 @@ public class Homepage extends BaseController {
         }
     }
 
-    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException {
+    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
        try {
         TemplateResult res = new TemplateResult(getServletContext());
-            res.activate("homepage.ftl", request, response);
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+
+        ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi(); //Lista di tutti i sondaggi
+        request.setAttribute("sondaggi", sondaggi);
+        
+        res.activate("homepage.ftl", request, response);
+        
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Homepage.class.getName()).log(Level.SEVERE, null, ex);
     }

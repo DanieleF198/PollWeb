@@ -163,8 +163,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     }
     
     @Override
-    public List<Utente> getUtenti() throws DataException {
-        List<Utente> result = new ArrayList();
+    public ArrayList<Utente> getUtenti() throws DataException {
+        ArrayList<Utente> result = new ArrayList();
 
         try (ResultSet rs = sUtenti.executeQuery()) {
             while (rs.next()) {

@@ -263,85 +263,77 @@
             </div>
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="card-deck mr-1 ml-1">
-                            <div class="row no-gutters">
-                                <div class="col-lg-4 mb-3 variable-height">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card title</h5>
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        </div>
-                                        <div class="card-footer bg-warning">
-                                            <small class="text-black">Last updated 3 mins ago</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3 variable-height">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="card-title">parliamo di cose serie, ma non di cose troppo serie, usando parole lunghe come supercalifragilistichespiralidoso. Ciao ciao ciao.</h5>
-                                            <p class="card-text">parliamo di cose serie, ma non di cose troppo serie, usando parole lunghe come supercalifragilistichespiralidoso. parliamo di cose serie, ma non di cose troppo serie, usando parole lunghe come supercalifragilistichespiralidoso. parliamo di cose serie, ma non di cose troppo serie, usando parole lunghe come supercalifragilistichespiralidoso.</p>  
-                                        </div>
-                                        <div class="space"></div>
-                                        <div class="card-footer bg-warning">
-                                            <small class="text-black">Last updated 3 mins ago</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 variable-height">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card title</h5>
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action. (MAX 200 char)</p>
-                                        </div>
-                                        <div class="card-footer bg-warning">
-                                            <small class="text-black">Last updated 3 mins ago</small>
+                    
+                    
+                    <#assign c = 1>
+                    <#list sondaggi as sondaggio>  
+
+                        <#if c%3 == 1>
+
+                            <#if c == 1>
+                                <div class="carousel-item active">
+                            <#else>
+                                <div class="carousel-item">
+                            </#if>
+
+                                <div class="card-deck mr-1 ml-1">
+                                    <div class="col-lg-4 mb-3 variable-height">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                                <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                            </div>
+                                            <div class="card-footer bg-warning">
+                                                <small class="text-black">${sondaggio.getCreazione()}</small>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="card-deck mr-1 ml-1">
-                            <div class="row no-gutters">
-                                <div class="col-lg-4 mb-3 variable-height">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card title</h5>
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        </div>
-                                        <div class="card-footer bg-warning">
-                                            <small class="text-black">Last updated 3 mins ago</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 mb-3 variable-height">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card title</h5>
-                                            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                                        </div>
-                                        <div class="card-footer bg-warning">
-                                            <small class="text-black">Last updated 3 mins ago</small>
+
+
+                        </#if>
+                        <#if c%3 == 2>
+
+                                    <div class="col-lg-4 mb-3 variable-height">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                                <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                            </div>
+                                            <div class="card-footer bg-warning">
+                                                <small class="text-black">${sondaggio.getCreazione()}</small>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 variable-height">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card title</h5>
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+
+
+                        </#if>
+                        <#if c%3 == 0>   
+
+                                    <div class="col-lg-4 mb-3 variable-height">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                                <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                            </div>
+                                            <div class="card-footer bg-warning">
+                                                <small class="text-black">${sondaggio.getCreazione()}</small>
+                                            </div>
                                         </div>
-                                        <div class="card-footer bg-warning">
-                                            <small class="text-black">Last updated 3 mins ago</small>
-                                        </div>
-                                    </div>
+                                    </div>   
                                 </div>
                             </div>
-                        </div>
-                    </div>
+
+
+                        </#if>
+                        <#assign c = c + 1>
+                    </#list>
+                    <#if c%3 != 1> 
+                                </div>
+                            </div>
+                    </#if>
+                    
+                    
+                    
                 </div>
                 <a class="carousel-control-prev text-dark" href="#carouselExampleControls" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>

@@ -30,6 +30,7 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     private String testoChiusura;
     private Date creazione;
     private Date scadenza; 
+    private int compilazioni; 
 
     public SondaggioImpl() {
         super();
@@ -44,6 +45,7 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
         this.scadenza = null;
         this.testoApertura = "";
         this.testoChiusura = "";
+        this.compilazioni = 0;
     }
 
 
@@ -56,7 +58,12 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     public int getIdUtente() {
         return idUtente;
     }
-    
+
+    @Override
+    public int getCompilazioni() {
+        return compilazioni;
+    }
+
     @Override
     public Utente getUtente() {
         return utente;
@@ -122,7 +129,6 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
         return visibilita;
     }
 
-
     @Override
     public void setDomande(List<DomandaImpl> domande) {
         this.domande = domande;
@@ -166,6 +172,11 @@ public class SondaggioImpl extends DataItemImpl<Integer> implements Sondaggio {
     @Override
     public void setVisibilita(boolean visibilita) {
         this.visibilita = visibilita;
+    }
+    
+    @Override
+     public void setCompilazioni(int compilazioni) {
+        this.compilazioni = compilazioni;
     }
     
 }

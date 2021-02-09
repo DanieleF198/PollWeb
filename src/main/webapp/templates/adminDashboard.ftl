@@ -169,13 +169,13 @@
                                     <#if listaTuoiSondaggiVuota?? && listaTuoiSondaggiVuota!="">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <h2>Ops! Pare che la tua ricerca non ti abbia portato a nessun sondaggio</h2>
+                                                <p class="h4 text-muted">Ops! Pare che la tua ricerca non ti abbia portato a nessun sondaggio</h2>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-9 col-md-8 col-sm-7 col-6"></div>
                                             <div class="col-lg-3 col-md-4 col-sm-5 col-6 mb-2 d-flex justify-content-end" >
-                                                <a href="dashboard" class="btn btn-warning">Torna ai tuoi sondaggi</a>
+                                                <a href="dashboard" class="btn btn-warning">annulla ricerca</a>
                                             </div>
                                         </div>
                                     <#else>
@@ -324,7 +324,7 @@
                                         <div class="row mt-3">
                                             <div class="col-lg-12">
                                                 <div id="search-field">
-                                                    <input type="text" name="header-search-utente" class="form-control" id="header-search" placeholder="Cerca..." />
+                                                    <input type="text" name="header-search-utenti" class="form-control" id="header-search" placeholder="Cerca..." />
                                                     <button style="visibility: hidden; font-size:0;">
                                                         <svg id="search-icon" class="search-icon" viewBox="0 0 24 24" style="visibility: visible">
                                                             <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
@@ -339,13 +339,13 @@
                                     <#if listaSearchUtentiVuota?? && listaSearchUtentiVuota!=""> <!-- TODO - barra di ricerca non ancora funzionante in noscript -->
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <h2>Nessun utente corrisponde alla tua ricerca</h2>
+                                                <p class="h4 text-muted">Nessun utente corrisponde alla tua ricerca</h2>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-9 col-md-8 col-sm-7 col-6"></div>
                                             <div class="col-lg-3 col-md-4 col-sm-5 col-6 mb-2 d-flex justify-content-end" >
-                                                <a href="dashboard" class="btn btn-warning">Torna ai tuoi sondaggi</a>
+                                                <a href="dashboard" class="btn btn-warning">Annulla ricerca</a>
                                             </div>
                                         </div>
                                     <#else>

@@ -132,6 +132,12 @@ public class SondaggioProxy extends SondaggioImpl implements DataItemProxy   {
         this.modified = true;
     }
     
+    @Override
+    public void setCompilazioni(int compilazioni){
+        super.setCompilazioni(compilazioni);
+        this.modified = true;
+    }
+    
     
     //METODI ESCLUSIVI DEL PROXY
     @Override

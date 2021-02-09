@@ -27,7 +27,7 @@ public interface UtenteDAO {
     
     public String checkIfExist (String username, String email) throws DataException;
     
-    public List<Utente> getUtenti() throws DataException;
+    public ArrayList<Utente> getUtenti() throws DataException;
     
     public void storeUtente(Utente utente) throws DataException;
     

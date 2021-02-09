@@ -527,9 +527,6 @@
                                 <div class="col-lg-9 col-md-8 col-sm-7 col-7">
                                     <h2>Sondaggi compilati</h2>
                                 </div>
-                                <div class="col-lg-3 col-md-4 col-sm-5 col-5 d-flex justify-content-end pb-2" >
-                                    <a href="/PollWeb/makerPoll/firstSection" class="btn btn-light">Crea un sondaggio</a>
-                                </div>
                             </div>
                             <#if noSondaggiComp?? && noSondaggiComp!="">
                                 <div class="row mt-3">

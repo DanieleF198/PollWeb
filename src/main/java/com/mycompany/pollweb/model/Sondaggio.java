@@ -32,6 +32,8 @@ public interface Sondaggio extends DataItem<Integer> {
 
     public String getTestoChiusura();
     
+    public int getCompilazioni();
+    
     public boolean isCompleto();
 
     public boolean isVisibilita();
@@ -63,5 +65,7 @@ public interface Sondaggio extends DataItem<Integer> {
     public void setCompleto(boolean completo);
 
     public void setVisibilita(boolean visibilita);
+    
+    public void setCompilazioni(int compilazioni);
     
 }

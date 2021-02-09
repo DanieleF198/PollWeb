@@ -684,6 +684,11 @@ input[type=number] {
     box-sizing: border-box;
     width: 10%
 }
+
+.tales {
+  min-width: 500px;
+}
+
 @media screen and (max-width: 1200px){
     .particular-width{
         width: 7.5%

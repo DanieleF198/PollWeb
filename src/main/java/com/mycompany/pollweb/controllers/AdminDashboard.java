@@ -18,6 +18,7 @@ import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,8 +44,14 @@ public class AdminDashboard extends BaseController {
             if (s!= null) {
                 if(request.getParameter("header-search-sondaggi") != null){
                     action_sondaggi_search(request, response);
-                    
+                    return;
                 }
+                
+                if(request.getParameter("header-search-utenti") != null){
+                    action_utenti_search(request, response);
+                    return;
+                }
+                
                 if (request.getParameter("btnDeleteUser") != null) {
                     System.out.println("Delete utente cliccato");
                     action_delete_user(request);
@@ -144,6 +151,9 @@ public class AdminDashboard extends BaseController {
             sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("header-search-sondaggi"));
             request.setAttribute("sondaggi", sondaggi);
             
+            List<Utente> utenti = dl.getUtenteDAO().getUtenti();
+            request.setAttribute("utenti", utenti);
+            
             if(!request.getParameter("header-search-sondaggi").isEmpty()){
                 request.setAttribute("ricercaTuoiSondaggi", "yes");
             }
@@ -158,6 +168,48 @@ public class AdminDashboard extends BaseController {
             else{
                 request.setAttribute("listaTuoiSondaggiVuota", "");
                 System.out.println("LISTA SONDAGGI VUOTA: " + request.getAttribute("listaTuoiSondaggiVuota"));
+            }
+            
+            res.activate("adminDashboard.ftl", request, response);
+        }
+    }
+    
+    private void action_utenti_search(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+        if(!(SecurityLayer.checkSession(request) != null)){
+            action_redirect_login(request,response);
+        }else{
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+            TemplateResult res = new TemplateResult(getServletContext());
+            HttpSession s = request.getSession(false);
+            GruppoImpl g = new GruppoImpl();
+            request.setAttribute("username", (String)s.getAttribute("username"));
+            request.setAttribute("email", (String)s.getAttribute("email"));
+            request.setAttribute("nome", (String)s.getAttribute("nome"));
+            request.setAttribute("cognome", (String)s.getAttribute("cognome"));
+            request.setAttribute("eta", (Integer)s.getAttribute("eta"));
+            request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
+            
+            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi();
+            request.setAttribute("sondaggi", sondaggi);
+            
+            ArrayList<Utente> utenti = dl.getUtenteDAO().getUtenti();
+            utenti = searchUtenti(utenti, (String)request.getParameter("header-search-utenti"));
+            request.setAttribute("utenti", utenti);
+            
+            if(!request.getParameter("header-search-utenti").isEmpty()){
+                request.setAttribute("ricercaUtente", "yes");
+            }
+            else{
+                request.setAttribute("ricercaUtente", "");
+            }
+            
+            if(utenti.isEmpty()){
+                request.setAttribute("listaSearchUtentiVuota", "yes");
+                System.out.println("LISTA UTENTI VUOTA: " + request.getAttribute("listaUtenti"));
+            }
+            else{
+                request.setAttribute("listaSearchUtentiVuota", "");
+                System.out.println("LISTA UTENTI VUOTA: " + request.getAttribute("listaUtenti"));
             }
             
             res.activate("adminDashboard.ftl", request, response);
@@ -234,6 +286,33 @@ public class AdminDashboard extends BaseController {
         catch (NumberFormatException e){
         }
         dl.getSondaggioDAO().deleteSondaggio(sondaggioId);
+    }
+    
+    private ArrayList<Utente> searchUtenti(ArrayList<Utente> utenti, String ricerca){
+        if(ricerca == null || ricerca.isEmpty()){
+            return utenti;
+        }
+        System.out.println("RICERCA: " + ricerca);
+        ArrayList<Utente> utentiSearch = new ArrayList();
+        Utente u;
+        Iterator<Utente> itr = utenti.iterator();
+        while(itr.hasNext()){
+            u = itr.next();
+            System.out.println("Nome Utente: " + u.getNome());
+            if(u.getNome().equals(ricerca)){
+                utentiSearch.add(u);
+            }
+            if(!u.getNome().equals(u.getCognome())){
+                if(u.getCognome().equals(ricerca)){
+                    utentiSearch.add(u);
+                }
+            }
+            if(u.getEmail().equals(ricerca)){
+                utentiSearch.add(u);
+            }
+        }
+        
+        return utentiSearch;
     }
     
 }

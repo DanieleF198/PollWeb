@@ -48,6 +48,9 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     private PreparedStatement sSondaggiCompilati;
     private PreparedStatement sSondaggiCompilati2;
     private PreparedStatement sSondaggiCompilati3;
+    private PreparedStatement sSondaggiRecent;
+    private PreparedStatement sSondaggiOld;
+    private PreparedStatement sSondaggiPopolari;
     
     SondaggioDAO_MySQL(DataLayer d) {
         super(d);
@@ -63,8 +66,8 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
             sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio");
             
-            iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,visibilita,dataCreazione,dataChiusura,privato,modificabile) VALUES(?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?, privato=?,modificabile=? WHERE idSondaggio=?");
+            iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,visibilita,dataCreazione,dataChiusura,privato,modificabile,compilazioni) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?, privato=?,modificabile=?,compilazioni=? WHERE idSondaggio=?");
             dSondaggio = connection.prepareStatement("DELETE FROM Sondaggio WHERE idSondaggio=?");
             searchSondaggiTitolo = connection.prepareStatement("SELECT * FROM Sondaggio WHERE titolo LIKE ?");
             searchSondaggiDataCreazione = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataCreazione = ?");
@@ -73,10 +76,13 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             
             sSondaggiPrivatiByIdUtente = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idUtente=?");
             
-            //ora concentrazione
             sSondaggiCompilati = connection.prepareStatement("SELECT * FROM Risposta WHERE idUtente=?");
             sSondaggiCompilati2 = connection.prepareStatement("SELECT * FROM RispostaDomanda WHERE idRisposta=?");
             sSondaggiCompilati3 = connection.prepareStatement("SELECT * FROM Domanda WHERE idDomanda=?");
+            
+            sSondaggiRecent = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY dataCreazione DESC");
+            sSondaggiOld = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY dataCreazione");
+            sSondaggiPopolari = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY compilazioni DESC");
             
             
             
@@ -101,6 +107,9 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiCompilati.close();
             sSondaggiCompilati2.close();
             sSondaggiCompilati3.close();
+            sSondaggiRecent.close();
+            sSondaggiOld.close();
+            sSondaggiPopolari.close();
             
             sSondaggi.close();
             
@@ -134,6 +143,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             s.setScadenza(rs.getDate("dataChiusura"));
             s.setPrivato(rs.getBoolean("privato"));
             s.setModificabile(rs.getBoolean("modificabile"));
+            s.setIdUtente(rs.getInt("compilazioni"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Sondaggio object form ResultSet", ex);
         }
@@ -193,6 +203,48 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
         List<Sondaggio> result = new ArrayList();
 
         try (ResultSet rs = sSondaggi.executeQuery()) {
+            while (rs.next()) {
+                result.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Sondaggi", ex);
+        }
+        return result;
+    }
+    
+    @Override
+    public ArrayList<Sondaggio> getSondaggiRecenti() throws DataException {
+        ArrayList<Sondaggio> result = new ArrayList();
+
+        try (ResultSet rs = sSondaggiRecent.executeQuery()) {
+            while (rs.next()) {
+                result.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Sondaggi", ex);
+        }
+        return result;
+    }
+    
+    @Override
+    public ArrayList<Sondaggio> getSondaggiMenoRecenti() throws DataException {
+        ArrayList<Sondaggio> result = new ArrayList();
+
+        try (ResultSet rs = sSondaggiOld.executeQuery()) {
+            while (rs.next()) {
+                result.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Sondaggi", ex);
+        }
+        return result;
+    }
+    
+    @Override
+    public ArrayList<Sondaggio> getSondaggiPopolari() throws DataException {
+        ArrayList<Sondaggio> result = new ArrayList();
+
+        try (ResultSet rs = sSondaggiPopolari.executeQuery()) {
             while (rs.next()) {
                 result.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
             }
@@ -266,7 +318,8 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 uSondaggio.setBoolean(6, sondaggio.isVisibilita());
                 uSondaggio.setBoolean(8, sondaggio.isPrivato());
                 uSondaggio.setBoolean(9, sondaggio.isModificabile());
-                uSondaggio.setInt(10, sondaggio.getKey());
+                uSondaggio.setInt(10, sondaggio.getCompilazioni());
+                uSondaggio.setInt(11, sondaggio.getKey());
 
                 if (uSondaggio.executeUpdate() == 0) {
                     throw new OptimisticLockException(sondaggio);
@@ -300,8 +353,9 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 iSondaggio.setBoolean(5, sondaggio.isCompleto());
                 iSondaggio.setBoolean(6, sondaggio.isVisibilita());
                 iSondaggio.setDate(7, sqlCreazione);
-                iSondaggio.setBoolean(9, sondaggio.isPrivato());
-                iSondaggio.setBoolean(10, sondaggio.isModificabile());
+                iSondaggio.setBoolean(8, sondaggio.isPrivato());
+                iSondaggio.setBoolean(9, sondaggio.isModificabile());
+                uSondaggio.setInt(10, sondaggio.getCompilazioni());
                 
                 if (iSondaggio.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database
@@ -439,7 +493,6 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                     try (ResultSet rsNoData = searchSondaggiNoData.executeQuery()) {
                         while (rsNoData.next()) {
                             Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsNoData.getInt("idSondaggio"))); // SONDAGGIO: il sondaggio del result
-                            System.out.println("NO DATA - Controllo sondaggio: " + sondaggio.getTitolo());
                             for (int i = 0; i < sondaggi.size(); i++){
                                 Sondaggio sondaggioList = (Sondaggio) sondaggi.get(i); //SONDAGGIOLIST: il sondaggio corrente in "sondaggi" scrollando la lista
                                 if(sondaggio.getKey() == sondaggioList.getKey()){
@@ -451,7 +504,6 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                                         }
                                     }
                                     if(add){
-                                        System.out.println("NO DATA - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
                                         sondaggiSearch.add(sondaggioList);
                                     }
                                     else{add = true;}
@@ -464,7 +516,6 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 try (ResultSet rsTitolo = searchSondaggiTitolo.executeQuery()) {
                     while (rsTitolo.next()) {
                         Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsTitolo.getInt("idSondaggio"))); //il sondaggio del result
-                        System.out.println("TITOLO - Controllo sondaggio numero: " + sondaggio.getTitolo());
                         for (int i = 0; i < sondaggi.size(); i++){
                             Sondaggio sondaggioList = (Sondaggio) sondaggi.get(i); //il sondaggio corrente in "sondaggi"
                             if(sondaggio.getKey() == sondaggioList.getKey()){
@@ -476,7 +527,6 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                                     }
                                 }
                                 if(add){
-                                    System.out.println("TITOLO - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
                                     sondaggiSearch.add(sondaggioList);
                                 }
                                 else{add = true;}
@@ -494,10 +544,8 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 try (ResultSet rsCreazione = searchSondaggiDataCreazione.executeQuery()) {
                     while (rsCreazione.next()) {
                         Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsCreazione.getInt("idSondaggio"))); //il sondaggio del result
-                        System.out.println("DATA CREAZIONE - : " + sondaggio.getCreazione());
                         for (int i = 0; i < sondaggi.size(); i++){
                             Sondaggio sondaggioList = (Sondaggio) sondaggi.get(i); //il sondaggio corrente in "sondaggi"
-                            System.out.println("DATA CREAZIONE - : " + sondaggioList.getCreazione());
                             if(sondaggio.getKey() == sondaggioList.getKey()){
                                 boolean add = true;
                                 for (int j = 0; j < sondaggiSearch.size(); j++){
@@ -507,20 +555,17 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                                     }
                                 }
                                 if(add){
-                                    System.out.println("DATA CREAZIONE - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
                                     sondaggiSearch.add(sondaggioList);
                                 }
                             } 
                         }
                     }
                 }
-                System.out.println("Siamo nella zona DataChiusura");
                 
                 searchSondaggiDataChiusura.setDate(1, dataRicercaSQL);
                 try (ResultSet rsChiusura = searchSondaggiDataChiusura.executeQuery()) {
                     while (rsChiusura.next()) {
                         Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsChiusura.getInt("idSondaggio"))); //il sondaggio del result
-                        System.out.println("DATA CHIUSURA - : " + sondaggio.getScadenza());
                         for (int i = 0; i < sondaggi.size(); i++){
                             Sondaggio sondaggioList = (Sondaggio) sondaggi.get(i); //il sondaggio corrente in "sondaggi"
                             System.out.println("DATA CHIUSURA - : " + sondaggioList.getScadenza());
@@ -533,7 +578,6 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                                     }
                                 }
                                 if(add){
-                                    System.out.println("DATA CREAZIONE - Aggiunto il sondaggio con ID: " + sondaggioList.getKey());
                                     sondaggiSearch.add(sondaggioList);
                                 }
                             } 
