@@ -143,9 +143,24 @@ public class FirstSection extends BaseController {
             HttpSession s = checkSession(request);
             PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
             Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
-            request.setAttribute("titoloSondaggio", sondaggio.getTitolo());
-            res.activate("MakerPoll/firstSectionWarning.ftl", request, response);
-            return;
+            if(sondaggio != null){
+                request.setAttribute("titoloSondaggio", sondaggio.getTitolo());
+                res.activate("MakerPoll/firstSectionWarning.ftl", request, response);
+                return;
+            } else {
+                s.setAttribute("sondaggio-in-creazione", 0); //caso in cui arriva ha creato il sondaggio, non lo completa e va in dashboard ad eliminarlo e torna qui.
+                s.setAttribute("continue", "no");            //in questo caso resetto il sessionamento per il nuovo sondaggio, e non lo faccio passare nemmeno da warningSection.
+                s.setAttribute("sondaggio-in-conferma", "no");
+                s.setAttribute("domanda-in-creazione", 0);
+                if(s.getAttribute("modVersion")!=null){
+                    s.removeAttribute("modVersion");
+                }
+                if(s.getAttribute("updateDomanda")!= null){
+                    s.removeAttribute("updateDomanda");
+                }
+                response.sendRedirect("firstSection");
+                return;
+            }
         } catch (TemplateManagerException ex) {
             Logger.getLogger(FirstSection.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -290,14 +305,14 @@ public class FirstSection extends BaseController {
                     }
                     privateSurvey = true;
                 }  else {
-                    ArrayList<Utente> listaPartecipantiToCheck = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiBySondaggioId((int)s.getAttribute("sondaggio-in-creazione"));
+                    ArrayList<Utente> listaPartecipantiToCheck = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiBySondaggioId((int)s.getAttribute("sondaggio-in-creazione"), false);
                     if(!(listaPartecipantiToCheck.isEmpty())){
                         System.out.println("sono entrato nell'eliminazione di listaPartecipanti 1");
                         dl.getUtenteDAO().deleteListaPartecipanti((int)s.getAttribute("sondaggio-in-creazione"));
                     }
                 }
             } else {
-                ArrayList<Utente> listaPartecipantiToCheck = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiBySondaggioId((int)s.getAttribute("sondaggio-in-creazione"));
+                ArrayList<Utente> listaPartecipantiToCheck = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiBySondaggioId((int)s.getAttribute("sondaggio-in-creazione"), false);
                 if(!(listaPartecipantiToCheck.isEmpty())){
                     System.out.println("sono entrato nell'eliminazione di listaPartecipanti 2");
                     dl.getUtenteDAO().deleteListaPartecipanti((int)s.getAttribute("sondaggio-in-creazione"));
@@ -306,7 +321,9 @@ public class FirstSection extends BaseController {
             System.out.println(request.getParameter("modificable"));
             if(request.getParameter("modificable") != null){
                 if(request.getParameter("modificable").equals("modificable")){
-                    modificableSurvey = true;
+                    if(!(privateSurvey)){
+                        modificableSurvey = true;
+                    }
                 }
             }
             

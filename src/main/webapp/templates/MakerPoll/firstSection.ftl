@@ -134,7 +134,8 @@
                                         &nbspSondaggio modificabile
                                     </div>
                                     <br>
-                                    <p>In caso di sondaggio modificabile qualsiasi utente che ha compilato il sondaggio potr&#224; cambiare le risposte che ha dato in qualsiasi momento prima della scadenza</p>
+                                    <p>In caso di sondaggio modificabile qualsiasi utente che ha compilato il sondaggio potr&#224; cambiare le risposte che ha dato in qualsiasi momento prima della scadenza.</p>
+                                    <p class="text-muted"><b>Nota: </b>un sondaggio privato non pu&#242; essere anche modificabile. Nel caso entrambi vengano spuntati, "sondaggio modificabile" verr&#224; ignorato.</p>
                                 </div>
                             </div>
                             <div class="row">

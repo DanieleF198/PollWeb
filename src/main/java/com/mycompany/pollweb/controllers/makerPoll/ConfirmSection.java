@@ -25,6 +25,7 @@ import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,6 +34,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -44,10 +46,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpSession;
@@ -78,9 +89,17 @@ public class ConfirmSection extends BaseController {
                         ArrayList<Utente> partecipants = new ArrayList<Utente>();   
                         if (request.getContentType() != null && request.getContentType().toLowerCase().contains("multipart/form-data")) {
                             System.out.println("passato enctype");
-                            if(request.getParameter("withCSV") != null){    
+                            boolean checkError = false;
+                            if(request.getParameter("withCSV") != null){
                                 Part filePart = request.getPart("file");
                                 File uploaded_file = File.createTempFile("upload_", "", new File(getServletContext().getInitParameter("uploads.directory")));
+                                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                                System.out.println("FILENAME: " + fileName + "CON LUNGHEZZA: " + fileName.length() +"ESTENZIONE: " + fileName.substring(fileName.length()-3));
+                                if(!"csv".equals(fileName.substring(fileName.length()-3))){
+                                    request.setAttribute("notCSVError", "yes");
+                                    action_default(request, response);
+                                    return;
+                                }
                                 try (InputStream is = filePart.getInputStream();
                                         OutputStream os = new FileOutputStream(uploaded_file)) {
                                     byte[] buffer = new byte[1024];
@@ -90,8 +109,36 @@ public class ConfirmSection extends BaseController {
                                     }
                                 }
                                 List<String[]> r = new ArrayList<String[]>();
+                                List<String[]> rH = new ArrayList<String[]>();
                                 
-                                try (CSVReader reader = new CSVReader(new FileReader(uploaded_file))) {
+                                try (CSVReader readerHeader = new CSVReaderBuilder(new FileReader(uploaded_file)).withSkipLines(0).build()) {
+                                    rH = readerHeader.readAll();
+                                    System.out.println("lettura riuscita - header");
+                                }
+                                
+                                if(!(rH.isEmpty())){
+                                    String[] header = rH.get(0);
+                                    if(header.length == 3){
+                                        if((!(header[0].toLowerCase().equals("nome"))) || (!(header[1].toLowerCase().equals("mail"))) || (!(header[2].toLowerCase().equals("password")))){
+                                            request.setAttribute("notCSVError", "yes");
+                                            action_default(request, response);
+                                            return;
+                                        }
+                                    } else {
+                                        request.setAttribute("notCSVError", "yes");
+                                        action_default(request, response);
+                                        return;
+                                    }
+                                } else{
+                                    request.setAttribute("notCSVError", "yes");
+                                    action_default(request, response);
+                                    return;
+                                }
+                                
+
+                                
+                                
+                                try (CSVReader reader = new CSVReaderBuilder(new FileReader(uploaded_file)).withSkipLines(1).build()) {
                                     r = reader.readAll();
                                     System.out.println("lettura riuscita - 2");
                                 }
@@ -129,7 +176,7 @@ public class ConfirmSection extends BaseController {
                                             ArrayList<Utente> tempPartecipants = new ArrayList<Utente>();
                                             for(int k = partecipants.size()-1; k >= 0 ; k--){
                                                 if (partecipants.get(k).getNome().isBlank() && partecipants.get(k).getEmail().isBlank() && partecipants.get(k).getPassword().isBlank()){
-                                                    partecipants.remove(k); 
+                                                    partecipants.remove(k);
                                                 }
                                             }
                                             for(int k = 0; k < partecipants.size(); k++){
@@ -139,6 +186,8 @@ public class ConfirmSection extends BaseController {
                                                 Utente checkU = partecipants.get(j);
                                                 if(checkU.getNome().isBlank() || checkU.getEmail().isBlank() || checkU.getPassword().isBlank()){
                                                     partecipants.remove(checkU);
+                                                    checkError = true;
+                                                    request.setAttribute("CSVerror", "yes");
                                                 }
                                                 String passwordOfU = checkU.getPassword();
                                                 Pattern specailCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
@@ -148,9 +197,13 @@ public class ConfirmSection extends BaseController {
                                                 Pattern emailPattern = Pattern.compile("^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
                                                 if(passwordOfU.length()<8 || !UpperCasePatten.matcher(passwordOfU).find() || !lowerCasePatten.matcher(passwordOfU).find() || !digitCasePatten.matcher(passwordOfU).find() || !specailCharPatten.matcher(passwordOfU).find()){
                                                     partecipants.remove(checkU);
+                                                    checkError = true;
+                                                    request.setAttribute("CSVerror", "yes");
                                                 }
                                                 if (!emailPattern.matcher(checkU.getEmail()).find()) {
                                                     partecipants.remove(checkU);
+                                                    checkError = true;
+                                                    request.setAttribute("CSVerror", "yes");
                                                 }
                                                 tempPartecipants.remove(0);
                                                 for(int k = 0; k < tempPartecipants.size(); k++){
@@ -158,6 +211,8 @@ public class ConfirmSection extends BaseController {
                                                     if(tempUtente.getEmail().equals(checkU.getEmail()) || tempUtente.getPassword().equals(checkU.getPassword())){
                                                         partecipants.remove(checkU);
                                                         partecipants.remove(tempUtente);
+                                                        checkError = true;
+                                                        request.setAttribute("CSVerror", "yes");
                                                     }
                                                 }
                                             }
@@ -212,7 +267,7 @@ public class ConfirmSection extends BaseController {
                                         for(int j = 0; j < partecipants.size(); j++){
                                             Utente checkU = partecipants.get(j);
                                             if(checkU.getNome().isBlank() || checkU.getEmail().isBlank() || checkU.getPassword().isBlank()){
-                                                partecipants.remove(checkU);
+                                                checkError = true;
                                             }
                                             String passwordOfU = checkU.getPassword();
                                             Pattern specailCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
@@ -221,22 +276,26 @@ public class ConfirmSection extends BaseController {
                                             Pattern digitCasePatten = Pattern.compile("[0-9 ]");
                                             Pattern emailPattern = Pattern.compile("^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
                                             if(passwordOfU.length()<8 || !UpperCasePatten.matcher(passwordOfU).find() || !lowerCasePatten.matcher(passwordOfU).find() || !digitCasePatten.matcher(passwordOfU).find() || !specailCharPatten.matcher(passwordOfU).find()){
-                                                partecipants.remove(checkU);
+                                                checkError = true;
                                             }
                                             if (!emailPattern.matcher(checkU.getEmail()).find()) {
-                                                partecipants.remove(checkU);
+                                                checkError = true;
                                             }
                                             tempPartecipants.remove(0);
                                             for(int k = 0; k < tempPartecipants.size(); k++){
                                                 System.out.println("terzo ciclo for, ciclo " + k);
                                                 Utente tempUtente = tempPartecipants.get(k);
                                                 if(tempUtente.getEmail().equals(checkU.getEmail()) || tempUtente.getPassword().equals(checkU.getPassword())){
-                                                    partecipants.remove(checkU);
+                                                    checkError = true;
                                                 }
                                             }
                                         }
                                     }
                                 }    
+                            }
+                            if(checkError){
+                                action_default(request, response);
+                                return;
                             }
                             if(!partecipants.isEmpty()){
                                 for(int i = 0; i < partecipants.size(); i++){
@@ -249,6 +308,91 @@ public class ConfirmSection extends BaseController {
                                 sondaggio.setVisibilita(false);
                             } else {
                                 sondaggio.setVisibilita(true);
+                                dl.getSondaggioDAO().storeSondaggio(sondaggio);
+                                if(sondaggio.isPrivato()){
+                                //simulazione invio della email (il codice è questo, solo non vi è un server locale per il SMTP, quindi stampiamo su file esterno il risultato finale
+                                final String from = "daniele.fossemo@outlook.it";
+                                String to = "jokeritaliano98@outlook.it";
+                                final String pass = "Password2021!";
+                                String host = "localhost";
+                                Properties properties = System.getProperties();
+                                properties.put("mail.smtp.starttls.enable", "true");
+                                properties.put("mail.smtp.ssl.enable", "true");
+                                properties.put("mail.smtp.host", host);
+                                properties.put("mail.smtp.port", "587");
+                                properties.put("mail.smtp.auth", "true");
+                                Authenticator auth = new Authenticator() {
+                                        //override the getPasswordAuthentication method
+                                        protected PasswordAuthentication getPasswordAuthentication() {
+                                                return new PasswordAuthentication(from, pass);
+                                        }
+                                };
+                                Session session = Session.getDefaultInstance(properties, auth);
+                                response.setContentType("text/html");
+                                PrintWriter out = response.getWriter();
+                                Utente u = dl.getUtenteDAO().getUtente(sondaggio.getIdUtente());
+                                
+                                for(int i = 0; i < partecipants.size(); i++){
+                                    try {
+                                        
+                                        
+                                        String password = partecipants.get(i).getPassword();
+                                        
+                                        MimeMessage message = new MimeMessage(session);
+
+                                        message.setFrom(new InternetAddress(from));
+
+                                        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                                        message.setSubject("This is the Subject Line!");
+
+                                        message.setText("This is actual message");
+
+                                        Transport transport = session.getTransport("smtp");
+                                        transport.connect(host, from, pass);
+                                        transport.sendMessage(message, message.getAllRecipients());
+                                        transport.close();
+                                        File f = new File("C:\\Users\\joker\\Documents\\NetBeansProjects\\PollWeb\\src\\main\\webapp\\emails\\emailSurvey"+(int)s.getAttribute("sondaggio-in-creazione")+".txt"); 
+                                        if (!f.createNewFile()) { System.out.println("File already exists"); }
+                                        PrintStream standard = System.out;
+                                        PrintStream fileStream = new PrintStream(new FileOutputStream("C:\\Users\\joker\\Documents\\NetBeansProjects\\PollWeb\\src\\main\\webapp\\emails\\emailSurvey"+(int)s.getAttribute("sondaggio-in-creazione")+".txt", true));
+                                        System.setOut(fileStream);
+                                        
+                                        String title = "Invito Sondaggio privato Quack, Duck, Poll";
+                                        
+                                        String docType =
+                                           "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
+                                        
+                                        String res = 
+                                                "Salve\n" + "sei stato invitato a partecipare ad un sondaggio privato su Quack, Duck, Poll dall\'utente " + u.getUsername() + "\n" +
+                                                "Le tue credenziali di accesso al sondaggio sono:\n" + "Email: " + partecipants.get(i).getEmail() + "\n" + "Password: " + password + "\n" +
+                                                "Puoi effettuare il login al seguente link: http://localhost:8080/PollWeb/loginForPartecipants \n" + "\n" +
+                                                "Questa mail viene inviata automaticamente dal sito Quack, Duck, Poll tramite la richiesta d\'invito da parte dell\'utente " + u.getUsername() + ", se pensi che la tua privacy sia stata lesa in un qualche modo contattaci all\'indirizzo: Quack@Duck.poll\n";
+//                                        Come sarebbe l'invio (esempio) vero
+                                        out.println(docType +
+                                           "<html>\n" +
+                                              "<head><title>" + title + "</title></head>\n" +
+                                                "<body bgcolor = \"#f0f0f0\">\n" +
+                                                    "<h1 align = \"center\">" + title + "</h1>\n" +
+                                                    "<p align = \"center\">" + res + "</p>\n" +
+                                                "</body>\n" +
+                                            "</html>\n" +
+                                            "---------------------"
+                                        );
+                                        System.out.println(
+                                           "Mail inviata da: "+ from + "\n" +
+                                           "Mail ricevuta da: "+ to + "\n" +
+                                           "Oggetto: " + title + "\n" +
+                                           "Testo:\n" + res + "\n" + 
+                                           "---------------------"
+                                        );
+                                        System.setOut(standard);  
+                                    } catch (MessagingException mex) {
+                                        mex.printStackTrace();
+                                    }
+                                }
+                                dl.getUtenteDAO().ListaPartecipantiSetMailSend((int)s.getAttribute("sondaggio-in-creazione"));
+                                }
                             }
                             sondaggio.setCompleto(true);
                             dl.getSondaggioDAO().storeSondaggio(sondaggio);
