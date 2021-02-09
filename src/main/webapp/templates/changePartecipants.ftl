@@ -162,7 +162,7 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <p><b>Inserimento partecipanti</b> - tramite csv</p>
-                                        <input type="file" name="file" id="file" class="form-control-file" disabled>
+                                        <input type="file" name="file" id="file" class="form-control-file">
                                     </div>
                                 </div>
                             </noscript>
