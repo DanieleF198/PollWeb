@@ -28,9 +28,9 @@
                                 <div class="col-lg-12">
                                     <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
                                     <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, e se sei abilitato alla creazione dei sondaggi, gestire i tuoi sondaggi.</p>
-                                    
+
                                         <p>PENSARE AD UNA FRASE DECENTE DA METTERE QUI O ELIMINARE LA SEZIONE</p>
-                                    
+
                                     <p><b>I tuoi dati personali:</b></p>
                                     <div class="row">
                                         <div class="col-lg-3">
@@ -94,7 +94,7 @@
                         </div>
                     </div>
                     <!-- End personal info -->
-                
+
                     <!-- Personal polls -->
                     <div class="container-fluid mt-5">
                         <div class="container bg-white border rounded-lg">
@@ -299,17 +299,17 @@
                                     </#if>
                                 </div>
                             </#if>
-                            
-                            
-                            
+
+
+
                             <div class="margin-pagination-scroll-bar"></div>      
                         </div>
                     </div>
                     <!-- End personal polls -->
-                
-                
-                
-                
+
+
+
+
                     <!-- TEST PRIVATI -->
                     <div class="container-fluid mt-5">
                         <div class="container bg-white border rounded-lg">
@@ -515,11 +515,11 @@
                         </div>
                     </div>
                     <!-- END TEST PRIVATI -->
-                
 
-                
-                
-                
+
+
+
+
                     <!-- TEST COMPILATI -->
                     <div class="container-fluid mt-5">
                         <div class="container bg-white border rounded-lg">
@@ -726,7 +726,7 @@
                     <!-- END COMPILATI -->
                 
                 
-                 
+                
                 </div>
             </main>
             <@macros.footer />
