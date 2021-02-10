@@ -212,7 +212,7 @@
                     <a class="nav-link" href="/PollWeb/makerPoll/firstSection">crea sondaggio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">sondaggio d'esempio</a>
+                    <a class="nav-link" href="/PollWeb/surveyExample">sondaggio d'esempio</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/PollWeb/dashboard">Zona utente</a>
@@ -347,4 +347,184 @@
         </div>
     </div>
     <!-- End public survey carousel -->
+    </#macro>
+
+    <#macro openShort domanda="">
+        <#if domanda!="">
+            <p>ciao</p>
+        <#else>
+            <div class="row">
+                <div class="col-12">
+                    <p class="h4">Domanda - risposta breve<span class="text-danger">*<span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-muted"> Questa &#232; la descrizione della domanda, qui puoi dare delle informazioni in pi&#249; per aiutare l'utente a rispondere nella maniera pi&#249; corretta possibile.</p>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <input type="text" class="form-control" placeholder="massimo numero di caratteri: 128" maxlength="128">
+                </div>
+            </div>
+        </#if>
+    </#macro>
+            
+    <#macro openLong domanda="">
+        <#if domanda!="">
+            <p>ciao</p>
+        <#else>
+            <div class="row">
+                <div class="col-12">
+                    <p class="h4">Domanda - risposta lunga<span class="text-danger">*<span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-muted"> Questa &#232; la descrizione della domanda, qui puoi dare delle informazioni in pi&#249; per aiutare l'utente a rispondere nella maniera pi&#249; corretta possibile.</p>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <textarea rows="3" class="form-control" placeholder="massimo numero di caratteri: 512" style="resize: none" max="512"></textarea>
+                </div>
+            </div>
+        </#if>
+    </#macro>
+            
+    <#macro openNumber domanda="">
+        <#if domanda!="">
+            <p>ciao</p>
+        <#else>
+            <div class="row">
+                <div class="col-12">
+                    <p class="h4">Domanda - risposta numerica<span class="text-danger">*<span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-muted"> Questa &#232; la descrizione della domanda, qui puoi dare delle informazioni in pi&#249; per aiutare l'utente a rispondere nella maniera pi&#249; corretta possibile.</p>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-lg-4 col-md-5 col-sm-12">
+                    <input type="number" class="form-control" placeholder="Numero compreso tra x ed y">
+                </div>
+            </div>
+        </#if>
+    </#macro>
+            
+    <#macro openDate domanda="">
+        <#if domanda!="">
+            <p>ciao</p>
+        <#else>
+            <div class="row">
+                <div class="col-12">
+                    <p class="h4">Domanda - risposta con data<span class="text-danger">*<span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-muted"> Questa &#232; la descrizione della domanda, qui puoi dare delle informazioni in pi&#249; per aiutare l'utente a rispondere nella maniera pi&#249; corretta possibile.</p>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-lg-4 col-md-5 col-sm-12">
+                    <input type="date" class="form-control">
+                </div>
+            </div>
+        </#if>
+    </#macro>
+            
+    <#macro closeSingle domanda="">
+        <#if domanda!="">
+            <p>ciao</p>
+        <#else>
+            <div class="row">
+                <div class="col-12">
+                    <p class="h4">Domanda - risposta con scelta singola<span class="text-danger">*<span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-muted"> Questa &#232; la descrizione della domanda, qui puoi dare delle informazioni in pi&#249; per aiutare l'utente a rispondere nella maniera pi&#249; corretta possibile.</p>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="opzione1" name="opzioni" value="opzione1">
+                        <label for="opzione1" class="custom-control-label">Opzione 1</label><br>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="opzione2" name="opzioni" value="opzione2">
+                        <label for="opzione2" class="custom-control-label">Opzione 2</label><br>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="opzione3" name="opzioni" value="opzione3">
+                        <label for="opzione3" class="custom-control-label">Opzione 3</label><br>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="opzione4" name="opzioni" value="opzione4">
+                        <label for="opzione4" class="custom-control-label">Opzione 4</label><br>
+                    </div>
+                </div>
+            </div>
+        </#if>
+    </#macro>
+            
+    <#macro closeMultiple domanda="">
+        <#if domanda!="">
+            <p>ciao</p>
+        <#else>
+            <div class="row">
+                <div class="col-12">
+                    <p class="h4">Domanda - risposta con scelta singola<span class="text-danger">*<span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-muted"> Questa &#232; la descrizione della domanda, qui puoi dare delle informazioni in pi&#249; per aiutare l'utente a rispondere nella maniera pi&#249; corretta possibile.</p>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div>
+                        <label class="checkbox mb-3">
+                            <input type="checkbox" name="opzioneM1"/>
+                            <span class="warning"></span>
+                        </label>
+                        &nbspOpzione 1 
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div>
+                        <label class="checkbox mb-3">
+                            <input type="checkbox" name="opzioneM2"/>
+                            <span class="warning"></span>
+                        </label>
+                        &nbspOpzione 2 
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div>
+                        <label class="checkbox mb-3">
+                            <input type="checkbox" name="opzioneM3"/>
+                            <span class="warning"></span>
+                        </label>
+                        &nbspOpzione 3 
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div>
+                        <label class="checkbox mb-3">
+                            <input type="checkbox" name="opzioneM4"/>
+                            <span class="warning"></span>
+                        </label>
+                        &nbspOpzione 4 
+                    </div>
+                </div>
+            </div>
+        </#if>
     </#macro>

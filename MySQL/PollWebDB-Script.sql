@@ -34,8 +34,8 @@ CREATE TABLE Utente (
 	idSondaggio int NOT NULL AUTO_INCREMENT,
     idUtente int NOT NULL,
     titolo varchar(128) NOT NULL,
-    testoApertura varchar(245),
-    testoChiusura varchar(245),
+    testoApertura varchar(2048),
+    testoChiusura varchar(1024),
     completo boolean NOT NULL,
     visibilita boolean NOT NULL,
     dataCreazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, /*non che serva not null ma ce lo metto uguale*/
