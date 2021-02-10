@@ -53,32 +53,39 @@ public class PublicPolls extends BaseController {
             
             PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
                     
+           
+            
             if(request.getParameter("search-sondaggio") != null){
                 System.out.println("search-sondaggi cliccato");
                 ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPopolari();
                 sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("search-sondaggio"));
                 request.setAttribute("sondaggi", sondaggi);
+                request.setAttribute("filtro", "no");
             }
             
             else if(request.getParameter("btnPopolari") != null){
                 System.out.println("btnPopolari cliccato");
                 ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPopolari();
                 request.setAttribute("sondaggi", sondaggi);
+                request.setAttribute("filtro", "popolari");
             }
             else if(request.getParameter("btnRecenti") != null){
                 System.out.println("btnRecenti cliccato");
                 ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiRecenti();
                 request.setAttribute("sondaggi", sondaggi);
+                request.setAttribute("filtro", "recenti");
             }
             else if(request.getParameter("btnMenoRecenti") != null){
                 System.out.println("btnMenoRecenti cliccato");
                 ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiMenoRecenti();
                 request.setAttribute("sondaggi", sondaggi);
+                request.setAttribute("filtro", "menoRecenti");
             }
 
             else{
                 ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi();//Lista di tutti i sondaggi
                 request.setAttribute("sondaggi", sondaggi);
+                request.setAttribute("filtro", "no");
             }
             
             res.activate("publicPolls.ftl", request, response);

@@ -5,6 +5,7 @@
  */
 package com.mycompany.pollweb.controllers;
 
+import com.mycompany.pollweb.dao.PollWebDataLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -15,9 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
+import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -27,8 +31,34 @@ import java.util.logging.Logger;
 public class ChangeMail extends BaseController {
 
     @Override
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException{
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
+            HttpSession s = checkSession(request);
+            if(request.getParameter("btnChangeEmail") != null){
+
+                if(request.getParameter("currentMail") != null && request.getParameter("newMail") != null && request.getParameter("confirmNewMail") != null && !request.getParameter("currentMail").isEmpty() && !request.getParameter("newMail").isEmpty() && !request.getParameter("confirmNewMail").isEmpty()){
+                    
+                    if(request.getParameter("currentMail").equals((String)s.getAttribute("email"))){
+                        
+                        if(request.getParameter("newMail").equals(request.getParameter("confirmNewMail"))){
+                            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                            Utente u = dl.getUtenteDAO().getUtente((Integer) s.getAttribute("userid"));
+                            u.setEmail(request.getParameter("newMail"));
+                            dl.getUtenteDAO().storeUtente(u);
+                            request.setAttribute("success", "Operazione conclusa con successo");
+                        }
+                        else{
+                           request.setAttribute("error", "Le nuove email non coincidono"); 
+                        }
+                    }
+                    else{
+                        request.setAttribute("error", "Inserire l'indirizzo email corretto");
+                    }
+                }
+                else{
+                    request.setAttribute("error", "Compilare ogni campo");
+                }
+            }
             action_default(request, response);
 
         } catch (IOException ex) {
