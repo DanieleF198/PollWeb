@@ -283,14 +283,14 @@
                                                         <#if sondaggio.getTestoApertura()??>
                                                             <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                         <#else>
-                                                            <h5 class="card-title">No descrizione</h5>
+                                                            <h5 class="card-text">No descrizione</h5>
                                                         </#if>
                                                     </div>
                                                     <div class="card-footer bg-warning">
                                                         <#if sondaggio.getCreazione()??>
                                                             <small class="text-black">${sondaggio.getCreazione()}</small>
                                                         <#else>
-                                                            <h5 class="card-title"></h5>
+                                                            <h5 class="card-black"></h5>
                                                         </#if>
                                                     </div>
                                                 </div>
@@ -311,14 +311,14 @@
                                                         <#if sondaggio.getTestoApertura()??>
                                                             <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                         <#else>
-                                                            <h5 class="card-title">No descrizione</h5>
+                                                            <h5 class="card-text">No descrizione</h5>
                                                         </#if>
                                                     </div>
                                                     <div class="card-footer bg-warning">
                                                         <#if sondaggio.getCreazione()??>
                                                             <small class="text-black">${sondaggio.getCreazione()}</small>
                                                         <#else>
-                                                            <h5 class="card-title"></h5>
+                                                            <h5 class="card-black"></h5>
                                                         </#if>
                                                     </div>
                                                 </div>
@@ -339,14 +339,14 @@
                                                         <#if sondaggio.getTestoApertura()??>
                                                             <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                         <#else>
-                                                            <h5 class="card-title">No descrizione</h5>
+                                                            <h5 class="card-text">No descrizione</h5>
                                                         </#if>
                                                     </div>
                                                     <div class="card-footer bg-warning">
                                                         <#if sondaggio.getCreazione()??>
                                                             <small class="text-black">${sondaggio.getCreazione()}</small>
                                                         <#else>
-                                                            <h5 class="card-title"></h5>
+                                                            <h5 class="card-black"></h5>
                                                         </#if>
                                                     </div>
                                                 </div>
