@@ -263,7 +263,7 @@
                         <#assign c = 1>
                         <#list sondaggi as sondaggio>  
 
-                            <#if c%9 == 1>
+                        <#if c%3 == 1>
 
                                 <#if c == 1>
                                     <div class="carousel-item active">
@@ -298,7 +298,7 @@
 
 
                             </#if>
-                            <#if c%9 != 1 && c%9 != 0>
+                        <#if c%3 == 2>
 
                                             <div class="col-lg-4 mb-3 variable-height">
                                                 <div class="card h-100">
@@ -326,7 +326,7 @@
 
 
                             </#if>
-                            <#if c%9 == 0>   
+                        <#if c%3 == 0>   
 
                                             <div class="col-lg-4 mb-3 variable-height">
                                                 <div class="card h-100">
@@ -358,8 +358,7 @@
                             </#if>
                             <#assign c = c + 1>
                         </#list>
-                        <#if c%9 != 1> 
-
+                    <#if c%3 != 1> 
                                         </div>
                                     </div>
                         </#if>

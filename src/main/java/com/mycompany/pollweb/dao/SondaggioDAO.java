@@ -33,6 +33,8 @@ public interface SondaggioDAO {
     
     public ArrayList<Sondaggio> getSondaggiPopolari() throws DataException;
     
+    public ArrayList<Sondaggio> getSondaggiPopolari9() throws DataException;
+    
     public void storeSondaggio(Sondaggio sondaggio) throws DataException;
     
     public ArrayList<Sondaggio> getSondaggiPrivati(int idUtente) throws DataException;

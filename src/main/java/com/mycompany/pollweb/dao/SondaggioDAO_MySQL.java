@@ -51,6 +51,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     private PreparedStatement sSondaggiRecent;
     private PreparedStatement sSondaggiOld;
     private PreparedStatement sSondaggiPopolari;
+    private PreparedStatement sSondaggiPopolari9;
     
     SondaggioDAO_MySQL(DataLayer d) {
         super(d);
@@ -83,6 +84,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiRecent = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY dataCreazione DESC");
             sSondaggiOld = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY dataCreazione");
             sSondaggiPopolari = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY compilazioni DESC");
+            sSondaggiPopolari9 = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY compilazioni DESC LIMIT 9");
             
             
             
@@ -110,6 +112,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiRecent.close();
             sSondaggiOld.close();
             sSondaggiPopolari.close();
+            sSondaggiPopolari9.close();
             
             sSondaggi.close();
             
@@ -245,6 +248,20 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
         ArrayList<Sondaggio> result = new ArrayList();
 
         try (ResultSet rs = sSondaggiPopolari.executeQuery()) {
+            while (rs.next()) {
+                result.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Sondaggi", ex);
+        }
+        return result;
+    }
+    
+    @Override
+    public ArrayList<Sondaggio> getSondaggiPopolari9() throws DataException {
+        ArrayList<Sondaggio> result = new ArrayList();
+
+        try (ResultSet rs = sSondaggiPopolari9.executeQuery()) {
             while (rs.next()) {
                 result.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
             }
@@ -444,13 +461,11 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                     sSondaggiCompilati2.setInt(1, idRisposta);
                     try (ResultSet rs2 = sSondaggiCompilati2.executeQuery()) { //prendiamo un solo idDomanda per ogni idRisposta che abbiamo (tanto ogni domanda per quell'id è riferita allo stesso sondaggio)
                         if (rs2.next()) {
-                            System.out.println("rs2 - idDomanda: " + rs2.getInt("idDomanda"));
                             idDomanda = rs2.getInt("idDomanda");
                             
                             sSondaggiCompilati3.setInt(1, idDomanda);
                             try (ResultSet rs3 = sSondaggiCompilati3.executeQuery()) { //prendiamo tutta la domanda che conterrà l'idSondaggio al quale è riferita
                                 if (rs3.next()) {
-                                    System.out.println("rs3 - idSondaggio: " + rs3.getInt("idSondaggio"));
                                     idSondaggio = rs3.getInt("idSondaggio");
                                     s = getSondaggio(idSondaggio);
                                     sp.add(s);

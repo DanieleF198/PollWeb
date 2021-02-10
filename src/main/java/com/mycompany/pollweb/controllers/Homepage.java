@@ -59,7 +59,7 @@ public class Homepage extends BaseController {
         TemplateResult res = new TemplateResult(getServletContext());
         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
 
-        ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi(); //Lista di tutti i sondaggi
+        ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiPopolari9(); //Lista di tutti i sondaggi
         request.setAttribute("sondaggi", sondaggi);
         
         res.activate("homepage.ftl", request, response);
