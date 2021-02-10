@@ -115,6 +115,7 @@
                                                                 <div class="card-footer bg-warning">
                                                                     <#if sondaggio.getCreazione()??>
                                                                         <small class="text-black">${sondaggio.getCreazione()}</small>
+                                                                        <button name="btnSondaggio" type="submit">bottone</button>
                                                                     <#else>
                                                                         <h5 class="card-black"></h5>
                                                                     </#if>
@@ -142,6 +143,7 @@
                                                                 <div class="card-footer bg-warning">
                                                                     <#if sondaggio.getCreazione()??>
                                                                         <small class="text-black">${sondaggio.getCreazione()}</small>
+                                                                        <button name="btnSondaggio" type="submit">bottone</button>
                                                                     <#else>
                                                                         <h5 class="card-black"></h5>
                                                                     </#if>
@@ -170,6 +172,7 @@
                                                                 <div class="card-footer bg-warning">
                                                                     <#if sondaggio.getCreazione()??>
                                                                         <small class="text-black">${sondaggio.getCreazione()}</small>
+                                                                        <button name="btnSondaggio" type="submit">bottone</button>
                                                                     <#else>
                                                                         <h5 class="card-black"></h5>
                                                                     </#if>

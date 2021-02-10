@@ -256,6 +256,12 @@
     <div class="javascriptVisibility">
         <div class="container-fluid mb-5 mt-5">
             <div class="container">
+            <div class="row mb-1">
+                <div class="col-lg-12 text-center">
+                    <h3> Sondaggi pubblici </h3>
+                    <p> Le possibilit&#224; che ti offriamo, direttamente da quello che hanno realizzato gli altri utenti (<a href="publicPolls" class="text-info text-decoration-none">vedi altro</a>).</p>
+                </div>
+            </div>
                 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
 
