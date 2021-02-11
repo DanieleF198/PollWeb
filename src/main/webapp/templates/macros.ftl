@@ -265,11 +265,50 @@
                 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <#assign c = 1>
-                        <div class="carousel-item active">
-                            <div class="card-deck mr-1 ml-1" >
                         <#list sondaggi as sondaggio>  
                             <#if c%3 == 1>
-                                        
+                                <#if c == 1>
+                                    <div class="carousel-item active">
+                                <#else>
+                                    <div class="carousel-item">
+                                </#if>
+                                        <div class="card-deck mr-1 ml-1" >
+                                            <div class="col-lg-4 mb-3 variable-height">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <#if sondaggio.getTitolo()??>
+                                                            <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                                        <#else>
+                                                            <h5 class="card-title">No title</h5>
+                                                        </#if>
+                                                        <#if sondaggio.getTestoApertura()??>
+                                                            <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                                        <#else>
+                                                            <h5 class="card-text">No descrizione</h5>
+                                                        </#if>
+                                                    </div>
+                                                    <div class="card-footer bg-warning">
+                                                        <#if sondaggio.getCreazione()??>
+                                                            <small class="text-black">${sondaggio.getCreazione()}</small>
+                                                            <button class="btn brn-lg btn-light" name="btnSondaggio" type="submit" title="compila" value="${sondaggio.getKey()}" style="float: right;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
+                                                                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+                                                                </svg>
+                                                            </button>
+                                                        <#else>
+                                                            <h5 class="card-black"></h5>
+                                                            <button class="btn brn-lg btn-light" name="btnSondaggio" type="submit" title="compila" value="${sondaggio.getKey()}" style="float: right;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
+                                                                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+                                                                </svg>
+                                                            </button>
+                                                        </#if>
+                                                    </div>
+                                                </div>
+                                            </div>
+                            </#if>
+                            <#if c%3 == 2>
+
                                             <div class="col-lg-4 mb-3 variable-height">
                                                 <div class="card h-100">
                                                     <div class="card-body">
@@ -306,7 +345,7 @@
 
 
                             </#if>
-                        <#if c%3 == 2>
+                            <#if c%3 == 0>   
 
                                             <div class="col-lg-4 mb-3 variable-height">
                                                 <div class="card h-100">
@@ -341,52 +380,17 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
 
 
-                            </#if>
-                        <#if c%3 == 0>   
-
-                                            <div class="col-lg-4 mb-3 variable-height">
-                                                <div class="card h-100">
-                                                    <div class="card-body">
-                                                        <#if sondaggio.getTitolo()??>
-                                                            <h5 class="card-title">${sondaggio.getTitolo()}</h5>
-                                                        <#else>
-                                                            <h5 class="card-title">No title</h5>
-                                                        </#if>
-                                                        <#if sondaggio.getTestoApertura()??>
-                                                            <p class="card-text">${sondaggio.getTestoApertura()}</p>
-                                                        <#else>
-                                                            <h5 class="card-text">No descrizione</h5>
-                                                        </#if>
-                                                    </div>
-                                                    <div class="card-footer bg-warning">
-                                                        <#if sondaggio.getCreazione()??>
-                                                            <small class="text-black">${sondaggio.getCreazione()}</small>
-                                                            <button class="btn brn-lg btn-light" name="btnSondaggio" type="submit" title="compila" value="${sondaggio.getKey()}" style="float: right;">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
-                                                                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
-                                                                </svg>
-                                                            </button>
-                                                        <#else>
-                                                            <h5 class="card-black"></h5>
-                                                            <button class="btn brn-lg btn-light" name="btnSondaggio" type="submit" title="compila" value="${sondaggio.getKey()}" style="float: right;">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
-                                                                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
-                                                                </svg>
-                                                            </button>
-                                                        </#if>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        
-
-
-                            </#if>
+                                </#if>
                             <#assign c = c + 1>
                         </#list>
-                                </div>
+                        <#if c%3 != 1> 
+                                        </div>
                                     </div>
+                        </#if>
 
 
                     </div>
