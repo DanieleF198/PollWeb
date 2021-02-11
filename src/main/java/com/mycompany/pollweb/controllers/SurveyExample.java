@@ -34,12 +34,6 @@ public class SurveyExample extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
-            HttpSession s = checkSession(request);
-            if (s!= null) {
-                request.setAttribute("sessioned", "yes");
-            } else {
-                request.setAttribute("sessioned", "no");
-            }
             action_default(request, response);
 
         } catch (IOException ex) {
