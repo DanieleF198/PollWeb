@@ -264,12 +264,20 @@
             </div>
                 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
+
+
                         <#assign c = 1>
-                        <div class="carousel-item active">
-                            <div class="card-deck mr-1 ml-1" >
                         <#list sondaggi as sondaggio>  
-                            <#if c%3 == 1>
-                                        
+
+                        <#if c%3 == 1>
+
+                                <#if c == 1>
+                                    <div class="carousel-item active">
+                                <#else>
+                                    <div class="carousel-item">
+                                </#if>
+
+                                        <div class="card-deck mr-1 ml-1" >
                                             <div class="col-lg-4 mb-3 variable-height">
                                                 <div class="card h-100">
                                                     <div class="card-body">
@@ -379,14 +387,17 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        
+                                        </div>
+                                    </div>
 
 
                             </#if>
                             <#assign c = c + 1>
                         </#list>
-                                </div>
+                    <#if c%3 != 1> 
+                                        </div>
                                     </div>
+                        </#if>
 
 
                     </div>
