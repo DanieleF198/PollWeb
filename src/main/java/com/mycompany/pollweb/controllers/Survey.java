@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.model.Domanda;
+import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.ArrayList;
@@ -35,13 +37,27 @@ public class Survey extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
             HttpSession s = checkSession(request);
-            if (s!= null) {
-                request.setAttribute("sessioned", "yes");
+            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+            if(request.getParameter("btnCompile")!=null){
+                Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(Integer.parseInt(request.getParameter("btnCompile")));
+                request.setAttribute("sondaggio", sondaggio);
+                if(sondaggio.isPrivato()){
+                    if (s!= null) {
+                        //TODO
+                    } else {
+                        action_redirect_login(request, response);
+                        return;
+                    }
+                } else {
+                    action_sondaggio_pubblico(request, response);
+                    return;
+                }
+                
+                action_default(request, response);
             } else {
-                request.setAttribute("sessioned", "no");
+                request.setAttribute("exception", "sondaggio inesistente");
+                action_error(request,response);
             }
-            action_default(request, response);
-
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
             action_error(request, response);
@@ -49,7 +65,6 @@ public class Survey extends BaseController {
         } catch (TemplateManagerException ex) {
             request.setAttribute("exception", ex);
             action_error(request, response);
-
         }
     }
 
@@ -62,7 +77,18 @@ public class Survey extends BaseController {
         
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Survey.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+    private void action_sondaggio_pubblico(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+       try {
+        TemplateResult res = new TemplateResult(getServletContext());
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        ArrayList<Domanda> domande = (ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio(Integer.parseInt(request.getParameter("btnCompile")));
+        request.setAttribute("domande", domande);
+        res.activate("survey.ftl", request, response);
+        } catch (TemplateManagerException ex) {
+            Logger.getLogger(Survey.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void action_error(HttpServletRequest request, HttpServletResponse response) {
@@ -70,6 +96,16 @@ public class Survey extends BaseController {
             (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
         } else {
             (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
+        }
+    }
+    
+        private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+        try {
+            request.setAttribute("urlrequest", request.getRequestURL());
+            RequestDispatcher rd = request.getRequestDispatcher("/login");
+            rd.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
         }
     }
 
