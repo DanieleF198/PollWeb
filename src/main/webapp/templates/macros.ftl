@@ -268,22 +268,12 @@
 
                         <#assign c = 1>
                         <#list sondaggi as sondaggio>  
-<<<<<<< HEAD
-                            <#if c%3 == 1>
-=======
-
                         <#if c%3 == 1>
-
->>>>>>> 4006e90e96fc43bb23d7373d9cc214ac102b7eb2
                                 <#if c == 1>
                                     <div class="carousel-item active">
                                 <#else>
                                     <div class="carousel-item">
                                 </#if>
-<<<<<<< HEAD
-=======
-
->>>>>>> 4006e90e96fc43bb23d7373d9cc214ac102b7eb2
                                         <div class="card-deck mr-1 ml-1" >
                                             <div class="col-lg-4 mb-3 variable-height">
                                                 <div class="card h-100">
@@ -399,15 +389,10 @@
                                 </#if>
                             <#assign c = c + 1>
                         </#list>
-<<<<<<< HEAD
-                        <#if c%3 != 1> 
-=======
                     <#if c%3 != 1> 
->>>>>>> 4006e90e96fc43bb23d7373d9cc214ac102b7eb2
                                         </div>
                                     </div>
                         </#if>
-
 
                     </div>
                     <a class="carousel-control-prev text-dark" href="#carouselExampleControls" role="button" data-slide="prev">
