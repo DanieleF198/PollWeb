@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  * @author joker
  */
 
-public class SurveyExample extends BaseController {
+public class Survey extends BaseController {
 
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
@@ -56,10 +56,12 @@ public class SurveyExample extends BaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
        try {
         TemplateResult res = new TemplateResult(getServletContext());
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        
         res.activate("surveyExample.ftl", request, response);
         
         } catch (TemplateManagerException ex) {
-            Logger.getLogger(SurveyExample.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Survey.class.getName()).log(Level.SEVERE, null, ex);
     }
     }
 
