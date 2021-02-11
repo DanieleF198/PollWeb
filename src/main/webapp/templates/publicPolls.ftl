@@ -104,12 +104,12 @@
                                                                     <#if sondaggio.getTitolo()??>
                                                                         <h5 class="card-title">${sondaggio.getTitolo()}</h5>
                                                                     <#else>
-                                                                        <h5 class="card-title">No title</h5>
+                                                                        <h5 class="card-title">Sondaggio senza titolo</h5>
                                                                     </#if>
                                                                     <#if sondaggio.getTestoApertura()??>
                                                                         <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                                     <#else>
-                                                                        <h5 class="card-text">No descrizione</h5>
+                                                                        <h5 class="card-text">Nessuna descrizione attribuita a questo sondaggio</h5>
                                                                     </#if>
                                                                 </div>
                                                                 <div class="card-footer bg-warning">
@@ -153,12 +153,12 @@
                                                                     <#if sondaggio.getTitolo()??>
                                                                         <h5 class="card-title">${sondaggio.getTitolo()}</h5>
                                                                     <#else>
-                                                                        <h5 class="card-title">No title</h5>
+                                                                        <h5 class="card-title">Sondaggio senza titolo</h5>
                                                                     </#if>
                                                                     <#if sondaggio.getTestoApertura()??>
                                                                         <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                                     <#else>
-                                                                        <h5 class="card-text">No descrizione</h5>
+                                                                        <h5 class="card-text">Nessuna descrizione attribuita a questo sondaggio</h5>
                                                                     </#if>
                                                                 </div>
                                                                 <div class="card-footer bg-warning">
@@ -203,12 +203,12 @@
                                                                     <#if sondaggio.getTitolo()??>
                                                                         <h5 class="card-title">${sondaggio.getTitolo()}</h5>
                                                                     <#else>
-                                                                        <h5 class="card-title">No title</h5>
+                                                                        <h5 class="card-title">Sondaggio senza titolo</h5>
                                                                     </#if>
                                                                     <#if sondaggio.getTestoApertura()??>
                                                                         <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                                     <#else>
-                                                                        <h5 class="card-text">No descrizione</h5>
+                                                                        <h5 class="card-text">Nessuna descrizione attribuita a questo sondaggio</h5>
                                                                     </#if>
                                                                 </div>
                                                                 <div class="card-footer bg-warning">
