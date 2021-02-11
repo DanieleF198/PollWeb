@@ -268,106 +268,95 @@
 
                         <#assign c = 1>
                         <#list sondaggi as sondaggio>  
-
                         <#if c%3 == 1>
-
-                                <#if c == 1>
-                                    <div class="carousel-item active">
-                                <#else>
-                                    <div class="carousel-item">
-                                </#if>
-
-                                        <div class="card-deck mr-1 ml-1" >
-                                            <div class="col-lg-4 mb-3 variable-height">
-                                                <div class="card h-100">
-                                                    <div class="card-body">
-                                                        <#if sondaggio.getTitolo()??>
-                                                            <h5 class="card-title">${sondaggio.getTitolo()}</h5>
-                                                        <#else>
-                                                            <h5 class="card-title">No title</h5>
-                                                        </#if>
-                                                        <#if sondaggio.getTestoApertura()??>
-                                                            <p class="card-text">${sondaggio.getTestoApertura()}</p>
-                                                        <#else>
-                                                            <h5 class="card-text">No descrizione</h5>
-                                                        </#if>
-                                                    </div>
-                                                    <div class="card-footer bg-warning">
-                                                        <#if sondaggio.getCreazione()??>
-                                                            <small class="text-black">${sondaggio.getCreazione()}</small>
-                                                        <#else>
-                                                            <h5 class="card-black"></h5>
-                                                        </#if>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
+                            <#if c == 1>
+                                <div class="carousel-item active">
+                            <#else>
+                                <div class="carousel-item">
                             </#if>
-                        <#if c%3 == 2>
-
-                                            <div class="col-lg-4 mb-3 variable-height">
-                                                <div class="card h-100">
-                                                    <div class="card-body">
-                                                        <#if sondaggio.getTitolo()??>
-                                                            <h5 class="card-title">${sondaggio.getTitolo()}</h5>
-                                                        <#else>
-                                                            <h5 class="card-title">No title</h5>
-                                                        </#if>
-                                                        <#if sondaggio.getTestoApertura()??>
-                                                            <p class="card-text">${sondaggio.getTestoApertura()}</p>
-                                                        <#else>
-                                                            <h5 class="card-text">No descrizione</h5>
-                                                        </#if>
-                                                    </div>
-                                                    <div class="card-footer bg-warning">
-                                                        <#if sondaggio.getCreazione()??>
-                                                            <small class="text-black">${sondaggio.getCreazione()}</small>
-                                                        <#else>
-                                                            <h5 class="card-black"></h5>
-                                                        </#if>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                            </#if>
-                        <#if c%3 == 0>   
-
-                                            <div class="col-lg-4 mb-3 variable-height">
-                                                <div class="card h-100">
-                                                    <div class="card-body">
-                                                        <#if sondaggio.getTitolo()??>
-                                                            <h5 class="card-title">${sondaggio.getTitolo()}</h5>
-                                                        <#else>
-                                                            <h5 class="card-title">No title</h5>
-                                                        </#if>
-                                                        <#if sondaggio.getTestoApertura()??>
-                                                            <p class="card-text">${sondaggio.getTestoApertura()}</p>
-                                                        <#else>
-                                                            <h5 class="card-text">No descrizione</h5>
-                                                        </#if>
-                                                    </div>
-                                                    <div class="card-footer bg-warning">
-                                                        <#if sondaggio.getCreazione()??>
-                                                            <small class="text-black">${sondaggio.getCreazione()}</small>
-                                                        <#else>
-                                                            <h5 class="card-black"></h5>
-                                                        </#if>
-                                                    </div>
-                                                </div>
-                                            </div>
+                            <div class="card-deck mr-1 ml-1" >
+                                <div class="col-lg-4 mb-3 variable-height">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <#if sondaggio.getTitolo()??>
+                                                <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                            <#else>
+                                                <h5 class="card-title">No title</h5>
+                                            </#if>
+                                            <#if sondaggio.getTestoApertura()??>
+                                                <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                            <#else>
+                                                <h5 class="card-text">Questo sondaggio </h5>
+                                            </#if>
+                                        </div>
+                                        <div class="card-footer bg-warning">
+                                            <#if sondaggio.getCreazione()??>
+                                                <small class="text-black">${sondaggio.getCreazione()}</small>
+                                            <#else>
+                                                <h5 class="card-black"></h5>
+                                            </#if>
                                         </div>
                                     </div>
-
-
-                            </#if>
-                            <#assign c = c + 1>
-                        </#list>
-                    <#if c%3 != 1> 
-                                        </div>
-                                    </div>
+                                </div>
                         </#if>
+                        <#if c%3 == 2>
+                            <div class="col-lg-4 mb-3 variable-height">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <#if sondaggio.getTitolo()??>
+                                            <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                        <#else>
+                                            <h5 class="card-title">No title</h5>
+                                        </#if>
+                                        <#if sondaggio.getTestoApertura()??>
+                                            <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                        <#else>
+                                            <h5 class="card-text">No descrizione</h5>
+                                        </#if>
+                                    </div>
+                                    <div class="card-footer bg-warning">
+                                        <#if sondaggio.getCreazione()??>
+                                            <small class="text-black">${sondaggio.getCreazione()}</small>
+                                        <#else>
+                                            <h5 class="card-black"></h5>
+                                        </#if>
+                                    </div>
+                                </div>
+                            </div>
+                        </#if>
+                        <#if c%3 == 0>   
+                            <div class="col-lg-4 mb-3 variable-height">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <#if sondaggio.getTitolo()??>
+                                            <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                        <#else>
+                                            <h5 class="card-title">No title</h5>
+                                        </#if>
+                                        <#if sondaggio.getTestoApertura()??>
+                                            <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                        <#else>
+                                            <h5 class="card-text">No descrizione</h5>
+                                        </#if>
+                                    </div>
+                                    <div class="card-footer bg-warning">
+                                        <#if sondaggio.getCreazione()??>
+                                            <small class="text-black">${sondaggio.getCreazione()}</small>
+                                        <#else>
+                                            <h5 class="card-black"></h5>
+                                        </#if>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        </#if>
+                    <#assign c = c + 1>
+                    </#list>
+                    <#if c%3 != 1> 
+                        </div>
+                        </div>
+                    </#if>
 
 
                     </div>
