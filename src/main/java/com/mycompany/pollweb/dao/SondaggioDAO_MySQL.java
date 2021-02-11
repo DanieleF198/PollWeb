@@ -37,6 +37,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     private PreparedStatement sSondaggioByIDUtente;
     private PreparedStatement sSondaggiByIDUtente;
     private PreparedStatement sSondaggi;
+    private PreparedStatement sSondaggiAdmin;
     private PreparedStatement iSondaggio;
     private PreparedStatement uSondaggio;
     private PreparedStatement dSondaggio;
@@ -65,7 +66,8 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggioByID = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idSondaggio=?");
             sSondaggioByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
             sSondaggiByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
-            sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio");
+            sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0");
+            sSondaggiAdmin = connection.prepareStatement("SELECT * FROM Sondaggio");
             
             iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,visibilita,dataCreazione,dataChiusura,privato,modificabile,compilazioni) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?, privato=?,modificabile=?,compilazioni=? WHERE idSondaggio=?");
@@ -81,10 +83,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiCompilati2 = connection.prepareStatement("SELECT * FROM RispostaDomanda WHERE idRisposta=?");
             sSondaggiCompilati3 = connection.prepareStatement("SELECT * FROM Domanda WHERE idDomanda=?");
             
-            sSondaggiRecent = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY dataCreazione DESC");
-            sSondaggiOld = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY dataCreazione");
-            sSondaggiPopolari = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY compilazioni DESC");
-            sSondaggiPopolari9 = connection.prepareStatement("SELECT * FROM Sondaggio ORDER BY compilazioni DESC LIMIT 9");
+            sSondaggiRecent = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 ORDER BY dataCreazione DESC");
+            sSondaggiOld = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 ORDER BY dataCreazione");
+            sSondaggiPopolari = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 ORDER BY compilazioni DESC");
+            sSondaggiPopolari9 = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 ORDER BY compilazioni DESC LIMIT 9");
             
             
             
@@ -115,6 +117,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiPopolari9.close();
             
             sSondaggi.close();
+            sSondaggiAdmin.close();
             
             iSondaggio.close();
             uSondaggio.close();
@@ -206,6 +209,20 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
         List<Sondaggio> result = new ArrayList();
 
         try (ResultSet rs = sSondaggi.executeQuery()) {
+            while (rs.next()) {
+                result.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Sondaggi", ex);
+        }
+        return result;
+    }
+    
+    @Override
+    public List<Sondaggio> getSondaggiAdmin() throws DataException {
+        List<Sondaggio> result = new ArrayList();
+
+        try (ResultSet rs = sSondaggiAdmin.executeQuery()) {
             while (rs.next()) {
                 result.add((Sondaggio) getSondaggio(rs.getInt("idSondaggio")));
             }

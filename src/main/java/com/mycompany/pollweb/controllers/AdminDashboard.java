@@ -104,7 +104,7 @@ public class AdminDashboard extends BaseController {
             request.setAttribute("eta", (Integer)s.getAttribute("eta"));
             request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
             
-            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi();
+            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiAdmin();
             request.setAttribute("sondaggi", sondaggi);
             
             List<Utente> utenti = dl.getUtenteDAO().getUtenti();
@@ -147,7 +147,7 @@ public class AdminDashboard extends BaseController {
             request.setAttribute("eta", (Integer)s.getAttribute("eta"));
             request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
             
-            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi();
+            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiAdmin();
             sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggi, (String)request.getParameter("header-search-sondaggi"));
             request.setAttribute("sondaggi", sondaggi);
             
@@ -189,7 +189,7 @@ public class AdminDashboard extends BaseController {
             request.setAttribute("eta", (Integer)s.getAttribute("eta"));
             request.setAttribute("gruppo", g.getNomeGruppoByID((Integer)s.getAttribute("groupid")));
             
-            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggi();
+            ArrayList<Sondaggio> sondaggi = (ArrayList<Sondaggio>) dl.getSondaggioDAO().getSondaggiAdmin();
             request.setAttribute("sondaggi", sondaggi);
             
             ArrayList<Utente> utenti = dl.getUtenteDAO().getUtenti();
