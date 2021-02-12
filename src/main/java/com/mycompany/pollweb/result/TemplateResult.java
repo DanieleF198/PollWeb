@@ -101,6 +101,7 @@ public class TemplateResult {
         //set the object handler that allows us to "view" Java beans as hashes
         DefaultObjectWrapperBuilder owb = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_26);
         owb.setForceLegacyNonListCollections(false);
+        owb.setIterableSupport(true);
         owb.setDefaultDateType(TemplateDateModel.DATETIME);
         cfg.setObjectWrapper(owb.build());
     }

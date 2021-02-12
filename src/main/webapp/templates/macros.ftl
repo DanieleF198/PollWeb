@@ -528,7 +528,31 @@
 
     <#macro openShort domanda="">
         <#if domanda!="">
-            <p>ciao</p>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.isObbligatoria()>
+                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                    <#else>
+                        <p class="h4">${domanda.getTitolo()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.getDescrizione()??>
+                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <#if domanda.getVincolo()??>
+                        <input type="text" class="form-control" placeholder="massimo numero di caratteri: ${domanda.getVincolo()[12..]}" maxlength="128">
+                    <#else>
+                        <input type="text" class="form-control" placeholder="massimo numero di caratteri: 128" maxlength="128">
+                    </#if>
+                </div>
+            </div>
         <#else>
             <div class="row">
                 <div class="col-12">
@@ -550,7 +574,31 @@
             
     <#macro openLong domanda="">
         <#if domanda!="">
-            <p>ciao</p>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.isObbligatoria()>
+                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                    <#else>
+                        <p class="h4">${domanda.getTitolo()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.getDescrizione()??>
+                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <#if domanda.getVincolo()??>
+                        <input type="text" class="form-control" placeholder="massimo numero di caratteri: ${domanda.getVincolo()[12..]}" maxlength="128">
+                    <#else>
+                        <input type="text" class="form-control" placeholder="massimo numero di caratteri: 128" maxlength="128">
+                    </#if>
+                </div>
+            </div>
         <#else>
             <div class="row">
                 <div class="col-12">
@@ -572,7 +620,31 @@
             
     <#macro openNumber domanda="">
         <#if domanda!="">
-            <p>ciao</p>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.isObbligatoria()>
+                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                    <#else>
+                        <p class="h4">${domanda.getTitolo()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.getDescrizione()??>
+                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-lg-4 col-md-5 col-sm-12">
+                    <#if domanda.getVincolo()??>
+                        <input type="number" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[12..<13]} e ${domanda.getVincolo()[17..]}">
+                    <#else>
+                        <input type="number" class="form-control" placeholder="Numero compreso tra x ed y">
+                    </#if>
+                </div>
+            </div>
         <#else>
             <div class="row">
                 <div class="col-12">
@@ -594,7 +666,32 @@
             
     <#macro openDate domanda="">
         <#if domanda!="">
-            <p>ciao</p>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.isObbligatoria()>
+                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                    <#else>
+                        <p class="h4">${domanda.getTitolo()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.getDescrizione()??>
+                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-lg-4 col-md-5 col-sm-12">
+                    <input type="date" class="form-control">
+                </div>
+                <#if domanda.getVincolo()??>
+                    <div class="col-lg-8 col-md-7 col-sm-12">
+                        <p class="text-muted pt-2">Data compresa tra il ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]} ed il ${domanda.getVincolo()[34..35]}/${domanda.getVincolo()[31..32]}/${domanda.getVincolo()[26..29]}</p>
+                    </div>
+                </#if>
+            </div>
         <#else>
             <div class="row">
                 <div class="col-12">
@@ -616,7 +713,34 @@
             
     <#macro closeSingle domanda="">
         <#if domanda!="">
-            <p>ciao</p>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.isObbligatoria()>
+                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                    <#else>
+                        <p class="h4">${domanda.getTitolo()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.getDescrizione()??>
+                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <#assign c = 0> 
+                    <#list domanda.getOpzioni().opzioni as opzione>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione}-${c}" name="opzioni" value="${opzione}">
+                            <label for=opzione${domanda.getPosizione}-${c}" class="custom-control-label">${opzione}</label><br>
+                        </div>
+                        <#assign c = c + 1>
+                    </#list>
+                </div>
+            </div>
         <#else>
             <div class="row">
                 <div class="col-12">
@@ -653,7 +777,38 @@
             
     <#macro closeMultiple domanda="">
         <#if domanda!="">
-            <p>ciao</p>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.isObbligatoria()>
+                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                    <#else>
+                        <p class="h4">${domanda.getTitolo()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <#if domanda.getDescrizione()??>
+                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                    </#if>
+                </div>
+            </div>
+            <div class="row mb-3">
+                    <#assign c = 0> 
+                    <#list domanda.getOpzioni().opzioni as opzione>
+                        <div class="col-12">
+                            <div>
+                                <label class="checkbox mb-3">
+                                    <input type="checkbox" name="opzioneM${domanda.getPosizione}-${c}"/>
+                                    <span class="warning"></span>
+                                </label>
+                                &nbsp${opzione}
+                            </div>
+                        </div>
+                        <#assign c = c + 1>
+                    </#list>
+                </div>
+            </div>
         <#else>
             <div class="row">
                 <div class="col-12">

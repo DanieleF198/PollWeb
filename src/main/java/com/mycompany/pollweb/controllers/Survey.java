@@ -21,6 +21,7 @@ import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -85,6 +86,7 @@ public class Survey extends BaseController {
         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
         ArrayList<Domanda> domande = (ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio(Integer.parseInt(request.getParameter("btnCompile")));
         request.setAttribute("domande", domande);
+        Collections.sort(domande);
         res.activate("survey.ftl", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Survey.class.getName()).log(Level.SEVERE, null, ex);
