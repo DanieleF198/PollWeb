@@ -98,19 +98,12 @@ public class Register extends BaseController {
                 TemplateResult res = new TemplateResult(getServletContext());
                 if(request.getParameter("buttonRegister") != null){
                     String firstName = SecurityLayer.addSlashes(request.getParameter("firstName"));
-                    firstName = SecurityLayer.stripSlashes(firstName);
                     String lastName = SecurityLayer.addSlashes(request.getParameter("lastName"));
-                    lastName = SecurityLayer.stripSlashes(lastName);
                     String date = SecurityLayer.addSlashes(request.getParameter("date"));
-                    date = SecurityLayer.stripSlashes(date);
                     String username = SecurityLayer.addSlashes(request.getParameter("username"));
-                    username = SecurityLayer.stripSlashes(username);
                     String email = SecurityLayer.addSlashes(request.getParameter("email"));
-                    email = SecurityLayer.stripSlashes(email);
                     String password = SecurityLayer.addSlashes(request.getParameter("password"));
-                    password = SecurityLayer.stripSlashes(password);
                     String confirmPassword = SecurityLayer.addSlashes(request.getParameter("confirmPassword"));
-                    confirmPassword = SecurityLayer.stripSlashes(confirmPassword);
                     if (firstName != null && lastName != null && date != null && username != null && email != null && password != null && confirmPassword != null && !firstName.isEmpty() && !lastName.isEmpty() && !date.isEmpty() && !username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty()) {
 
                         Pattern specailCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
@@ -252,7 +245,6 @@ public class Register extends BaseController {
                         newUtente.setEmail(email);
                         newUtente.setUsername(username);
                         newUtente.setPassword(password);
-                        
                         dl.getUtenteDAO().storeUtente(newUtente);
                         SecurityLayer.createSession(request, newUtente, false);
                         response.sendRedirect("homepage");

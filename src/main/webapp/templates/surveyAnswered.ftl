@@ -20,7 +20,6 @@
                         <div class="row">
                             <div class="col-12">
                                 <p>questa pagina e' da realizzare, comunque questo e' il sondaggio con titolo ${sondaggio.getTitolo()}</p>
-                                <p>Per inciso, l'utente che ha risposto ha indirizzo: ${remoteAddr}</p>
                             </div>
                         </div>
                     </div>

@@ -80,9 +80,7 @@ public class Login extends BaseController {
                 TemplateResult res = new TemplateResult(getServletContext());
                 if(request.getParameter("buttonLogin") != null){
                     String username = SecurityLayer.addSlashes(request.getParameter("inputUsername"));
-                    username = SecurityLayer.stripSlashes(username);
                     String password = SecurityLayer.addSlashes(request.getParameter("inputPassword"));
-                    password = SecurityLayer.stripSlashes(password);
 
                     if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
                         Utente utente = ((PollWebDataLayer)request.getAttribute("datalayer")).getUtenteDAO().getUtenteLogin(username, password);

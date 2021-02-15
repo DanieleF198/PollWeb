@@ -21,6 +21,7 @@ import com.mycompany.pollweb.model.Risposta;
 import com.mycompany.pollweb.model.RispostaDomanda;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -282,30 +283,30 @@ public class Survey extends BaseController {
             JSONObject risposta = new JSONObject();
             ArrayList<String> r = new ArrayList<String>();
             if(d.getTipo().equals("openShort")){
-                r.add(openShortMap.get(i));
+                r.add(SecurityLayer.addSlashes(openShortMap.get(i)));
                 risposta.put("risposta", new JSONArray(r)); 
             } else if(d.getTipo().equals("openLong")){
-                r.add(openLongMap.get(i));
+                r.add(SecurityLayer.addSlashes(openLongMap.get(i)));
                 risposta.put("risposta", new JSONArray(r)); 
             } else if(d.getTipo().equals("openNumber")){
-                r.add(openNumberMap.get(i));
+                r.add(SecurityLayer.addSlashes(openNumberMap.get(i)));
                 risposta.put("risposta", new JSONArray(r)); 
             } else if(d.getTipo().equals("openDate")){
-                r.add(openDateMap.get(i));
+                r.add(SecurityLayer.addSlashes(openDateMap.get(i)));
                 risposta.put("risposta", new JSONArray(r)); 
             } else if(d.getTipo().equals("closeSingle")){
-                r.add(closeSingleMap.get(i));
+                r.add(SecurityLayer.addSlashes(closeSingleMap.get(i)));
                 risposta.put("risposta", new JSONArray(r)); 
             } else if(d.getTipo().equals("closeMultiple")){
                 HashMap<Integer, String> closeMultipleIstanceTemp = closeMultipleMap.get(i);
                 for(int j = 0; j < closeMultipleIstanceTemp.size(); j++){
-                    r.add(closeMultipleIstanceTemp.get(j));
+                    r.add(SecurityLayer.addSlashes(closeMultipleIstanceTemp.get(j)));
                 }
                 risposta.put("risposta", new JSONArray(r)); 
             }
-            System.out.println("IdRisposta: " + idRisposta + ", IdDomanda: " + i + ", risposta: " + risposta.toString());
+            System.out.println("IdRisposta: " + idRisposta + ", IdDomanda: " + d.getKey() + ", risposta: " + risposta.toString());
             RispostaDomanda rispDom = dl.getRispostaDomandaDAO().createRispostaDomanda();
-            rispDom.setIdDomanda(i);
+            rispDom.setIdDomanda(d.getKey());
             rispDom.setIdRisposta(idRisposta);
             rispDom.setRisposta(risposta);
             dl.getRispostaDomandaDAO().insertRisposta(rispDom);

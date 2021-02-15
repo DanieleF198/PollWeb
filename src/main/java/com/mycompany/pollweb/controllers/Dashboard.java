@@ -21,6 +21,7 @@ import com.mycompany.pollweb.model.Gruppo;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.result.SplitSlashesFmkExt;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.io.BufferedWriter;
@@ -234,6 +235,8 @@ public class Dashboard extends BaseController {
                 if( sondaggiComp.isEmpty() ){
                     request.setAttribute("noSondaggiComp", "yes");
                 }
+                
+                request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
                 res.activate("dashboard.ftl", request, response);
             }
         } catch (TemplateManagerException ex) {
