@@ -531,9 +531,9 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
                     </#if>
                 </div>
             </div>
@@ -547,9 +547,9 @@
             <div class="row mb-3">
                 <div class="col-12">
                     <#if domanda.getVincolo()??>
-                        <input type="text" class="form-control" placeholder="massimo numero di caratteri: ${domanda.getVincolo()[12..]}" maxlength="128">
+                        <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo: 128" maxlength="128">
                     <#else>
-                        <input type="text" class="form-control" placeholder="massimo numero di caratteri: 128" maxlength="128">
+                        <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 128" maxlength="128">
                     </#if>
                 </div>
             </div>
@@ -577,9 +577,9 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
                     </#if>
                 </div>
             </div>
@@ -593,9 +593,9 @@
             <div class="row mb-3">
                 <div class="col-12">
                     <#if domanda.getVincolo()??>
-                        <input type="text" class="form-control" placeholder="massimo numero di caratteri: ${domanda.getVincolo()[12..]}" maxlength="128">
+                        <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo 512" maxlength="512">
                     <#else>
-                        <input type="text" class="form-control" placeholder="massimo numero di caratteri: 128" maxlength="128">
+                        <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 512" maxlength="128">
                     </#if>
                 </div>
             </div>
@@ -623,9 +623,9 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
                     </#if>
                 </div>
             </div>
@@ -639,9 +639,9 @@
             <div class="row mb-3">
                 <div class="col-lg-4 col-md-5 col-sm-12">
                     <#if domanda.getVincolo()??>
-                        <input type="number" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[12..<13]} e ${domanda.getVincolo()[17..]}">
+                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}">
                     <#else>
-                        <input type="number" class="form-control" placeholder="Numero compreso tra x ed y">
+                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra x ed y">
                     </#if>
                 </div>
             </div>
@@ -669,9 +669,9 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
                     </#if>
                 </div>
             </div>
@@ -684,7 +684,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-lg-4 col-md-5 col-sm-12">
-                    <input type="date" class="form-control">
+                    <input type="date" name="openDate${domanda.getPosizione()}" class="form-control">
                 </div>
                 <#if domanda.getVincolo()??>
                     <div class="col-lg-8 col-md-7 col-sm-12">
@@ -716,9 +716,9 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
                     </#if>
                 </div>
             </div>
@@ -726,6 +726,8 @@
                 <div class="col-12">
                     <#if domanda.getDescrizione()??>
                         <p class="text-muted">${domanda.getDescrizione()}</p>
+                    <#else>
+                        <p class="text-muted"></p>
                     </#if>
                 </div>
             </div>
@@ -734,8 +736,8 @@
                     <#assign c = 0> 
                     <#list domanda.getOpzioni().opzioni as opzione>
                         <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione}-${c}" name="opzioni" value="${opzione}">
-                            <label for=opzione${domanda.getPosizione}-${c}" class="custom-control-label">${opzione}</label><br>
+                            <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${opzione}">
+                            <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${opzione}</label><br>
                         </div>
                         <#assign c = c + 1>
                     </#list>
@@ -780,9 +782,9 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
                     </#if>
                 </div>
             </div>
@@ -799,7 +801,7 @@
                         <div class="col-12">
                             <div>
                                 <label class="checkbox mb-3">
-                                    <input type="checkbox" name="opzioneM${domanda.getPosizione}-${c}"/>
+                                    <input type="checkbox" name="opzioneM${domanda.getPosizione()}-${c}" value="${opzione}"/>
                                     <span class="warning"></span>
                                 </label>
                                 &nbsp${opzione}

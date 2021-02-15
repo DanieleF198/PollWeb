@@ -29,8 +29,10 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     private PreparedStatement sRispostaByID;
     private PreparedStatement sRispostaByIDUtente;
     private PreparedStatement sRisposte;
-    private PreparedStatement iRisposta;
-    private PreparedStatement uRisposta;
+    private PreparedStatement iRispostaUserReg;
+    private PreparedStatement uRispostaUserReg;
+    private PreparedStatement iRispostaUserNotReg;
+    private PreparedStatement uRispostaUserNotReg;
     private PreparedStatement dRisposta;
     
     RispostaDAO_MySQL(DataLayer d) {
@@ -46,8 +48,10 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             sRispostaByIDUtente = connection.prepareStatement("SELECT * FROM Risposta WHERE idUtente=?");
             sRisposte = connection.prepareStatement("SELECT * FROM Risposta");
             
-            iRisposta = connection.prepareStatement("INSERT INTO Risposta (idRisposta,idUtente,dataCreazione,nomeUtenteRisposta) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uRisposta = connection.prepareStatement("UPDATE Risposta SET idRisposta=?,idUtente=?,dataCreazione=?,punteggio=?,nomeUtenteRisposta=? WHERE idRisposta=?");
+            iRispostaUserReg = connection.prepareStatement("INSERT INTO Risposta (idUtente,dataCreazione,usernameUtenteRisposta,ipUtenteRisposta) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uRispostaUserReg = connection.prepareStatement("UPDATE Risposta SET idUtente=?,dataCreazione=?,usernameUtenteRisposta=?,ipUtenteRisposta=? WHERE idRisposta=?");
+            iRispostaUserNotReg = connection.prepareStatement("INSERT INTO Risposta (dataCreazione,ipUtenteRisposta) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
+            uRispostaUserNotReg = connection.prepareStatement("UPDATE Risposta SET dataCreazione=?,ipUtenteRisposta=? WHERE idRisposta=?");
             dRisposta = connection.prepareStatement("DELETE FROM Risposta WHERE idRisposta=?");
             
             
@@ -66,8 +70,8 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             
             sRisposte.close();
             
-            iRisposta.close();
-            uRisposta.close();
+            iRispostaUserReg.close();
+            uRispostaUserReg.close();
             dRisposta.close();
             
         } catch (SQLException ex) {
@@ -88,7 +92,8 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             r.setKey(rs.getInt("idRisposta"));
             r.setIdUtente(rs.getInt("idUtente"));
             r.setData(rs.getDate("dataCreazione"));
-            r.setNomeUtenteRisposta(rs.getString("nomeUtenteRisposta"));
+            r.setUsernameUtenteRisposta(rs.getString("usernameUtenteRisposta"));
+            r.setIpUtenteRisposta(rs.getString("ipUtenteRisposta"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Risposta object form ResultSet", ex);
         }
@@ -158,36 +163,39 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     }
     
     @Override
-    public void storeRisposta (Risposta risposta) throws DataException {
+    public int storeRispostaUserReg (Risposta risposta) throws DataException {
         try {
             if (risposta.getKey() != null && risposta.getKey() > 0) { //update
                 //non facciamo nulla se l'oggetto è un proxy e indica di non aver subito modifiche
                 //do not store the object if it is a proxy and does not indicate any modification
                 if (risposta instanceof DataItemProxy && !((DataItemProxy) risposta).isModified()) {
-                    return;
+                    return risposta.getKey();
                 }
-                uRisposta.setInt(1, risposta.getIdUtente());
-                uRisposta.setDate(2, (Date) risposta.getData());
-                uRisposta.setString(3, risposta.getNomeUtenteRisposta());
-                uRisposta.setInt(4, risposta.getKey());
+                java.sql.Date sqlCreazione = new java.sql.Date( risposta.getData().getTime() );
+                uRispostaUserReg.setInt(1, risposta.getIdUtente());
+                uRispostaUserReg.setDate(2, sqlCreazione);
+                uRispostaUserReg.setString(3, risposta.getUsernameUtenteRisposta());
+                uRispostaUserReg.setString(4, risposta.getIpUtenteRisposta());
+                uRispostaUserReg.setInt(5, risposta.getKey());
 
-                if (uRisposta.executeUpdate() == 0) {
+                if (uRispostaUserReg.executeUpdate() == 0) {
                     throw new OptimisticLockException(risposta);
                 }
             }
             else { //insert
-                iRisposta.setInt(1, risposta.getIdUtente());
-                iRisposta.setDate(2, (Date) risposta.getData());
-                iRisposta.setString(3, risposta.getNomeUtenteRisposta());
-                iRisposta.setInt(4, risposta.getKey());
+                java.sql.Date sqlCreazione = new java.sql.Date( risposta.getData().getTime() );
+                iRispostaUserReg.setInt(1, risposta.getIdUtente());
+                iRispostaUserReg.setDate(2, sqlCreazione);
+                iRispostaUserReg.setString(3, risposta.getUsernameUtenteRisposta());
+                iRispostaUserReg.setString(4, risposta.getIpUtenteRisposta());
                 
-                if (iRisposta.executeUpdate() == 1) {
+                if (iRispostaUserReg.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database
                     //per il record appena inserito, usiamo il metodo
                     //getGeneratedKeys sullo statement.
                     //to read the generated record key from the database
                     //we use the getGeneratedKeys method on the same statement
-                    try (ResultSet keys = iRisposta.getGeneratedKeys()) {
+                    try (ResultSet keys = iRispostaUserReg.getGeneratedKeys()) {
                         //il valore restituito è un ResultSet con un record
                         //per ciascuna chiave generata (uno solo nel nostro caso)
                         //the returned value is a ResultSet with a distinct record for
@@ -225,6 +233,81 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             if (risposta instanceof DataItemProxy) {
                 ((DataItemProxy) risposta).setModified(false);
             }
+            return risposta.getKey();
+        } catch (SQLException | OptimisticLockException ex) {
+            throw new DataException("Unable to store risposta", ex);
+        }
+    }
+    
+    @Override
+    public int storeRispostaUserNotReg (Risposta risposta) throws DataException {
+        try {
+            if (risposta.getKey() != null && risposta.getKey() > 0) { //update
+                //non facciamo nulla se l'oggetto è un proxy e indica di non aver subito modifiche
+                //do not store the object if it is a proxy and does not indicate any modification
+                if (risposta instanceof DataItemProxy && !((DataItemProxy) risposta).isModified()) {
+                    return risposta.getKey();
+                }
+                java.sql.Date sqlCreazione = new java.sql.Date( risposta.getData().getTime() );
+                uRispostaUserNotReg.setDate(1, sqlCreazione);
+                uRispostaUserNotReg.setString(2, risposta.getIpUtenteRisposta());
+                uRispostaUserNotReg.setInt(3, risposta.getKey());
+                
+
+                if (uRispostaUserNotReg.executeUpdate() == 0) {
+                    throw new OptimisticLockException(risposta);
+                }
+            }
+            else { //insert
+                java.sql.Date sqlCreazione = new java.sql.Date( risposta.getData().getTime() );
+                iRispostaUserNotReg.setDate(1, sqlCreazione);
+                iRispostaUserNotReg.setString(2, risposta.getIpUtenteRisposta());
+                
+                if (iRispostaUserNotReg.executeUpdate() == 1) {
+                    //per leggere la chiave generata dal database
+                    //per il record appena inserito, usiamo il metodo
+                    //getGeneratedKeys sullo statement.
+                    //to read the generated record key from the database
+                    //we use the getGeneratedKeys method on the same statement
+                    try (ResultSet keys = iRispostaUserNotReg.getGeneratedKeys()) {
+                        //il valore restituito è un ResultSet con un record
+                        //per ciascuna chiave generata (uno solo nel nostro caso)
+                        //the returned value is a ResultSet with a distinct record for
+                        //each generated key (only one in our case)
+                        if (keys.next()) {
+                            //i campi del record sono le componenti della chiave
+                            //(nel nostro caso, un solo intero)
+                            //the record fields are the key componenets
+                            //(a single integer in our case)
+                            int key = keys.getInt(1);
+                            //aggiornaimo la chiave in caso di inserimento
+                            //after an insert, uopdate the object key
+                            risposta.setKey(key);
+                            //inseriamo il nuovo oggetto nella cache
+                            //add the new object to the cache
+                            dataLayer.getCache().add(Risposta.class, risposta);
+                        }
+                    }
+                }
+            }
+
+//            //se possibile, restituiamo l'oggetto appena inserito RICARICATO
+//            //dal database tramite le API del modello. In tal
+//            //modo terremo conto di ogni modifica apportata
+//            //durante la fase di inserimento
+//            //if possible, we return the just-inserted object RELOADED from the
+//            //database through our API. In this way, the resulting
+//            //object will ambed any data correction performed by
+//            //the DBMS
+//            if (key > 0) {
+//                gruppo.copyFrom(getGruppo(key));
+//            }
+            //se abbiamo un proxy, resettiamo il suo attributo dirty
+            //if we have a proxy, reset its dirty attribute
+            if (risposta instanceof DataItemProxy) {
+                ((DataItemProxy) risposta).setModified(false);
+            }
+            return risposta.getKey();
         } catch (SQLException | OptimisticLockException ex) {
             throw new DataException("Unable to store risposta", ex);
         }

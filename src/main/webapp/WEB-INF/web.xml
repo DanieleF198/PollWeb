@@ -77,6 +77,10 @@
         <servlet-name>Survey</servlet-name>
         <servlet-class>com.mycompany.pollweb.controllers.Survey</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SurveyAnswered</servlet-name>
+        <servlet-class>com.mycompany.pollweb.controllers.SurveyAnswered</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Homepage</servlet-name>
         <url-pattern>/homepage</url-pattern>
@@ -140,6 +144,10 @@
     <servlet-mapping>
         <servlet-name>Survey</servlet-name>
         <url-pattern>/survey</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SurveyAnswered</servlet-name>
+        <url-pattern>/surveyAnswered</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>homepage</welcome-file>

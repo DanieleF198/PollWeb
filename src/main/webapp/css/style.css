@@ -233,12 +233,6 @@ input[type=number] {
     background-color: white;
 }
 
-/* the shadow; displayed while the element is in focus */
-.custom-radio .custom-control-input:focus ~ .custom-control-label::before {
-    -webkit-box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
-            box-shadow: inset 0 1px 1px rgba(240, 172, 78, 0.075), 0 0 8px rgba(237, 188, 121, 0.6);
-}
-
 .custom-control-label::before {
     background-color: darkorange;
 }

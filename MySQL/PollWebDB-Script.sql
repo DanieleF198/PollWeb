@@ -63,9 +63,10 @@ CREATE TABLE Utente (
   
   CREATE TABLE Risposta(
 	idRisposta int NOT NULL AUTO_INCREMENT,
-    idUtente int NOT NULL,
+    idUtente int,
     dataCreazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    nomeUtenteRisposta varchar(45) NOT NULL,
+    usernameUtenteRisposta varchar(45),
+    ipUtenteRisposta varchar(45) NOT NULL,
     PRIMARY KEY (idRisposta),
 	FOREIGN KEY (idUtente) REFERENCES Utente (idUtente) on update cascade on delete cascade
   );
@@ -112,7 +113,7 @@ INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligator
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('4', '1', 'Domanda 4', true, 'sono la 4 domanda', 3, '{}', 'openNumber',null );
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('5', '1', 'Domanda 5', true, 'sono la 5 domanda', 4, '{}', 'openDate',null );
 
-INSERT INTO	`pollwebdb`.`Risposta`(`idRisposta`,`idUtente`,`dataCreazione`,`nomeUtenteRisposta`)VALUES('1', '2', '2021-01-11', 'zawardo');
+INSERT INTO	`pollwebdb`.`Risposta`(`idRisposta`,`idUtente`,`dataCreazione`,`usernameUtenteRisposta`,`ipUtenteRisposta`)VALUES('1', '2', '2021-01-11', 'zawardo', '0:0:0:0:0:0:0:1');
 
 INSERT INTO `pollwebdb`.`RispostaDomanda`(`idRisposta`,`idDomanda`,`risposta`)VALUES('1', '1', '{}');
 INSERT INTO `pollwebdb`.`RispostaDomanda`(`idRisposta`,`idDomanda`,`risposta`)VALUES('1', '2', '{}');
@@ -130,10 +131,10 @@ INSERT INTO `pollwebdb`.`ListaPartecipanti`(`idListaPartecipanti`,`idUtente`,`id
 INSERT INTO `pollwebdb`.`Sondaggio`(`idSondaggio`,`idUtente`,`titolo`,`testoApertura`,`testoChiusura`,`completo`,`visibilita`,`dataCreazione`,`dataChiusura`,`privato`,`modificabile`,`compilazioni`)VALUES('2','2','Che cibo preferisci?', 'Ho creato questo sondaggio perchè devo creare un menu per il mio nuovo ristorante e mi piacerebbe sapere cosa preferite.', 'Grazie infinite per aver compilato, magari se passi riceverai uno sconticino :)', true, true,'2021-01-11','2021-02-12',false,false,1000);
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('6', '2', 'Quale è il tuo piatto preferito?', true, 'per avere un idea generale su cosa preferiate mangiare', 0, '{}', 'openShort','Constraint: 35' );
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('7', '2', 'Dovendo scegliere una sola portata preferiresti un primo o un secondo?', true, '', 1, '{"opzioni": ["Un primo", "Un secondo"]}', 'closeSingle','Constraint: 200' );
-INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('42', '2', 'Quante volte hai mangiato in un ristorante negli ultimi tempi?', true, '', 1, '{}', 'openNumber','Constraint: 0 -- 20' );
-INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('8', '2', 'Che genere preferisci tra questi?', true, 'vorrei capire se nel mio ristorante dovrei inserire un angolo pizzeria', 2, '{"opzioni": ["Si", "No"]}', 'closeMultiple',null );
-INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('9', '2', 'A fine pasto meglio un dolce o un gelato?', true, 'in base alle preferenze vedrò di cosa fare maggior rifornimento', 3, '{"opzioni": ["Dolce", "Gelato"]}', 'closeSingle',null );
-INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('43', '2', 'In che giorno saresti disponibile per un eventuale innaugurazione', true, 'in base alle preferenze vedrò di cosa fare maggior rifornimento', 3, '{}', 'openDate','Constraint: 2021-02-10 -- 2021-12-30' );
+INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('42', '2', 'Quante volte hai mangiato in un ristorante negli ultimi tempi?', true, '', 2, '{}', 'openNumber','Constraint: 0 -- 20' );
+INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('8', '2', 'Che genere preferisci tra questi?', true, 'vorrei capire se nel mio ristorante dovrei inserire un angolo pizzeria', 3, '{"opzioni": ["Si", "No"]}', 'closeMultiple',null );
+INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('9', '2', 'A fine pasto meglio un dolce o un gelato?', true, 'in base alle preferenze vedrò di cosa fare maggior rifornimento', 4, '{"opzioni": ["Dolce", "Gelato"]}', 'closeSingle',null );
+INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('43', '2', 'In che giorno saresti disponibile per un eventuale innaugurazione', true, 'in base alle preferenze vedrò di cosa fare maggior rifornimento', 5, '{}', 'openDate','Constraint: 2021-02-10 -- 2021-12-30' );
 
 
 INSERT INTO `pollwebdb`.`Sondaggio`(`idSondaggio`,`idUtente`,`titolo`,`testoApertura`,`testoChiusura`,`completo`,`visibilita`,`dataCreazione`,`dataChiusura`,`privato`,`modificabile`,`compilazioni`)VALUES('3','2','Che guardi in tv?', 'Per una ricerca scolastica ho bisogno di un pochino di informazioni da parte vostra. Mi aiutate?', 'La tua risposta è stata preziosa, GRAZIE', true, true, '2021-02-11','2021-03-12',false,false,999);

@@ -234,9 +234,6 @@ public class Dashboard extends BaseController {
                 if( sondaggiComp.isEmpty() ){
                     request.setAttribute("noSondaggiComp", "yes");
                 }
-                
-                
-                
                 res.activate("dashboard.ftl", request, response);
             }
         } catch (TemplateManagerException ex) {

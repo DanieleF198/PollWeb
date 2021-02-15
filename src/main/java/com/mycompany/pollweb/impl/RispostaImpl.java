@@ -19,13 +19,15 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     private int idUtente;
     private Utente utente;
     private Date data;
-    private String nomeUtenteRisposta;
+    private String usernameUtenteRisposta;
+    private String ipUtenteRisposta;
 
     public RispostaImpl() {
         super();
         this.utente = null;
         this.data = null;
-        this.nomeUtenteRisposta = "";
+        this.usernameUtenteRisposta = "";
+        this.ipUtenteRisposta = "";
     }
     
     @Override
@@ -44,8 +46,8 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     }
 
     @Override
-    public String getNomeUtenteRisposta() {
-        return nomeUtenteRisposta;
+    public String getUsernameUtenteRisposta() {
+        return usernameUtenteRisposta;
     }
 
     @Override
@@ -64,8 +66,18 @@ public class RispostaImpl extends DataItemImpl<Integer> implements Risposta {
     }
 
     @Override
-    public void setNomeUtenteRisposta(String nomeUtenteRisposta) {
-        this.nomeUtenteRisposta = nomeUtenteRisposta;
+    public void setUsernameUtenteRisposta(String usernameUtenteRisposta) {
+        this.usernameUtenteRisposta = usernameUtenteRisposta;
+    }
+
+    @Override
+    public String getIpUtenteRisposta() {
+        return ipUtenteRisposta;
+    }
+
+    @Override
+    public void setIpUtenteRisposta(String ipUtenteRisposta) {
+        this.ipUtenteRisposta = ipUtenteRisposta;
     }
     
 }

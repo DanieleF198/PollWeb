@@ -24,6 +24,8 @@ public interface RispostaDAO {
     
     public List<Risposta> getRisposte() throws DataException;
     
-    public void storeRisposta(Risposta risposta) throws DataException;
+    public int storeRispostaUserReg(Risposta risposta) throws DataException;
+    
+    public int storeRispostaUserNotReg(Risposta risposta) throws DataException;
     
 }

@@ -22,7 +22,9 @@ public interface Risposta extends DataItem<Integer> {
 
     public Date getData();
     
-    public String getNomeUtenteRisposta();
+    public String getUsernameUtenteRisposta();
+    
+    public String getIpUtenteRisposta();
 
     public void setIdUtente(int userId);
     
@@ -30,6 +32,8 @@ public interface Risposta extends DataItem<Integer> {
 
     public void setData(Date data);
     
-    public void setNomeUtenteRisposta(String nomeUtenteRisposta);
+    public void setUsernameUtenteRisposta(String usernameUtenteRisposta);
+    
+    public void setIpUtenteRisposta(String ipUtenteRisposta);
     
 }

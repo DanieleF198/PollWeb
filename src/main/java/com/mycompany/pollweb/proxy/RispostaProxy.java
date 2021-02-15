@@ -72,8 +72,14 @@ public class RispostaProxy extends RispostaImpl implements DataItemProxy {
     }
 
     @Override
-    public void setNomeUtenteRisposta(String nomeUtenteRisposta) {
-        super.setNomeUtenteRisposta(nomeUtenteRisposta);
+    public void setUsernameUtenteRisposta(String usernameUtenteRisposta) {
+        super.setUsernameUtenteRisposta(usernameUtenteRisposta);
+        this.modified = true;
+    }
+    
+    @Override
+    public void setIpUtenteRisposta(String ipUtenteRisposta) {
+        super.setIpUtenteRisposta(ipUtenteRisposta);
         this.modified = true;
     }
 

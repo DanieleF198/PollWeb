@@ -20,6 +20,8 @@ public interface RispostaDomandaDAO {
     
     public RispostaDomanda getRispostaDomanda(int idRisposta,int idDomanda) throws DataException;
     
-    public void storeRisposta(RispostaDomanda rispostaDomanda) throws DataException;
+    public void insertRisposta(RispostaDomanda rispostaDomanda) throws DataException;
+    
+    public void updateRisposta(RispostaDomanda rispostaDomanda) throws DataException;
     
 }

@@ -41,10 +41,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -484,6 +487,8 @@ public class ConfirmSection extends BaseController {
 
         } catch (CsvException ex) {
             Logger.getLogger(ConfirmSection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(ConfirmSection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -492,7 +497,7 @@ public class ConfirmSection extends BaseController {
         return;
     }
     
-    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException, CsvException {
+    private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException, CsvException, ParseException {
        try {
             TemplateResult res = new TemplateResult(getServletContext());  
             HttpSession s = checkSession(request);
@@ -553,6 +558,32 @@ public class ConfirmSection extends BaseController {
                             }
                         }
                     }
+                    if(d.getTipo().equals("openNumber")){
+                        if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
+                            int vincoloNumber1 = Integer.parseInt(d.getVincolo().substring(d.getVincolo().indexOf(":")+2, d.getVincolo().indexOf("-")-1));
+                            int vincoloNumber2 = Integer.parseInt(d.getVincolo().substring(d.getVincolo().indexOf("-")+3));
+                            if((vincoloNumber1 > vincoloNumber2) ||  (vincoloNumber1 == vincoloNumber2)){
+                                if(!errors.contains(err4)){
+                                    errors.add(err4);
+                                }
+                            }
+                        }
+                    }
+                    if(d.getTipo().equals("openDate")){
+                        if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
+                            String vincoloDate1 = d.getVincolo().substring(12,22);
+                            String vincoloDate2 = d.getVincolo().substring(26,36);
+                            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(vincoloDate1);
+                            Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(vincoloDate2);
+                            if((date1.after(date1)) ||  (date1.equals(date2))){
+                                if(!errors.contains(err4)){
+                                    errors.add(err4);
+                                }
+                            }
+                        }
+                    }
+                    
+                    
                 }
             }
             if(!errors.isEmpty()){

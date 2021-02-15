@@ -41,7 +41,7 @@ public class RispostaDomandaDAO_MySQL extends DAO implements RispostaDomandaDAO 
             
             sRispostaDomanda = connection.prepareStatement("SELECT * FROM RispostaDomanda WHERE idRisposta=? AND idDomanda=?");
             iRispostaDomanda = connection.prepareStatement("INSERT INTO RispostaDomanda (idRisposta,idDomanda,risposta) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uRispostaDomanda = connection.prepareStatement("UPDATE RispostaDomanda SET idRisposta=?,idDomanda=?,risposta=? WHERE idRisposta=? AND idDomanda=?");
+            uRispostaDomanda = connection.prepareStatement("UPDATE RispostaDomanda SET risposta=? WHERE idRisposta=? AND idDomanda=?");
             
             
         } catch (SQLException ex) {
@@ -93,8 +93,6 @@ public class RispostaDomandaDAO_MySQL extends DAO implements RispostaDomandaDAO 
                 try (ResultSet rs = sRispostaDomanda.executeQuery()) {
                     if (rs.next()) {
                         r = createRispostaDomanda(rs);
-                        //e lo mettiamo anche nella cache
-                        dataLayer.getCache().add(RispostaDomanda.class, r);
                     }
                 }
             } catch (SQLException ex) {
@@ -104,39 +102,46 @@ public class RispostaDomandaDAO_MySQL extends DAO implements RispostaDomandaDAO 
     }
 
     @Override
-    public void storeRisposta(RispostaDomanda rispostaDomanda) throws DataException { //DA TESTARE
+    public void insertRisposta(RispostaDomanda rispostaDomanda) throws DataException { //DA TESTARE
         try {
-            if (rispostaDomanda.getIdRisposta() > 0) {
-                if (rispostaDomanda instanceof DataItemProxy && !((DataItemProxy) rispostaDomanda).isModified()) {
-                    return;
-                }
-                uRispostaDomanda.setInt(1, rispostaDomanda.getIdRisposta());
-                uRispostaDomanda.setInt(2, rispostaDomanda.getIdDomanda());
+            iRispostaDomanda.setInt(1, rispostaDomanda.getIdRisposta());
+            iRispostaDomanda.setInt(2, rispostaDomanda.getIdDomanda());
+            if(rispostaDomanda.getRisposta() != null){
+                iRispostaDomanda.setObject(3, rispostaDomanda.getRisposta().toString());
+            }else{
+                iRispostaDomanda.setObject(3, "{}");
+            }
+            iRispostaDomanda.executeUpdate();
+            if (rispostaDomanda instanceof DataItemProxy) {
+                ((DataItemProxy) rispostaDomanda).setModified(false);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RispostaDomandaDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }      
+    
+    @Override
+    public void updateRisposta(RispostaDomanda rispostaDomanda) throws DataException { //DA TESTARE
+        try {
+            if (rispostaDomanda instanceof DataItemProxy && !((DataItemProxy) rispostaDomanda).isModified()) {
+                return;
+            }
+                uRispostaDomanda.setInt(2, rispostaDomanda.getIdRisposta());
+                uRispostaDomanda.setInt(3, rispostaDomanda.getIdDomanda());
                 if(rispostaDomanda.getRisposta() != null){
-                    uRispostaDomanda.setObject(3, rispostaDomanda.getRisposta().toString());
+                    uRispostaDomanda.setObject(1, rispostaDomanda.getRisposta().toString());
                 }else{
-                    uRispostaDomanda.setObject(3, "{}");
+                    uRispostaDomanda.setObject(1, "{}");
                 }
 
                 if (uRispostaDomanda.executeUpdate() == 0) {
                     throw new OptimisticLockException(rispostaDomanda);
                 }
-            }
-
-            else { //insert
-                iRispostaDomanda.setInt(1, rispostaDomanda.getIdRisposta());
-                iRispostaDomanda.setInt(2, rispostaDomanda.getIdDomanda());
-                if(rispostaDomanda.getRisposta() != null){
-                    iRispostaDomanda.setObject(3, rispostaDomanda.getRisposta().toString());
-                }else{
-                    iRispostaDomanda.setObject(3, "{}");
-                }
-            }
-        if (rispostaDomanda instanceof DataItemProxy) {
-            ((DataItemProxy) rispostaDomanda).setModified(false);
-        }
         } catch (SQLException ex) {
             Logger.getLogger(RispostaDomandaDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (rispostaDomanda instanceof DataItemProxy) {
+            ((DataItemProxy) rispostaDomanda).setModified(false);
         }
     }      
 }
