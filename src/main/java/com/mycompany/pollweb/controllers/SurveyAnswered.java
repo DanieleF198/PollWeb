@@ -38,7 +38,7 @@ public class SurveyAnswered extends BaseController {
             if(request.getAttribute("sondaggio")!=null){
                 action_default(request, response);
             } else {
-                request.setAttribute("exception", "attribute sondaggio in request is null");
+                request.setAttribute("message", "attribute sondaggio in request is null");
                 action_error(request, response);
             }
 

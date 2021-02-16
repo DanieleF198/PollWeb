@@ -28,6 +28,7 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     
     private PreparedStatement sRispostaByID;
     private PreparedStatement sRispostaByIDUtente;
+    private PreparedStatement sRispostaByIPUtente;
     private PreparedStatement sRisposte;
     private PreparedStatement iRispostaUserReg;
     private PreparedStatement uRispostaUserReg;
@@ -46,12 +47,13 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             
             sRispostaByID = connection.prepareStatement("SELECT * FROM Risposta WHERE idRisposta=?");
             sRispostaByIDUtente = connection.prepareStatement("SELECT * FROM Risposta WHERE idUtente=?");
+            sRispostaByIPUtente = connection.prepareStatement("SELECT * FROM Risposta WHERE ipUtenteRisposta=? AND usernameUtenteRisposta=?");
             sRisposte = connection.prepareStatement("SELECT * FROM Risposta");
             
             iRispostaUserReg = connection.prepareStatement("INSERT INTO Risposta (idUtente,dataCreazione,usernameUtenteRisposta,ipUtenteRisposta) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             uRispostaUserReg = connection.prepareStatement("UPDATE Risposta SET idUtente=?,dataCreazione=?,usernameUtenteRisposta=?,ipUtenteRisposta=? WHERE idRisposta=?");
-            iRispostaUserNotReg = connection.prepareStatement("INSERT INTO Risposta (dataCreazione,ipUtenteRisposta) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
-            uRispostaUserNotReg = connection.prepareStatement("UPDATE Risposta SET dataCreazione=?,ipUtenteRisposta=? WHERE idRisposta=?");
+            iRispostaUserNotReg = connection.prepareStatement("INSERT INTO Risposta (dataCreazione,usernameUtenteRisposta,ipUtenteRisposta) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            uRispostaUserNotReg = connection.prepareStatement("UPDATE Risposta SET dataCreazione=?, ipUtenteRisposta=? WHERE idRisposta=?");
             dRisposta = connection.prepareStatement("DELETE FROM Risposta WHERE idRisposta=?");
             
             
@@ -67,6 +69,7 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             
             sRispostaByID.close();
             sRispostaByIDUtente.close();
+            sRispostaByIPUtente.close();
             
             sRisposte.close();
             
@@ -125,27 +128,38 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     }
     
     @Override
-    public Risposta getRispostaByIdUtente(int idUtente) throws DataException {
-        Risposta r = null;
-        //prima vediamo se l'oggetto è già stato caricato
-        if (dataLayer.getCache().has(Risposta.class, idUtente)) {
-            r = dataLayer.getCache().get(Risposta.class, idUtente);
-        } else {
+    public List<Risposta> getRispostaByIdUtente(int idUtente) throws DataException {
+        List<Risposta> result = new ArrayList();
             //altrimenti lo carichiamo dal database
             try {
                 sRispostaByIDUtente.setInt(1, idUtente);
                 try (ResultSet rs = sRispostaByIDUtente.executeQuery()) {
-                    if (rs.next()) {
-                        r = createRisposta(rs);
-                        //e lo mettiamo anche nella cache
-                        dataLayer.getCache().add(Risposta.class, r);
+                    while (rs.next()) {
+                        result.add((Risposta) getRisposta(rs.getInt("idRisposta")));
+                    }   
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Risposta by idRisposta", ex);
+            }
+        return result;
+    }
+    
+    @Override
+    public List<Risposta> getRispostaByIPUtente(String ipUtente) throws DataException {
+        List<Risposta> result = new ArrayList();
+            //altrimenti lo carichiamo dal database
+            try {
+                sRispostaByIPUtente.setString(1, ipUtente);
+                sRispostaByIPUtente.setString(2, "no!username");
+                try (ResultSet rs = sRispostaByIPUtente.executeQuery()) {
+                    while (rs.next()) {
+                        result.add((Risposta) getRisposta(rs.getInt("idRisposta")));
                     }
                 }
             } catch (SQLException ex) {
-                throw new DataException("Unable to load Risposta by idUtente", ex);
+                throw new DataException("Unable to load Risposta by idRisposta", ex);
             }
-        }
-        return r;
+        return result;
     }
     
     @Override
@@ -154,7 +168,7 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
 
         try (ResultSet rs = sRisposte.executeQuery()) {
             while (rs.next()) {
-                result.add((Risposta) getRisposta(rs.getInt("idgetRisposte")));
+                result.add((Risposta) getRisposta(rs.getInt("idRisposta")));
             }
         } catch (SQLException ex) {
             throw new DataException("Unable to load Risposte", ex);
@@ -261,7 +275,8 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             else { //insert
                 java.sql.Date sqlCreazione = new java.sql.Date( risposta.getData().getTime() );
                 iRispostaUserNotReg.setDate(1, sqlCreazione);
-                iRispostaUserNotReg.setString(2, risposta.getIpUtenteRisposta());
+                iRispostaUserNotReg.setString(2, "no!username"); //siamo sicuri che questo username non esista perché non ammettiamo username con il "!"
+                iRispostaUserNotReg.setString(3, risposta.getIpUtenteRisposta());
                 
                 if (iRispostaUserNotReg.executeUpdate() == 1) {
                     //per leggere la chiave generata dal database

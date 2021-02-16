@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.impl.RispostaImpl;
 import com.mycompany.pollweb.model.Domanda;
 import com.mycompany.pollweb.model.Risposta;
 import com.mycompany.pollweb.model.RispostaDomanda;
@@ -64,9 +65,11 @@ public class Survey extends BaseController {
                 }
                 
                 action_default(request, response);
-            } else if(request.getParameter("sendAnswer")!=null){
+            } else if(request.getParameter("returnSurvey")!=null){ //caso in cui torna per modificare le risposte
+                action_load_survey(request,response);
+            } else if(request.getParameter("sendAnswer")!=null || request.getParameter("ModAnswer")!=null){
                 action_send_answer(request,response);
-            }else{
+            } else {
                 request.setAttribute("message", "sondaggio inesistente");
                 action_error(request,response);
             }
@@ -85,8 +88,6 @@ public class Survey extends BaseController {
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
        try {
         TemplateResult res = new TemplateResult(getServletContext());
-        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
-        
         res.activate("surveyExample.ftl", request, response);
         
         } catch (TemplateManagerException ex) {
@@ -98,8 +99,86 @@ public class Survey extends BaseController {
         TemplateResult res = new TemplateResult(getServletContext());
         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
         ArrayList<Domanda> domande = (ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio(Integer.parseInt(request.getParameter("btnCompile")));
+        Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(Integer.parseInt(request.getParameter("btnCompile")));
         request.setAttribute("domande", domande);
         Collections.sort(domande);
+        //controllo se l'utente ha già risposto al sondaggio in passato
+        ArrayList<Risposta> risposte;
+        HttpSession s = checkSession(request);
+        if(s!=null){
+            risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIdUtente((int) s.getAttribute("userid"));
+        } else {
+            risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIPUtente(request.getRemoteHost());
+        }
+        Risposta risposta = new RispostaImpl();
+        int idRispostaCorretta = -1;
+        for(int i = 0; i<risposte.size();i++){
+            risposta = risposte.get(i);
+            for(int j = 0; j<domande.size(); j++){
+                Domanda d = domande.get(i);
+                JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                if(r != null){
+                    idRispostaCorretta = i;
+                    break;
+                }
+            }
+            if(idRispostaCorretta!=-1){
+                break;
+            }
+        }
+        if(idRispostaCorretta!=-1){
+            risposta = risposte.get(idRispostaCorretta);
+        } else {
+            risposta = null;
+        }
+        HashMap<String, String> risposteNoMult = new HashMap<String, String>();
+        HashMap<String, String> risposteRadios = new HashMap<String, String>();
+        HashMap<String, HashMap<String, String>> risposteSiMult = new HashMap<String, HashMap<String, String>>();
+        if(risposta != null){
+            for(int i = 0; i<domande.size(); i++){
+                Domanda d = domande.get(i);
+                JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                if(r != null){
+                    if (d.getTipo().equals("closeMultiple")){
+                        HashMap<String, String> temp = new HashMap<String, String>();
+                        for(int j = 0; j<r.length(); j++){
+                            temp.put(String.valueOf(j), r.get(j).toString());
+                        }
+                        risposteSiMult.put(String.valueOf(i), temp);
+                    } else if(d.getTipo().equals("closeSingle")) {
+                        risposteRadios.put(String.valueOf(i), r.get(0).toString());
+                    } else {
+                        risposteNoMult.put(String.valueOf(i), r.get(0).toString());
+                    }
+                } else {
+                    if(d.isObbligatoria()){
+                        request.setAttribute("message", "errore nel caricamento delle risposte");
+                        action_error(request, response);
+                    }
+                }
+            }
+        }
+        boolean atLeastOne = false;
+        if(!risposteNoMult.isEmpty()){
+            request.setAttribute("risposteNoMult", risposteNoMult);
+            atLeastOne = true;
+        }
+        if(!risposteRadios.isEmpty()){
+            request.setAttribute("risposteRadios", risposteRadios);
+            atLeastOne = true;
+        }
+        if(!risposteSiMult.isEmpty()){
+            request.setAttribute("risposteSiMult", risposteSiMult);
+            atLeastOne = true;
+        }
+        request.setAttribute("sondaggio", sondaggio);
+        
+        if(!sondaggio.isModificabile() && atLeastOne){ //caso in cui il sondaggio non è modificabile e l'utente ha già risposto in passato
+            request.setAttribute("AlreadyCompiled", "yes");
+            RequestDispatcher rd = request.getRequestDispatcher("/surveyAnswered");
+            rd.forward(request, response);
+            return;
+        }
         res.activate("survey.ftl", request, response);
         } catch (TemplateManagerException ex) {
             Logger.getLogger(Survey.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,7 +189,12 @@ public class Survey extends BaseController {
        try {
         TemplateResult res = new TemplateResult(getServletContext());
         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
-        int idSondaggio = Integer.parseInt(request.getParameter("sendAnswer").substring(10));
+        int idSondaggio = -1;
+        if(request.getParameter("ModAnswer")!=null){
+            idSondaggio = Integer.parseInt(request.getParameter("ModAnswer").substring(9));
+        } else {
+            idSondaggio = Integer.parseInt(request.getParameter("sendAnswer").substring(10));
+        }
         Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(idSondaggio);
         ArrayList<Domanda> domande = (ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio(idSondaggio);
         Collections.sort(domande);
@@ -220,13 +304,15 @@ public class Survey extends BaseController {
                     }
                 }
             } else if(d.getTipo().equals("closeMultiple")){
-                System.out.println("sezione openClose");
+                System.out.println("sezione closeMultiple");
                 JSONArray opzioni = d.getOpzioni().getJSONArray("opzioni");
                 HashMap<Integer, String> closeMultipleIstance = new HashMap<Integer, String>();
+                int k = 0;
                 for(int j = 0; j < opzioni.length();j++){
                     if(request.getParameter("opzioneM"+i+"-"+j)!=null){
-                        closeMultipleIstance.put(j, request.getParameter("opzioneM"+i+"-"+j));
+                        closeMultipleIstance.put(k, request.getParameter("opzioneM"+i+"-"+j));
                         hasRisposta = true;
+                        k++;
                     }
                 }
                 closeMultipleMap.put(i, closeMultipleIstance);
@@ -263,7 +349,34 @@ public class Survey extends BaseController {
         System.out.println("caso senza errori");
         
         HttpSession s = checkSession(request);
-        Risposta risp = dl.getRispostaDAO().createRisposta();
+        Risposta risp = new RispostaImpl();
+        if(request.getParameter("ModAnswer")!=null){
+            ArrayList<Risposta> risposte;
+            if(s!=null){
+                risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIdUtente((int) s.getAttribute("userid"));
+            } else {
+                risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIPUtente(request.getRemoteHost());
+            }
+            int idRispostaCorretta = -1;
+            for(int i = 0; i<risposte.size();i++){
+                risp = risposte.get(i);
+                for(int j = 0; j<domande.size(); j++){
+                    Domanda d = domande.get(i);
+                    JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risp.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                    if(r != null){
+                        idRispostaCorretta = i;
+                        break;
+                    }
+                }
+                if(idRispostaCorretta!=-1){
+                    break;
+                }
+            }
+            risp = risposte.get(idRispostaCorretta);   
+        } else {
+            risp = dl.getRispostaDAO().createRisposta();
+        } 
+        
         int idRisposta = 0;
         Date nowTemp = new Date();
         if(s!=null){
@@ -271,11 +384,15 @@ public class Survey extends BaseController {
             risp.setIpUtenteRisposta((String)s.getAttribute("ip"));
             risp.setUsernameUtenteRisposta((String)s.getAttribute("username"));
             risp.setData(nowTemp);
-            idRisposta = dl.getRispostaDAO().storeRispostaUserReg(risp);
+            idRisposta = dl.getRispostaDAO().storeRispostaUserReg(risp);   
         } else {
             risp.setIpUtenteRisposta(request.getRemoteHost());
             risp.setData(nowTemp);
             idRisposta = dl.getRispostaDAO().storeRispostaUserNotReg(risp);
+        }
+        
+        if(request.getParameter("ModAnswer")==null){
+            dl.getSondaggioDAO().updateCompilazioni(sondaggio.getKey());
         }
         
         for(int i = 0; i<domande.size(); i++){
@@ -309,7 +426,11 @@ public class Survey extends BaseController {
             rispDom.setIdDomanda(d.getKey());
             rispDom.setIdRisposta(idRisposta);
             rispDom.setRisposta(risposta);
-            dl.getRispostaDomandaDAO().insertRisposta(rispDom);
+            if(request.getParameter("ModAnswer")!=null){
+                dl.getRispostaDomandaDAO().updateRisposta(rispDom);
+            } else {
+                dl.getRispostaDomandaDAO().insertRisposta(rispDom);
+            } 
         }
         
         request.setAttribute("sondaggio", sondaggio);
@@ -338,6 +459,79 @@ public class Survey extends BaseController {
         } catch (ServletException e) {
             e.printStackTrace();
         }
+    }
+
+    private void action_load_survey(HttpServletRequest request, HttpServletResponse response)throws IOException, ServletException, TemplateManagerException, DataException, ParseException {
+        TemplateResult res = new TemplateResult(getServletContext());
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        int idSondaggio = Integer.parseInt(request.getParameter("returnSurvey"));
+        Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(idSondaggio);
+        ArrayList<Domanda> domande = (ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio(idSondaggio);
+        Collections.sort(domande);
+        request.setAttribute("domande", domande);
+        request.setAttribute("sondaggio", sondaggio);
+        ArrayList<Risposta> risposte;
+        HttpSession s = checkSession(request);
+        if(s!=null){
+            risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIdUtente((int) s.getAttribute("userid"));
+        } else {
+            risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIPUtente(request.getRemoteHost());
+        }
+        Risposta risposta = new RispostaImpl();
+        int idRispostaCorretta = -1;
+        for(int i = 0; i<risposte.size();i++){
+            risposta = risposte.get(i);
+            for(int j = 0; j<domande.size(); j++){
+                Domanda d = domande.get(i);
+                JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                if(r != null){
+                    idRispostaCorretta = i;
+                    break;
+                }
+            }
+            if(idRispostaCorretta!=-1){
+                break;
+            }
+        }
+        risposta = risposte.get(idRispostaCorretta);
+        HashMap<String, String> risposteNoMult = new HashMap<String, String>();
+        HashMap<String, String> risposteRadios = new HashMap<String, String>();
+        HashMap<String, HashMap<String, String>> risposteSiMult = new HashMap<String, HashMap<String, String>>();
+        for(int i = 0; i<domande.size(); i++){
+            Domanda d = domande.get(i);
+            JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+            if(r != null){
+                if (d.getTipo().equals("closeMultiple")){
+                    HashMap<String, String> temp = new HashMap<String, String>();
+                    for(int j = 0; j<r.length(); j++){
+                        temp.put(String.valueOf(j), r.get(j).toString());
+                    }
+                    risposteSiMult.put(String.valueOf(i), temp);
+                } else if(d.getTipo().equals("closeSingle")) {
+                    risposteRadios.put(String.valueOf(i), r.get(0).toString());
+                } else {
+                    risposteNoMult.put(String.valueOf(i), r.get(0).toString());
+                }
+            } else {
+                if(d.isObbligatoria()){
+                    request.setAttribute("message", "errore nel caricamento delle risposte");
+                    action_error(request, response);
+                }
+            }
+        }
+      
+        if(!risposteNoMult.isEmpty()){
+            request.setAttribute("risposteNoMult", risposteNoMult);
+        }
+        if(!risposteRadios.isEmpty()){
+            request.setAttribute("risposteRadios", risposteRadios);
+        }
+        if(!risposteSiMult.isEmpty()){
+            request.setAttribute("risposteSiMult", risposteSiMult);
+        }
+        request.setAttribute("modRisposta", "yes");
+        res.activate("survey.ftl", request, response);
+        return;
     }
 
 }
