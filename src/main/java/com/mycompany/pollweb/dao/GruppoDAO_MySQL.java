@@ -48,7 +48,7 @@ public class GruppoDAO_MySQL extends DAO implements GruppoDAO {
             sGruppi = connection.prepareStatement("SELECT * FROM Gruppo");
             
             iGruppo = connection.prepareStatement("INSERT INTO Gruppo (idGruppo, nomeGruppo) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
-            uGruppo = connection.prepareStatement("UPDATE Gruppo SET idGruppo=?, nomeGruppo=? WHERE idGruppo=?");
+            uGruppo = connection.prepareStatement("UPDATE Gruppo SET idGruppo=?, nomeGruppo=?,version=? WHERE idGruppo=? AND version=?");
             dGruppo = connection.prepareStatement("DELETE FROM Gruppo WHERE idGruppo=?");
             
             
@@ -86,6 +86,7 @@ public class GruppoDAO_MySQL extends DAO implements GruppoDAO {
         try {
             g.setKey(rs.getInt("idGruppo"));
             g.setNomeGruppo(rs.getString("nomeGruppo"));
+            g.setVersion(rs.getLong("version"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Gruppo object form ResultSet", ex);
         }
@@ -140,12 +141,18 @@ public class GruppoDAO_MySQL extends DAO implements GruppoDAO {
                     return;
                 }
                 uGruppo.setString(1, gruppo.getNomeGruppo());
-                uGruppo.setInt(2, gruppo.getKey());
-
+                
+                long currentVersion = gruppo.getVersion();
+                long nextVersion = currentVersion + 1;
+                
+                uGruppo.setLong(2, nextVersion);
+                uGruppo.setInt(3, gruppo.getKey());
+                uGruppo.setLong(4, currentVersion);
 
                 if (uGruppo.executeUpdate() == 0) {
                     throw new OptimisticLockException(gruppo);
                 }
+                gruppo.setVersion(nextVersion);
             }
             else { //insert
                 iGruppo.setString(1, gruppo.getNomeGruppo());

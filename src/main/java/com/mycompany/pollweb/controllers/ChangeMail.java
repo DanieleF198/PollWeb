@@ -21,6 +21,7 @@ import com.mycompany.pollweb.result.FailureResult;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -34,36 +35,40 @@ public class ChangeMail extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
             HttpSession s = checkSession(request);
-            if ((Integer)s.getAttribute("groupid") == 1){
-               response.sendRedirect("partecipantDashboard");
-               return;
-            }
-            if(request.getParameter("btnChangeEmail") != null){
+            if (s!= null) {
+                if ((Integer)s.getAttribute("groupid") == 1){
+                    response.sendRedirect("partecipantDashboard");
+                    return;
+                }
+                if(request.getParameter("btnChangeEmail") != null){
+                    if(request.getParameter("currentMail") != null && request.getParameter("newMail") != null && request.getParameter("confirmNewMail") != null && !request.getParameter("currentMail").isEmpty() && !request.getParameter("newMail").isEmpty() && !request.getParameter("confirmNewMail").isEmpty()){
 
-                if(request.getParameter("currentMail") != null && request.getParameter("newMail") != null && request.getParameter("confirmNewMail") != null && !request.getParameter("currentMail").isEmpty() && !request.getParameter("newMail").isEmpty() && !request.getParameter("confirmNewMail").isEmpty()){
-                    
-                    if(request.getParameter("currentMail").equals((String)s.getAttribute("email"))){
-                        
-                        if(request.getParameter("newMail").equals(request.getParameter("confirmNewMail"))){
-                            PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
-                            Utente u = dl.getUtenteDAO().getUtente((Integer) s.getAttribute("userid"));
-                            u.setEmail(request.getParameter("newMail"));
-                            dl.getUtenteDAO().storeUtente(u);
-                            request.setAttribute("success", "Operazione conclusa con successo");
+                        if(request.getParameter("currentMail").equals((String)s.getAttribute("email"))){
+
+                            if(request.getParameter("newMail").equals(request.getParameter("confirmNewMail"))){
+                                PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                                Utente u = dl.getUtenteDAO().getUtente((Integer) s.getAttribute("userid"));
+                                u.setEmail(request.getParameter("newMail"));
+                                dl.getUtenteDAO().storeUtente(u);
+                                request.setAttribute("success", "Operazione conclusa con successo");
+                            }
+                            else{
+                               request.setAttribute("error", "Le nuove email non coincidono"); 
+                            }
                         }
                         else{
-                           request.setAttribute("error", "Le nuove email non coincidono"); 
+                            request.setAttribute("error", "Inserire l'indirizzo email corretto");
                         }
                     }
                     else{
-                        request.setAttribute("error", "Inserire l'indirizzo email corretto");
+                        request.setAttribute("error", "Compilare ogni campo");
                     }
                 }
-                else{
-                    request.setAttribute("error", "Compilare ogni campo");
-                }
+                action_default(request, response);
             }
-            action_default(request, response);
+            else{
+                action_redirect_login(request, response);
+            }
 
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
@@ -90,6 +95,16 @@ public class ChangeMail extends BaseController {
             (new FailureResult(getServletContext())).activate((Exception) request.getAttribute("exception"), request, response);
         } else {
             (new FailureResult(getServletContext())).activate((String) request.getAttribute("message"), request, response);
+        }
+    }
+    
+    private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+        try {
+            request.setAttribute("urlrequest", request.getRequestURL());
+            RequestDispatcher rd = request.getRequestDispatcher("/login");
+            rd.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
         }
     }
 

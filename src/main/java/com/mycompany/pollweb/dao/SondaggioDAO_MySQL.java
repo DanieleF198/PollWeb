@@ -67,12 +67,14 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggioByID = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idSondaggio=?");
             sSondaggioByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
             sSondaggiByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
-            sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0");
+            sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND modificabile=0"); //update per far apparire i sondaggi solo non modificabili
             sSondaggiAdmin = connection.prepareStatement("SELECT * FROM Sondaggio");
             
             iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,visibilita,dataCreazione,dataChiusura,privato,modificabile,compilazioni) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+
             uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?, privato=?,modificabile=?,compilazioni=? WHERE idSondaggio=?");
             uSondaggioCompilazioni = connection.prepareStatement("UPDATE SONDAGGIO SET compilazioni =? WHERE idSondaggio=?");
+
             dSondaggio = connection.prepareStatement("DELETE FROM Sondaggio WHERE idSondaggio=?");
             searchSondaggiTitolo = connection.prepareStatement("SELECT * FROM Sondaggio WHERE titolo LIKE ?");
             searchSondaggiDataCreazione = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataCreazione = ?");
@@ -153,6 +155,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             s.setPrivato(rs.getBoolean("privato"));
             s.setModificabile(rs.getBoolean("modificabile"));
             s.setCompilazioni(rs.getInt("compilazioni"));
+            s.setVersion(rs.getLong("version"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Sondaggio object form ResultSet", ex);
         }
@@ -317,6 +320,8 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 if (sondaggio instanceof DataItemProxy && !((DataItemProxy) sondaggio).isModified()) {
                     return;
                 }
+                //idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?,
+                //privato=?,modificabile=?,compilazioni=?,version=? WHERE idSondaggio=? AND version=?
                 java.sql.Date sqlCreazione = new java.sql.Date( sondaggio.getCreazione().getTime() );
                 if(sondaggio.getScadenza() != null){
                     java.sql.Date sqlScadenza = new java.sql.Date( sondaggio.getScadenza().getTime() );
@@ -357,11 +362,18 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 uSondaggio.setBoolean(8, sondaggio.isPrivato());
                 uSondaggio.setBoolean(9, sondaggio.isModificabile());
                 uSondaggio.setInt(10, sondaggio.getCompilazioni());
-                uSondaggio.setInt(11, sondaggio.getKey());
+                
+                long currentVersion = sondaggio.getVersion();
+                long nextVersion = currentVersion + 1;
+                
+                uSondaggio.setLong(11, nextVersion);
+                uSondaggio.setInt(12, sondaggio.getKey());
+                uSondaggio.setLong(13, currentVersion);
 
                 if (uSondaggio.executeUpdate() == 0) {
                     throw new OptimisticLockException(sondaggio);
                 }
+                sondaggio.setVersion(nextVersion);
             }
             else {
                 

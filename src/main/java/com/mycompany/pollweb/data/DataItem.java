@@ -15,4 +15,8 @@ public interface DataItem<KT> {
 
     void setKey(KT key);
 
+    long getVersion();
+
+    void setVersion(long version);
+
 }
