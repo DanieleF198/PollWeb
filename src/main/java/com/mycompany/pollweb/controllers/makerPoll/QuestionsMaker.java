@@ -78,6 +78,10 @@ public class QuestionsMaker extends BaseController {
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
+                if ((Integer)s.getAttribute("groupid") == 1){
+                    response.sendRedirect("../partecipantDashboard");
+                    return;
+                }
                 if((int)s.getAttribute("sondaggio-in-creazione") != 0 && (s.getAttribute("fromFirst") != null) && (s.getAttribute("sondaggio-in-conferma").equals("no"))){ //è arrivato da firstSection cliccando su bottone
                     System.out.println("caso 1");
                     s.removeAttribute("fromFirst");

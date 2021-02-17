@@ -16,6 +16,8 @@ import com.mycompany.pollweb.security.SecurityLayer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -32,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author joker
  */
-public class Login extends BaseController {
+public class LoginForPartecipants extends BaseController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,34 +48,16 @@ public class Login extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
-            TemplateResult res = new TemplateResult(getServletContext());
             if(SecurityLayer.checkSession(request) != null){ //l'utente è già in sessione  
                 response.sendRedirect("dashboard");
-            }else if(request.getAttribute("fromPartecipant")!=null){
-                res.activate("login.ftl", request, response);
-                return;
             }
             else if("POST".equals(request.getMethod())) {   //l'utente ha mandato i dati per il login
                 action_login(request, response);
             }
-            else {  //l'utente è stato reindirizzato in questa pagina per effettuare il login
-                if(request.getAttribute("fromPartecipant")!=null){
-                    res.activate("login.ftl", request, response);
-                    return;
-                }
-                if(request.getAttribute("urlrequest") != null){
-                    String referrer = request.getAttribute("urlrequest").toString();
-                    if(referrer.contains("makerPoll")){
-                        request.setAttribute("urlMakerPoll", "yes");
-                    } else {
-                        request.setAttribute("urlMakerPoll", "no");
-                    }
-                    request.setAttribute("referrer", referrer);
-                }
-                res.activate("login.ftl", request, response);
-                return;
+            else {  //l'utente è arrivato su questa pagina per effettuare il login
+                TemplateResult res = new TemplateResult(getServletContext());
+                res.activate("loginForPartecipants.ftl", request, response);
             }
-
         } catch (IOException | TemplateManagerException ex) {
             request.setAttribute("exception", ex);
             action_error(request, response);
@@ -84,48 +68,48 @@ public class Login extends BaseController {
         try{
             if(SecurityLayer.checkSession(request) != null){ //controllo in più inutile ma per essere sicuri
                 response.sendRedirect("dashboard");
+                return;
             }else{
                 TemplateResult res = new TemplateResult(getServletContext());
                 if(request.getParameter("buttonLogin") != null){
-                    String username = SecurityLayer.addSlashes(request.getParameter("inputUsername"));
+                    String email = SecurityLayer.addSlashes(request.getParameter("inputEmail"));
                     String password = SecurityLayer.addSlashes(request.getParameter("inputPassword"));
 
-                    if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
-                        Utente utente = ((PollWebDataLayer)request.getAttribute("datalayer")).getUtenteDAO().getUtenteLogin(username, password);
-
-                        if(utente != null){
-                            if(utente.isBloccato()){
-                            request.setAttribute("error", "ban");
-                            res.activate("login.ftl", request, response);
+                    if (email != null && password != null && !email.isEmpty() && !password.isEmpty()){
+                        //controllo se le credenziali siano per caso "doppiate", cioè se esiste l'utente registrato con quella email (ma è anche stato invitato)
+                        //in tal caso allora lo riporto al login "normale"
+                        if(((PollWebDataLayer)request.getAttribute("datalayer")).getUtenteDAO().checkWithMail(email)){
+                            request.setAttribute("error", "partecipant");
+                            request.setAttribute("fromPartecipant", "yes");
+                            request.setAttribute("urlrequest", request.getRequestURL());
+                            RequestDispatcher rd = request.getRequestDispatcher("/login");
+                            rd.forward(request, response);
                             return;
-                            }
-                            if (username.equals(utente.getUsername())){
-                                if(request.getParameter("remember") == null){
-                                    SecurityLayer.createSession(request, utente, false);
-                                }else{
-                                    SecurityLayer.createSession(request, utente, true);
-                                }
-                                if(request.getParameter("referrer") != null){
-                                    response.sendRedirect(request.getParameter("referrer"));
-                                }
-                                else{
-                                    response.sendRedirect("homepage");
-                                }
+                        }
+                        //come key abbiamo l'idSondaggio al quale il partecipante è riferito, value il partecipante effettivo
+                        //questa cosa perché uno stesso partecipante può essere invitato a più sondaggi privati da diversi responsabili
+                        HashMap<Integer, Utente> partecipante = ((PollWebDataLayer)request.getAttribute("datalayer")).getUtenteDAO().getPartecipanteLogin(email, password);
+                        if(partecipante != null){
+                            if(!partecipante.isEmpty()){
+                                Utente u = ((PollWebDataLayer)request.getAttribute("datalayer")).getUtenteDAO().createUtente();
+                                u.setEmail(email);
+                                u.setPassword(password);
+                                SecurityLayer.createSession(request,u);
+                                response.sendRedirect("partecipantDashboard");
+                            } else {
+                                request.setAttribute("error", "Credenziali errate oppure Permesso scaduto");
+                                res.activate("loginForPartecipants.ftl", request, response);
                             }
                         } else {
-                            request.setAttribute("error", "Credenziali errate");
-                            if(request.getParameter("referrer") != null){
-                                String referrer = request.getParameter("referrer");
-                                request.setAttribute("referrer", referrer);
-                            }
-                            //è vero che deriviamo da li, ma essendo che in caso di errori ritorniamo in pollweb/login (e non pollweb/pollMaker/login non serve più).
-                            //non abbiamo optato per sendRedirect per non perderci il referrer.
-                            request.setAttribute("urlMakerPoll", "no"); 
-                            res.activate("login.ftl", request, response);
+                            request.setAttribute("error", "Credenziali errate oppure Permesso scaduto");
+                            res.activate("loginForPartecipants.ftl", request, response);
                         }
+                    } else {
+                        request.setAttribute("error", "Credenziali errate oppure Permesso scaduto");
+                        res.activate("loginForPartecipants.ftl", request, response);
                     }
                 } else {
-                    res.activate("login.ftl", request, response);
+                    res.activate("loginForPartecipants.ftl", request, response);
                 }
             }
         } catch (TemplateManagerException ex) {
@@ -157,7 +141,7 @@ public class Login extends BaseController {
             } catch (IOException ex1) {
                 //if ALSO this error status cannot be notified, write to the server log
                 //se ANCHE questo stato di errore non pu� essere notificato, scriviamo sul log del server
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(LoginForPartecipants.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
     }

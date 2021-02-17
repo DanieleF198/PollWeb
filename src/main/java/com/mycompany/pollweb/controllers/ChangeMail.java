@@ -34,6 +34,10 @@ public class ChangeMail extends BaseController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
             HttpSession s = checkSession(request);
+            if ((Integer)s.getAttribute("groupid") == 1){
+               response.sendRedirect("partecipantDashboard");
+               return;
+            }
             if(request.getParameter("btnChangeEmail") != null){
 
                 if(request.getParameter("currentMail") != null && request.getParameter("newMail") != null && request.getParameter("confirmNewMail") != null && !request.getParameter("currentMail").isEmpty() && !request.getParameter("newMail").isEmpty() && !request.getParameter("confirmNewMail").isEmpty()){

@@ -54,24 +54,22 @@ public class Survey extends BaseController {
                 request.setAttribute("sondaggio", sondaggio);
                 if(sondaggio.isPrivato()){
                     if (s!= null) {
-                        //TODO
+                        action_sondaggio(request, response);
+                        return;
                     } else {
-                        action_redirect_login(request, response);
+                        action_redirect_login_2(request, response);
                         return;
                     }
                 } else {
-                    action_sondaggio_pubblico(request, response);
+                    action_sondaggio(request, response);
                     return;
                 }
-                
-                action_default(request, response);
             } else if(request.getParameter("returnSurvey")!=null){ //caso in cui torna per modificare le risposte
                 action_load_survey(request,response);
             } else if(request.getParameter("sendAnswer")!=null || request.getParameter("ModAnswer")!=null){
                 action_send_answer(request,response);
             } else {
-                request.setAttribute("message", "sondaggio inesistente");
-                action_error(request,response);
+                action_default(request, response);
             }
         } catch (IOException ex) {
             request.setAttribute("exception", ex);
@@ -94,7 +92,7 @@ public class Survey extends BaseController {
             Logger.getLogger(Survey.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void action_sondaggio_pubblico(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
+    private void action_sondaggio(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
        try {
         TemplateResult res = new TemplateResult(getServletContext());
         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
@@ -102,82 +100,84 @@ public class Survey extends BaseController {
         Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(Integer.parseInt(request.getParameter("btnCompile")));
         request.setAttribute("domande", domande);
         Collections.sort(domande);
-        //controllo se l'utente ha già risposto al sondaggio in passato
-        ArrayList<Risposta> risposte;
-        HttpSession s = checkSession(request);
-        if(s!=null){
-            risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIdUtente((int) s.getAttribute("userid"));
-        } else {
-            risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIPUtente(request.getRemoteHost());
-        }
-        Risposta risposta = new RispostaImpl();
-        int idRispostaCorretta = -1;
-        for(int i = 0; i<risposte.size();i++){
-            risposta = risposte.get(i);
-            for(int j = 0; j<domande.size(); j++){
-                Domanda d = domande.get(i);
-                JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
-                if(r != null){
-                    idRispostaCorretta = i;
+        //controllo se l'utente ha già risposto al sondaggio in passato (caso impossibile per i sondaggi privati)
+        if(sondaggio.isPrivato()){
+            ArrayList<Risposta> risposte;
+            HttpSession s = checkSession(request);
+            if(s!=null){
+                risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIdUtente((int) s.getAttribute("userid"));
+            } else {
+                risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIPUtente(request.getRemoteHost());
+            }
+            Risposta risposta = new RispostaImpl();
+            int idRispostaCorretta = -1;
+            for(int i = 0; i<risposte.size();i++){
+                risposta = risposte.get(i);
+                for(int j = 0; j<domande.size(); j++){
+                    Domanda d = domande.get(i);
+                    JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                    if(r != null){
+                        idRispostaCorretta = i;
+                        break;
+                    }
+                }
+                if(idRispostaCorretta!=-1){
                     break;
                 }
             }
             if(idRispostaCorretta!=-1){
-                break;
+                risposta = risposte.get(idRispostaCorretta);
+            } else {
+                risposta = null;
             }
-        }
-        if(idRispostaCorretta!=-1){
-            risposta = risposte.get(idRispostaCorretta);
-        } else {
-            risposta = null;
-        }
-        HashMap<String, String> risposteNoMult = new HashMap<String, String>();
-        HashMap<String, String> risposteRadios = new HashMap<String, String>();
-        HashMap<String, HashMap<String, String>> risposteSiMult = new HashMap<String, HashMap<String, String>>();
-        if(risposta != null){
-            for(int i = 0; i<domande.size(); i++){
-                Domanda d = domande.get(i);
-                JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
-                if(r != null){
-                    if (d.getTipo().equals("closeMultiple")){
-                        HashMap<String, String> temp = new HashMap<String, String>();
-                        for(int j = 0; j<r.length(); j++){
-                            temp.put(String.valueOf(j), r.get(j).toString());
+            HashMap<String, String> risposteNoMult = new HashMap<String, String>();
+            HashMap<String, String> risposteRadios = new HashMap<String, String>();
+            HashMap<String, HashMap<String, String>> risposteSiMult = new HashMap<String, HashMap<String, String>>();
+            if(risposta != null){
+                for(int i = 0; i<domande.size(); i++){
+                    Domanda d = domande.get(i);
+                    JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                    if(r != null){
+                        if (d.getTipo().equals("closeMultiple")){
+                            HashMap<String, String> temp = new HashMap<String, String>();
+                            for(int j = 0; j<r.length(); j++){
+                                temp.put(String.valueOf(j), r.get(j).toString());
+                            }
+                            risposteSiMult.put(String.valueOf(i), temp);
+                        } else if(d.getTipo().equals("closeSingle")) {
+                            risposteRadios.put(String.valueOf(i), r.get(0).toString());
+                        } else {
+                            risposteNoMult.put(String.valueOf(i), r.get(0).toString());
                         }
-                        risposteSiMult.put(String.valueOf(i), temp);
-                    } else if(d.getTipo().equals("closeSingle")) {
-                        risposteRadios.put(String.valueOf(i), r.get(0).toString());
                     } else {
-                        risposteNoMult.put(String.valueOf(i), r.get(0).toString());
-                    }
-                } else {
-                    if(d.isObbligatoria()){
-                        request.setAttribute("message", "errore nel caricamento delle risposte");
-                        action_error(request, response);
+                        if(d.isObbligatoria()){
+                            request.setAttribute("message", "errore nel caricamento delle risposte");
+                            action_error(request, response);
+                        }
                     }
                 }
             }
-        }
-        boolean atLeastOne = false;
-        if(!risposteNoMult.isEmpty()){
-            request.setAttribute("risposteNoMult", risposteNoMult);
-            atLeastOne = true;
-        }
-        if(!risposteRadios.isEmpty()){
-            request.setAttribute("risposteRadios", risposteRadios);
-            atLeastOne = true;
-        }
-        if(!risposteSiMult.isEmpty()){
-            request.setAttribute("risposteSiMult", risposteSiMult);
-            atLeastOne = true;
-        }
-        request.setAttribute("sondaggio", sondaggio);
-        
-        if(!sondaggio.isModificabile() && atLeastOne){ //caso in cui il sondaggio non è modificabile e l'utente ha già risposto in passato
-            request.setAttribute("AlreadyCompiled", "yes");
-            RequestDispatcher rd = request.getRequestDispatcher("/surveyAnswered");
-            rd.forward(request, response);
-            return;
+            boolean atLeastOne = false;
+            if(!risposteNoMult.isEmpty()){
+                request.setAttribute("risposteNoMult", risposteNoMult);
+                atLeastOne = true;
+            }
+            if(!risposteRadios.isEmpty()){
+                request.setAttribute("risposteRadios", risposteRadios);
+                atLeastOne = true;
+            }
+            if(!risposteSiMult.isEmpty()){
+                request.setAttribute("risposteSiMult", risposteSiMult);
+                atLeastOne = true;
+            }
+            request.setAttribute("sondaggio", sondaggio);
+
+            if(!sondaggio.isModificabile() && atLeastOne){ //caso in cui il sondaggio non è modificabile e l'utente ha già risposto in passato
+                request.setAttribute("AlreadyCompiled", "yes");
+                RequestDispatcher rd = request.getRequestDispatcher("/surveyAnswered");
+                rd.forward(request, response);
+                return;
+            }
         }
         res.activate("survey.ftl", request, response);
         } catch (TemplateManagerException ex) {
@@ -189,6 +189,7 @@ public class Survey extends BaseController {
        try {
         TemplateResult res = new TemplateResult(getServletContext());
         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+        HttpSession s = checkSession(request);
         int idSondaggio = -1;
         if(request.getParameter("ModAnswer")!=null){
             idSondaggio = Integer.parseInt(request.getParameter("ModAnswer").substring(9));
@@ -197,6 +198,15 @@ public class Survey extends BaseController {
         }
         Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(idSondaggio);
         ArrayList<Domanda> domande = (ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio(idSondaggio);
+        System.out.println("IL SONDAGGIO È" + sondaggio.isPrivato());
+        if(sondaggio.isPrivato()){
+            System.out.println("EHY, QUI CI ENTRO");
+            if(dl.getUtenteDAO().checkifAlreadyAnswered((String)s.getAttribute("email"), idSondaggio)){
+                System.out.println("ANCHE QUI");
+                response.sendRedirect("partecipantDashboard");
+                return;
+            }
+        }
         Collections.sort(domande);
         
         //hashmap dove key = posizione domanda e value= valore risposta.
@@ -348,7 +358,6 @@ public class Survey extends BaseController {
         
         System.out.println("caso senza errori");
         
-        HttpSession s = checkSession(request);
         Risposta risp = new RispostaImpl();
         if(request.getParameter("ModAnswer")!=null){
             ArrayList<Risposta> risposte;
@@ -380,11 +389,18 @@ public class Survey extends BaseController {
         int idRisposta = 0;
         Date nowTemp = new Date();
         if(s!=null){
-            risp.setIdUtente((int)s.getAttribute("userid"));
-            risp.setIpUtenteRisposta((String)s.getAttribute("ip"));
-            risp.setUsernameUtenteRisposta((String)s.getAttribute("username"));
-            risp.setData(nowTemp);
-            idRisposta = dl.getRispostaDAO().storeRispostaUserReg(risp);   
+            if(sondaggio.isPrivato()){
+                risp.setIpUtenteRisposta(request.getRemoteHost());
+                risp.setData(nowTemp);
+                risp.setUsernameUtenteRisposta((String)s.getAttribute("email"));
+                idRisposta = dl.getRispostaDAO().insertRispostaUserPartecipante(risp);
+            } else {
+                risp.setIdUtente((int)s.getAttribute("userid"));
+                risp.setIpUtenteRisposta((String)s.getAttribute("ip"));
+                risp.setUsernameUtenteRisposta((String)s.getAttribute("username"));
+                risp.setData(nowTemp);
+                idRisposta = dl.getRispostaDAO().storeRispostaUserReg(risp);   
+            }
         } else {
             risp.setIpUtenteRisposta(request.getRemoteHost());
             risp.setData(nowTemp);
@@ -433,6 +449,11 @@ public class Survey extends BaseController {
             } 
         }
         
+        if(sondaggio.isPrivato()){
+            dl.getUtenteDAO().updatePartecipanteSetScaduto((String)s.getAttribute("email"), idSondaggio);
+            request.setAttribute("isPrivato", "yes");
+        }
+        
         request.setAttribute("sondaggio", sondaggio);
         RequestDispatcher rd = request.getRequestDispatcher("/surveyAnswered");
         rd.forward(request, response);
@@ -451,10 +472,20 @@ public class Survey extends BaseController {
         }
     }
     
-        private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+    private void action_redirect_login(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         try {
             request.setAttribute("urlrequest", request.getRequestURL());
             RequestDispatcher rd = request.getRequestDispatcher("/login");
+            rd.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void action_redirect_login_2(HttpServletRequest request, HttpServletResponse response) throws  IOException {
+        try {
+            request.setAttribute("urlrequest", request.getRequestURL());
+            RequestDispatcher rd = request.getRequestDispatcher("/loginPartecipants");
             rd.forward(request, response);
         } catch (ServletException e) {
             e.printStackTrace();
@@ -533,5 +564,5 @@ public class Survey extends BaseController {
         res.activate("survey.ftl", request, response);
         return;
     }
-
+    
 }

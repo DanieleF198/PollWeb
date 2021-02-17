@@ -37,6 +37,10 @@ public class Homepage extends BaseController {
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
+                if ((Integer)s.getAttribute("groupid") == 1){
+                    response.sendRedirect("partecipantDashboard");
+                    return;
+                }
                 request.setAttribute("sessioned", "yes");
             } else {
                 request.setAttribute("sessioned", "no");

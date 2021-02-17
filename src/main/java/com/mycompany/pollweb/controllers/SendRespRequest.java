@@ -41,6 +41,19 @@ public class SendRespRequest extends BaseController {
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
+                //in teoria questa pagina va eliminata, nel caso non lo facciamo cmq evitiamo problemi con il redirect
+                if ((Integer)s.getAttribute("groupid") == 1){
+                   response.sendRedirect("partecipantDashboard");
+                   return;
+                }
+                if ((Integer)s.getAttribute("groupid") == 2){
+                   response.sendRedirect("dashboard");
+                   return;
+                }
+                if ((Integer)s.getAttribute("groupid") == 3){
+                   response.sendRedirect("adminDashboard");
+                   return;
+                }
                 if("POST".equals(request.getMethod())) {   //l'utente ha mandato i dati
                     action_default(request, response);
                 }

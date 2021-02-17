@@ -14,6 +14,14 @@
         <servlet-class>com.mycompany.pollweb.controllers.Login</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>LoginForPartecipants</servlet-name>
+        <servlet-class>com.mycompany.pollweb.controllers.LoginForPartecipants</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PartecipantDashboard</servlet-name>
+        <servlet-class>com.mycompany.pollweb.controllers.PartecipantDashboard</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Register</servlet-name>
         <servlet-class>com.mycompany.pollweb.controllers.Register</servlet-class>
     </servlet>
@@ -88,6 +96,14 @@
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginForPartecipants</servlet-name>
+        <url-pattern>/loginForPartecipants</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PartecipantDashboard</servlet-name>
+        <url-pattern>/partecipantDashboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
