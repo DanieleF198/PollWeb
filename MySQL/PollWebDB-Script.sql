@@ -128,7 +128,7 @@ INSERT INTO `pollwebdb`.`ListaPartecipanti`(`idListaPartecipanti`,`idUtente`,`id
 
 
 
-INSERT INTO `pollwebdb`.`Sondaggio`(`idSondaggio`,`idUtente`,`titolo`,`testoApertura`,`testoChiusura`,`completo`,`visibilita`,`dataCreazione`,`dataChiusura`,`privato`,`modificabile`,`compilazioni`)VALUES('2','2','Che cibo preferisci?', 'Ho creato questo sondaggio perchè devo creare un menu per il mio nuovo ristorante e mi piacerebbe sapere cosa preferite.', 'Grazie infinite per aver compilato, magari se passi riceverai uno sconticino :)', true, true,'2021-01-11','2021-02-12',false,false,1000);
+INSERT INTO `pollwebdb`.`Sondaggio`(`idSondaggio`,`idUtente`,`titolo`,`testoApertura`,`testoChiusura`,`completo`,`visibilita`,`dataCreazione`,`dataChiusura`,`privato`,`modificabile`,`compilazioni`)VALUES('2','2','Che cibo preferisci?', 'Ho creato questo sondaggio perchè devo creare un menu per il mio nuovo ristorante e mi piacerebbe sapere cosa preferite.', 'Grazie infinite per aver compilato, magari se passi riceverai uno sconticino :)', true, true,'2021-01-11','2021-02-12',false,true,1000);
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('6', '2', 'Quale è il tuo piatto preferito?', true, 'per avere un idea generale su cosa preferiate mangiare', 0, '{}', 'openShort','Constraint: 35' );
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('7', '2', 'Dovendo scegliere una sola portata preferiresti un primo o un secondo?', true, '', 1, '{"opzioni": ["Un primo", "Un secondo"]}', 'closeSingle','Constraint: 200' );
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('42', '2', 'Quante volte hai mangiato in un ristorante negli ultimi tempi?', true, '', 2, '{}', 'openNumber','Constraint: 0 -- 20' );
@@ -265,9 +265,6 @@ INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligator
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('85', '22', 'Cosa preferisci tra queste opzioni?', true, '', 1, '{"opzioni": ["Un bel Film", "Una Serie TV", "Un Documentario", "Un Cartone Animato"]}', 'closeSingle',null );
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('86', '22', 'Ti piacerebbe poter scegliere una pizza?', true, 'vorrei capire se nel mio ristorante dovrei inserire un angolo pizzeria', 2, '{"opzioni": ["Azione", "Avventura", "Fantasy", "Fantascienza", "Animazione", "Romantico", "Thriller", "Horror"]}', 'closeMultiple',null );
 INSERT INTO `pollwebdb`.`Domanda`(`idDomanda`,`idSondaggio`,`titolo`,`obbligatoria`,`descrizione`,`posizione`,`opzioni`,`tipo`,`vincolo`)VALUES('87', '22', 'Qual è il tuo film preferito?', true, 'questa è solo per curiosità', 3, '{}', 'openShort',null );
-
-
-
 
 INSERT INTO `pollwebdb`.`ListaPartecipanti`(`idListaPartecipanti`,`idUtente`,`idSondaggio`,`nome`,`email`,`password`,`scaduto`,`emailMandata`)VALUES('4', '2', '2', 'zawardo', 'dioBrando@gmail.com', 'mudamuda',false,true);
 INSERT INTO `pollwebdb`.`ListaPartecipanti`(`idListaPartecipanti`,`idUtente`,`idSondaggio`,`nome`,`email`,`password`,`scaduto`,`emailMandata`)VALUES('5', '2', '3', 'zawardo', 'dioBrando@gmail.com', 'mudamuda',false,true);

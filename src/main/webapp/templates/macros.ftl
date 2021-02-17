@@ -546,10 +546,22 @@
             </div>
             <div class="row mb-3">
                 <div class="col-12">
-                    <#if domanda.getVincolo()??>
-                        <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo: 128" maxlength="128">
+                    <#if risposteNoMult??>
+                        <#list risposteNoMult?keys as key>
+                            <#if key == domanda.getPosizione()?string>
+                                <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
+                                    <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo: 128" value="${risposteNoMult[key]}" maxlength="128">
+                                <#else>
+                                    <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 128" value="${risposteNoMult[key]}" maxlength="128">
+                                </#if>
+                            </#if>
+                        </#list>
                     <#else>
-                        <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 128" maxlength="128">
+                        <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
+                            <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo: 128" maxlength="128">
+                        <#else>
+                            <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 128" maxlength="128">
+                        </#if>
                     </#if>
                 </div>
             </div>
@@ -592,10 +604,22 @@
             </div>
             <div class="row mb-3">
                 <div class="col-12">
-                    <#if domanda.getVincolo()??>
-                        <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo 512" maxlength="512">
+                    <#if risposteNoMult??>
+                        <#list risposteNoMult?keys as key>
+                            <#if key == domanda.getPosizione()?string>
+                                <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
+                                    <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo 512" value="${risposteNoMult[key]}" maxlength="512">
+                                <#else>
+                                    <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 512" value="${risposteNoMult[key]}" maxlength="512">
+                                </#if>
+                            </#if>
+                        </#list>
                     <#else>
-                        <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 512" maxlength="128">
+                        <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
+                            <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo 512" maxlength="512">
+                        <#else>
+                            <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 512" maxlength="128">
+                        </#if>
                     </#if>
                 </div>
             </div>
@@ -638,10 +662,22 @@
             </div>
             <div class="row mb-3">
                 <div class="col-lg-4 col-md-5 col-sm-12">
-                    <#if domanda.getVincolo()??>
-                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}">
+                    <#if risposteNoMult??>
+                        <#list risposteNoMult?keys as key>
+                            <#if key == domanda.getPosizione()?string>
+                                <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
+                                    <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}" value="${risposteNoMult[key]}">
+                                <#else>
+                                    <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Scrivi un numero qualsiasi" value="${risposteNoMult[key]}">
+                                </#if>
+                            </#if>
+                        </#list>
                     <#else>
-                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra x ed y">
+                        <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
+                            <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}">
+                        <#else>
+                            <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Scrivi un numero qualsiasi">
+                        </#if>
                     </#if>
                 </div>
             </div>
@@ -683,13 +719,28 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-lg-4 col-md-5 col-sm-12">
-                    <input type="date" name="openDate${domanda.getPosizione()}" class="form-control">
-                </div>
-                <#if domanda.getVincolo()??>
-                    <div class="col-lg-8 col-md-7 col-sm-12">
-                        <p class="text-muted pt-2">Data compresa tra il ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]} ed il ${domanda.getVincolo()[34..35]}/${domanda.getVincolo()[31..32]}/${domanda.getVincolo()[26..29]}</p>
+                <#if risposteNoMult??>
+                    <#list risposteNoMult?keys as key>
+                        <#if key == domanda.getPosizione()?string>
+                            <div class="col-lg-4 col-md-5 col-sm-12">
+                                <input type="date" name="openDate${domanda.getPosizione()}" value="${risposteNoMult[key]}" class="form-control">
+                            </div>
+                            <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
+                                <div class="col-lg-8 col-md-7 col-sm-12">
+                                    <p class="text-muted pt-2">Data compresa tra il ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]} ed il ${domanda.getVincolo()[34..35]}/${domanda.getVincolo()[31..32]}/${domanda.getVincolo()[26..29]}</p>
+                                </div>
+                            </#if>
+                        </#if>
+                    </#list>
+                <#else>
+                    <div class="col-lg-4 col-md-5 col-sm-12">
+                        <input type="date" name="openDate${domanda.getPosizione()}" class="form-control">
                     </div>
+                    <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
+                        <div class="col-lg-8 col-md-7 col-sm-12">
+                            <p class="text-muted pt-2">Data compresa tra il ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]} ed il ${domanda.getVincolo()[34..35]}/${domanda.getVincolo()[31..32]}/${domanda.getVincolo()[26..29]}</p>
+                        </div>
+                    </#if>
                 </#if>
             </div>
         <#else>
@@ -733,14 +784,37 @@
             </div>
             <div class="row mb-3">
                 <div class="col-12">
-                    <#assign c = 0> 
-                    <#list domanda.getOpzioni().opzioni as opzione>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${opzione}">
-                            <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${opzione}</label><br>
-                        </div>
-                        <#assign c = c + 1>
-                    </#list>
+                    <#if risposteRadios??>
+                        <#list risposteRadios?keys as key>
+                            <#if key == domanda.getPosizione()?string>
+                                <#assign optVal = risposteRadios[key]>
+                            </#if>
+                        </#list>
+                        <#assign c = 0> 
+                        <#list domanda.getOpzioni().opzioni as opzione>
+                            <#if opzione == optVal>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${opzione}" checked>
+                                    <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${opzione}</label><br>
+                                </div>
+                            <#else>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${opzione}">
+                                    <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${opzione}</label><br>
+                                </div>
+                            </#if>
+                             <#assign c = c + 1>
+                        </#list>
+                    <#else>
+                        <#assign c = 0> 
+                        <#list domanda.getOpzioni().opzioni as opzione>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${opzione}">
+                                <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${opzione}</label><br>
+                            </div>
+                            <#assign c = c + 1>
+                        </#list>
+                    </#if>
                 </div>
             </div>
         <#else>
@@ -796,6 +870,42 @@
                 </div>
             </div>
             <div class="row mb-3">
+                <#if risposteSiMult??>
+                    <#assign c = 0> 
+                    <#list domanda.getOpzioni().opzioni as opzione>
+                        <#list risposteSiMult?keys as key>
+                            <#if key == domanda.getPosizione()?string>
+                                <#list risposteSiMult[key]?keys as key2>
+                                    <#if key2 == c?string>
+                                        <#assign optVal = risposteSiMult[key][key2]>
+                                    </#if>
+                                </#list>
+                                <#if opzione == optVal>
+                                    <div class="col-12">
+                                        <div>
+                                            <label class="checkbox mb-3">
+                                                <input type="checkbox" name="opzioneM${domanda.getPosizione()}-${c}" value="${opzione}" checked/>
+                                                <span class="warning"></span>
+                                            </label>
+                                            &nbsp${opzione}
+                                        </div>
+                                    </div>
+                                <#else>
+                                    <div class="col-12">
+                                        <div>
+                                            <label class="checkbox mb-3">
+                                                <input type="checkbox" name="opzioneM${domanda.getPosizione()}-${c}" value="${opzione}"/>
+                                                <span class="warning"></span>
+                                            </label>
+                                            &nbsp${opzione}
+                                        </div>
+                                    </div>
+                                </#if>
+                            </#if>
+                        </#list>
+                        <#assign c = c + 1>
+                    </#list>
+                <#else>
                     <#assign c = 0> 
                     <#list domanda.getOpzioni().opzioni as opzione>
                         <div class="col-12">
@@ -809,7 +919,7 @@
                         </div>
                         <#assign c = c + 1>
                     </#list>
-                </div>
+                </#if>
             </div>
         <#else>
             <div class="row">

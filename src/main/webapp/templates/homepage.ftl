@@ -25,7 +25,7 @@
                                     <#if sessioned?? && sessioned=="no">
                                         <a href="register" class="btn btn-warning">Comincia adesso!</a>
                                     <#else>
-                                        <a href="/PollWeb/makerPoll/firsSection" class="btn btn-warning">Comincia adesso!</a>
+                                        <a href="/PollWeb/makerPoll/firstSection" class="btn btn-warning">Comincia adesso!</a>
                                     </#if>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
                                 <#else>
                                     <p class="h3 text-center mb-5">Grazie di esserti unito alla community, ora &#232; tempo di sondaggi!</p>
                                     <div class="form-inline">
-                                        <a href="/PollWeb/makerPoll/firsSection" class="btn btn-warning btn-lg btn-block">Unisciti a noi</a>
+                                        <a href="/PollWeb/makerPoll/firstSection" class="btn btn-warning btn-lg btn-block">Unisciti a noi</a>
                                     </div>
                                 </#if>
                             </div>

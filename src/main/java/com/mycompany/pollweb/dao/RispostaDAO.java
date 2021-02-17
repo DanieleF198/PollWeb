@@ -20,7 +20,9 @@ public interface RispostaDAO {
     
     Risposta getRisposta(int idRisposta) throws DataException;
     
-    public Risposta getRispostaByIdUtente(int idUtente) throws DataException;
+    public List<Risposta> getRispostaByIdUtente(int idUtente) throws DataException;
+    
+    public List<Risposta> getRispostaByIPUtente(String ipUtente) throws DataException;
     
     public List<Risposta> getRisposte() throws DataException;
     
