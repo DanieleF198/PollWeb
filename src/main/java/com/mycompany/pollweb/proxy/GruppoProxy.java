@@ -32,6 +32,12 @@ public class GruppoProxy extends GruppoImpl implements DataItemProxy {
     }
      
     @Override
+    public void setVersion(long version) {
+        super.setVersion(version);
+        this.modified = true;
+    }
+    
+    @Override
     public void setNomeGruppo(String nomeGruppo){
         super.setNomeGruppo(nomeGruppo);
         this.modified = true;

@@ -109,7 +109,7 @@
                                                                     <#if sondaggio.getTestoApertura()??>
                                                                         <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                                     <#else>
-                                                                        <h5 class="card-text">Nessuna descrizione attribuita a questo sondaggio</h5>
+                                                                        <p class="card-text">Nessuna descrizione attribuita a questo sondaggio</p>
                                                                     </#if>
                                                                 </div>
                                                                 <div class="card-footer bg-warning">
@@ -162,7 +162,7 @@
                                                                     <#if sondaggio.getTestoApertura()??>
                                                                         <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                                     <#else>
-                                                                        <h5 class="card-text">Nessuna descrizione attribuita a questo sondaggio</h5>
+                                                                        <p class="card-text">Nessuna descrizione attribuita a questo sondaggio</p>
                                                                     </#if>
                                                                 </div>
                                                                 <div class="card-footer bg-warning">
@@ -216,7 +216,7 @@
                                                                     <#if sondaggio.getTestoApertura()??>
                                                                         <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                                     <#else>
-                                                                        <h5 class="card-text">Nessuna descrizione attribuita a questo sondaggio</h5>
+                                                                        <p class="card-text">Nessuna descrizione attribuita a questo sondaggio</p>
                                                                     </#if>
                                                                 </div>
                                                                 <div class="card-footer bg-warning">
@@ -305,7 +305,7 @@
                                                         <#if sondaggio.getTestoApertura()??>
                                                             <p class="card-text">${sondaggio.getTestoApertura()}</p>
                                                         <#else>
-                                                            <h5 class="card-title">No descrizione</h5>
+                                                            <p class="card-text">Nessuna descrizione attribuita a questo sondaggio</p>
                                                         </#if>
                                                     </div>
                                                     <div class="card-footer bg-warning">

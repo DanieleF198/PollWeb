@@ -60,6 +60,12 @@ public class RispostaProxy extends RispostaImpl implements DataItemProxy {
     }
     
     @Override
+    public void setVersion(long version) {
+        super.setVersion(version);
+        this.modified = true;
+    }
+    
+    @Override
     public void setIdUtente(int idUtente) {
         super.setIdUtente(idUtente);
         this.modified = true;

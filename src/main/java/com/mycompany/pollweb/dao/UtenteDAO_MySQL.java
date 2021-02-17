@@ -66,7 +66,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             sUtenti = connection.prepareStatement("SELECT * FROM Utente");   
             
             iUtente = connection.prepareStatement("INSERT INTO Utente (idGruppo,nome,cognome,dataNascita,username,password,email,bloccato) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,dataNascita=?,username=?,password=?,email=?,bloccato=? WHERE idUtente=?");
+            uUtente = connection.prepareStatement("UPDATE Utente SET idGruppo=?,nome=?,cognome=?,dataNascita=?,username=?,password=?,email=?,bloccato=?,version=? WHERE idUtente=? AND version=?");
             dUtente = connection.prepareStatement("DELETE FROM Utente WHERE idUtente=?");
             
             iUtenteListaPartecipanti = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,nome,email,password,scaduto,emailMandata) VALUES(?,?,?,?,?,?)");
@@ -126,6 +126,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             u.setPassword(rs.getString("password"));
             u.setEmail(rs.getString("email"));
             u.setBloccato(rs.getBoolean("bloccato"));
+            u.setVersion(rs.getLong("version"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Utente object form ResultSet", ex);
         }
@@ -258,13 +259,19 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 uUtente.setString(6, utente.getPassword());
                 uUtente.setString(7, utente.getEmail());
                 uUtente.setBoolean(8, utente.isBloccato());
-                uUtente.setInt(9, utente.getKey());
+                
+                long currentVersion = utente.getVersion();
+                long nextVersion = currentVersion + 1;
+                
+                uUtente.setLong(9, nextVersion);
+                uUtente.setInt(10, utente.getKey());
+                uUtente.setLong(11, currentVersion);
 
 
                 if (uUtente.executeUpdate() == 0) {
                     throw new OptimisticLockException(utente);
                 }
-                
+                utente.setVersion(nextVersion);
                 dataLayer.getCache().add(Utente.class, utente); //salviamo nella cache l'utente modificato così che db e cache siano allineati
             }
             else { //insert

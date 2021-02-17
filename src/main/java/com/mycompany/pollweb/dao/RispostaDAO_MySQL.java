@@ -49,9 +49,9 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             sRisposte = connection.prepareStatement("SELECT * FROM Risposta");
             
             iRispostaUserReg = connection.prepareStatement("INSERT INTO Risposta (idUtente,dataCreazione,usernameUtenteRisposta,ipUtenteRisposta) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uRispostaUserReg = connection.prepareStatement("UPDATE Risposta SET idUtente=?,dataCreazione=?,usernameUtenteRisposta=?,ipUtenteRisposta=? WHERE idRisposta=?");
+            uRispostaUserReg = connection.prepareStatement("UPDATE Risposta SET idUtente=?,dataCreazione=?,usernameUtenteRisposta=?,ipUtenteRisposta=?,version=? WHERE idRisposta=? AND version=?");
             iRispostaUserNotReg = connection.prepareStatement("INSERT INTO Risposta (dataCreazione,ipUtenteRisposta) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
-            uRispostaUserNotReg = connection.prepareStatement("UPDATE Risposta SET dataCreazione=?,ipUtenteRisposta=? WHERE idRisposta=?");
+            uRispostaUserNotReg = connection.prepareStatement("UPDATE Risposta SET dataCreazione=?,ipUtenteRisposta=? WHERE idRisposta=?"); //chiedere a dan
             dRisposta = connection.prepareStatement("DELETE FROM Risposta WHERE idRisposta=?");
             
             
@@ -94,6 +94,7 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             r.setData(rs.getDate("dataCreazione"));
             r.setUsernameUtenteRisposta(rs.getString("usernameUtenteRisposta"));
             r.setIpUtenteRisposta(rs.getString("ipUtenteRisposta"));
+            r.setVersion(rs.getLong("version"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Risposta object form ResultSet", ex);
         }
@@ -176,11 +177,18 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
                 uRispostaUserReg.setDate(2, sqlCreazione);
                 uRispostaUserReg.setString(3, risposta.getUsernameUtenteRisposta());
                 uRispostaUserReg.setString(4, risposta.getIpUtenteRisposta());
-                uRispostaUserReg.setInt(5, risposta.getKey());
+                
+                long currentVersion = risposta.getVersion();
+                long nextVersion = currentVersion + 1;
+                
+                uRispostaUserReg.setLong(5, nextVersion);
+                uRispostaUserReg.setInt(6, risposta.getKey());
+                uRispostaUserReg.setLong(7, currentVersion);
 
                 if (uRispostaUserReg.executeUpdate() == 0) {
                     throw new OptimisticLockException(risposta);
                 }
+                risposta.setVersion(nextVersion);
             }
             else { //insert
                 java.sql.Date sqlCreazione = new java.sql.Date( risposta.getData().getTime() );
@@ -251,12 +259,19 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
                 java.sql.Date sqlCreazione = new java.sql.Date( risposta.getData().getTime() );
                 uRispostaUserNotReg.setDate(1, sqlCreazione);
                 uRispostaUserNotReg.setString(2, risposta.getIpUtenteRisposta());
-                uRispostaUserNotReg.setInt(3, risposta.getKey());
+                
+                long currentVersion = risposta.getVersion();
+                long nextVersion = currentVersion + 1;
+                
+                uRispostaUserNotReg.setLong(3, nextVersion);
+                uRispostaUserNotReg.setInt(4, risposta.getKey());
+                uRispostaUserNotReg.setLong(5, currentVersion);
                 
 
                 if (uRispostaUserNotReg.executeUpdate() == 0) {
                     throw new OptimisticLockException(risposta);
                 }
+                risposta.setVersion(nextVersion);
             }
             else { //insert
                 java.sql.Date sqlCreazione = new java.sql.Date( risposta.getData().getTime() );

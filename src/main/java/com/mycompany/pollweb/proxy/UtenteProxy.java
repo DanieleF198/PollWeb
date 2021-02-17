@@ -69,6 +69,12 @@ public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
     }
     
     @Override
+    public void setVersion(long version) {
+        super.setVersion(version);
+        this.modified = true;
+    }
+    
+    @Override
     public void setNome(String newNome){
         super.setNome(newNome);
 	this.modified = true;

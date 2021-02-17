@@ -49,7 +49,7 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
             sDomande = connection.prepareStatement("SELECT * FROM Domanda");
             
             iDomanda = connection.prepareStatement("INSERT INTO Domanda (idSondaggio,titolo,obbligatoria,descrizione,posizione,opzioni,tipo,vincolo) VALUES(?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uDomanda = connection.prepareStatement("UPDATE Domanda SET idSondaggio=?,titolo=?,obbligatoria=?,descrizione=?,posizione=?,opzioni=?,tipo=?,vincolo=? WHERE idDomanda=?");
+            uDomanda = connection.prepareStatement("UPDATE Domanda SET idSondaggio=?,titolo=?,obbligatoria=?,descrizione=?,posizione=?,opzioni=?,tipo=?,vincolo=?,version=? WHERE idDomanda=? AND version=?");
             dDomanda = connection.prepareStatement("DELETE FROM Domanda WHERE idDomanda=?");
             
             
@@ -98,6 +98,7 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
             d.setOpzioni(opzioni);
             d.setTipo(rs.getString("tipo"));
             d.setVincolo(rs.getString("vincolo"));
+            d.setVersion(rs.getLong("version"));
         } catch (SQLException ex) {
             throw new DataException("Unable to create Domanda object form ResultSet", ex);
         }
@@ -221,11 +222,18 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
                 }
                 uDomanda.setString(7, domanda.getTipo());
                 uDomanda.setString(8, domanda.getVincolo());
-                uDomanda.setInt(9, domanda.getKey());
+                
+                long currentVersion = domanda.getVersion();
+                long nextVersion = currentVersion + 1;
+                
+                uDomanda.setLong(9, nextVersion);
+                uDomanda.setInt(10, domanda.getKey());
+                uDomanda.setLong(11, currentVersion);
 
                 if (uDomanda.executeUpdate() == 0) {
                     throw new OptimisticLockException(domanda);
                 }
+                domanda.setVersion(nextVersion);
             }
             else { //insert
                 iDomanda.setInt(1, domanda.getIdSondaggio());

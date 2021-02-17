@@ -330,9 +330,9 @@ public class FirstSection extends BaseController {
             Sondaggio newSondaggio = dl.getSondaggioDAO().createSondaggio();
             
             newSondaggio.setIdUtente((int)s.getAttribute("userid"));
-            newSondaggio.setTitolo(title);
-            newSondaggio.setTestoApertura(description);
-            newSondaggio.setTestoChiusura(finalMessage);
+            newSondaggio.setTitolo(SecurityLayer.addSlashes(title));
+            newSondaggio.setTestoApertura(SecurityLayer.addSlashes(description));
+            newSondaggio.setTestoChiusura(SecurityLayer.addSlashes(finalMessage));
             newSondaggio.setCreazione(nowTemp);
             if(expirationDate != null){
                 newSondaggio.setScadenza(expirationDate);

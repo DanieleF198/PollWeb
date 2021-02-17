@@ -64,6 +64,12 @@ public class DomandaProxy extends DomandaImpl implements DataItemProxy {
     }
     
     @Override
+    public void setVersion(long version) {
+        super.setVersion(version);
+        this.modified = true;
+    }
+    
+    @Override
     public void setTitolo(String titolo) {
         super.setTitolo(titolo);
         this.modified = true;
