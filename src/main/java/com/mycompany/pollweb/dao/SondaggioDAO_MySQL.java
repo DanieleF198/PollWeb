@@ -71,12 +71,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiAdmin = connection.prepareStatement("SELECT * FROM Sondaggio");
             
             iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,visibilita,dataCreazione,dataChiusura,privato,modificabile,compilazioni) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-<<<<<<< HEAD
-            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?, privato=?,modificabile=?,compilazioni=?,version=? WHERE idSondaggio=? AND version=?");
-=======
+
             uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?, privato=?,modificabile=?,compilazioni=? WHERE idSondaggio=?");
             uSondaggioCompilazioni = connection.prepareStatement("UPDATE SONDAGGIO SET compilazioni =? WHERE idSondaggio=?");
->>>>>>> be153bab5cb6eb1b5bb06a4620ff1bdfa530b06f
+
             dSondaggio = connection.prepareStatement("DELETE FROM Sondaggio WHERE idSondaggio=?");
             searchSondaggiTitolo = connection.prepareStatement("SELECT * FROM Sondaggio WHERE titolo LIKE ?");
             searchSondaggiDataCreazione = connection.prepareStatement("SELECT * FROM Sondaggio WHERE dataCreazione = ?");

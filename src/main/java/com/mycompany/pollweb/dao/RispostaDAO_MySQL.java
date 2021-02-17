@@ -51,15 +51,11 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
             sRisposte = connection.prepareStatement("SELECT * FROM Risposta");
             
             iRispostaUserReg = connection.prepareStatement("INSERT INTO Risposta (idUtente,dataCreazione,usernameUtenteRisposta,ipUtenteRisposta) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-<<<<<<< HEAD
+
             uRispostaUserReg = connection.prepareStatement("UPDATE Risposta SET idUtente=?,dataCreazione=?,usernameUtenteRisposta=?,ipUtenteRisposta=?,version=? WHERE idRisposta=? AND version=?");
             iRispostaUserNotReg = connection.prepareStatement("INSERT INTO Risposta (dataCreazione,ipUtenteRisposta) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
             uRispostaUserNotReg = connection.prepareStatement("UPDATE Risposta SET dataCreazione=?,ipUtenteRisposta=? WHERE idRisposta=?"); //chiedere a dan
-=======
-            uRispostaUserReg = connection.prepareStatement("UPDATE Risposta SET idUtente=?,dataCreazione=?,usernameUtenteRisposta=?,ipUtenteRisposta=? WHERE idRisposta=?");
-            iRispostaUserNotReg = connection.prepareStatement("INSERT INTO Risposta (dataCreazione,usernameUtenteRisposta,ipUtenteRisposta) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            uRispostaUserNotReg = connection.prepareStatement("UPDATE Risposta SET dataCreazione=?, ipUtenteRisposta=? WHERE idRisposta=?");
->>>>>>> be153bab5cb6eb1b5bb06a4620ff1bdfa530b06f
+
             dRisposta = connection.prepareStatement("DELETE FROM Risposta WHERE idRisposta=?");
             
             
