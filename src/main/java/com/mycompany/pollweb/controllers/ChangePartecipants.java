@@ -50,6 +50,10 @@ public class ChangePartecipants extends BaseController {
         try {
             HttpSession s = checkSession(request);
             if (s!= null) {
+                if ((Integer)s.getAttribute("groupid") == 1){
+                    response.sendRedirect("partecipantDashboard");
+                    return;
+                }
                 if("POST".equals(request.getMethod()) && request.getParameter("changePartecipants")!=null){
                     action_change_partecipants(request, response);
                     return;

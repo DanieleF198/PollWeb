@@ -30,4 +30,6 @@ public interface RispostaDAO {
     
     public int storeRispostaUserNotReg(Risposta risposta) throws DataException;
     
+    public int insertRispostaUserPartecipante(Risposta risposta) throws DataException;
+    
 }

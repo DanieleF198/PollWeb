@@ -18,9 +18,11 @@ import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
+import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -32,7 +34,13 @@ public class PublicPolls extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
-            
+            HttpSession s = checkSession(request);
+            if(s!=null){
+                if ((Integer)s.getAttribute("groupid") == 1){
+                   response.sendRedirect("partecipantDashboard");
+                   return;
+                }
+            }
             action_default(request, response);
 
         } catch (IOException ex) {

@@ -56,6 +56,9 @@ public class Dashboard extends BaseController {
                     action_redirect_adminDashboard(request, response);
                     return;
                 }
+                if ((Integer)s.getAttribute("groupid") == 1){
+                    response.sendRedirect("partecipantDashboard");
+                }
                 else{
                     if(request.getParameter("header-search-tuoi-sondaggi") != null){
                         System.out.println("REQUEST HEADER_SEARCH (tuoi): " + request.getParameter("header-search-tuoi-sondaggi"));

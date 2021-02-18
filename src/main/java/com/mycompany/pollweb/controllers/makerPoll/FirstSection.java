@@ -51,6 +51,10 @@ public class FirstSection extends BaseController {
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
+                if ((Integer)s.getAttribute("groupid") == 1){
+                    response.sendRedirect("../partecipantDashboard");
+                    return;
+                }
                 if (("POST".equals(request.getMethod())) && (request.getParameter("buttonFirstSection") != null)) {
                     action_questions(request, response); //caso in cui clicca il bottone "crea sondaggio"
                     return;

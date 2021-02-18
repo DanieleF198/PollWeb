@@ -82,6 +82,10 @@ public class ConfirmSection extends BaseController {
             HttpSession s = checkSession(request);
             PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
             if(s!= null){
+                if ((Integer)s.getAttribute("groupid") == 1){
+                    response.sendRedirect("../partecipantDashboard");
+                    return;
+                }
                 if(s.getAttribute("sondaggio-in-conferma").equals("no")){
                     s.setAttribute("domanda-in-creazione", 0); //resetto domanda in creazione, in caso torni indietro lo porterò alla warning
                     s.setAttribute("sondaggio-in-conferma", "yes");

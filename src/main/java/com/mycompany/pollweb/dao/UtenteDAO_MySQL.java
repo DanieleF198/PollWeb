@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     private PreparedStatement sUtenteByID;
     private PreparedStatement sUtenteByGruppo;
     private PreparedStatement sUtenteLogin;
+    private PreparedStatement sUtenteEmail;
+    private PreparedStatement sPartecipanteLogin;
     private PreparedStatement sUtenteExistByUsername;
     private PreparedStatement sUtenteExistByEmail;
     private PreparedStatement sUtenti;
@@ -43,6 +46,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     private PreparedStatement iUtenteListaPartecipanti2;
     private PreparedStatement uUtenteListaPartecipantiScaduto;
     private PreparedStatement uUtenteListaPartecipanti;
+    private PreparedStatement uPartecipanteSetScaduto;
+    private PreparedStatement sPartecipanteCheckScaduto;
     private PreparedStatement uUtenteListaPartecipantiSendEmail;
     private PreparedStatement sListaPartecipantiBySondaggio;
     private PreparedStatement sListaPartecipantiWithMailToSendBySondaggio;
@@ -61,6 +66,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             sUtenteByID = connection.prepareStatement("SELECT * FROM Utente WHERE idUtente=?");
             sUtenteByGruppo = connection.prepareStatement("SELECT * FROM Utente WHERE idGruppo=?");
             sUtenteLogin = connection.prepareStatement("SELECT * FROM Utente WHERE username=? and password=?");
+            sPartecipanteLogin = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE email=? and password=? and scaduto=?");
             sUtenteExistByUsername = connection.prepareStatement("SELECT * FROM Utente WHERE username=?");
             sUtenteExistByEmail = connection.prepareStatement("SELECT * FROM Utente WHERE email=?");
             sUtenti = connection.prepareStatement("SELECT * FROM Utente");   
@@ -73,6 +79,8 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             iUtenteListaPartecipanti2 = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,idUtente,nome,email,password,scaduto,emailMandata) VALUES(?,?,?,?,?,?,?)");
             uUtenteListaPartecipantiScaduto = connection.prepareStatement("UPDATE ListaPartecipanti SET scaduto=? WHERE idSondaggio=? AND email=?");
             uUtenteListaPartecipanti = connection.prepareStatement("UPDATE ListaPartecipanti SET nome=?, password=?, scaduto=? WHERE idSondaggio=? AND email=?");
+            uPartecipanteSetScaduto = connection.prepareStatement("UPDATE ListaPartecipanti SET scaduto=? WHERE idSondaggio=? AND email=?");
+            sPartecipanteCheckScaduto = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idSondaggio=? AND email=?");
             uUtenteListaPartecipantiSendEmail = connection.prepareStatement("UPDATE ListaPartecipanti SET emailMandata=? WHERE idSondaggio=? AND scaduto=?");
             sListaPartecipantiBySondaggio = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idSondaggio=? AND scaduto=?");
             sListaPartecipantiWithMailToSendBySondaggio = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idSondaggio=? AND emailMandata=? AND scaduto=?");
@@ -92,11 +100,14 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             
             sUtenteByGruppo.close();
             sUtenteLogin.close();
+            sPartecipanteLogin.close();
             sUtenteExistByUsername.close();
             sUtenteExistByEmail.close();
             sUtenti.close();
             iUtenteListaPartecipanti.close();
             iUtenteListaPartecipanti2.close();
+            uPartecipanteSetScaduto.close();
+            sPartecipanteCheckScaduto.close();
             
             iUtente.close();
             uUtente.close();
@@ -205,6 +216,24 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 throw new DataException("Unable to load Utente by idUtente", ex);
             }
         return u;
+    }
+    
+    @Override
+    public HashMap<Integer, Utente> getPartecipanteLogin(String email, String password) throws DataException {
+        HashMap<Integer, Utente> result = new HashMap<Integer,Utente>();
+        try {
+                sPartecipanteLogin.setString(1, email);
+                sPartecipanteLogin.setString(2, password);
+                sPartecipanteLogin.setBoolean(3, false);
+                try (ResultSet rs = sPartecipanteLogin.executeQuery()) {
+                    while (rs.next()) {
+                        result.put(rs.getInt("idSondaggio"),(Utente) getUtente(rs.getInt("idUtente")));
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Utente by idUtente", ex);
+            }
+        return result;
     }
     
     @Override
@@ -432,6 +461,19 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    @Override
+    public void updatePartecipanteSetScaduto(String email, int idSondaggio) throws DataException {
+        try {
+            uPartecipanteSetScaduto.setBoolean(1, true);
+            uPartecipanteSetScaduto.setInt(2, idSondaggio);
+            uPartecipanteSetScaduto.setString(3, email);
+            uPartecipanteSetScaduto.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    } 
 
     @Override
     public void updateUtenteListaPartecipanti(ArrayList<Utente> partecipants, int idSondaggio) throws DataException {
@@ -516,5 +558,39 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @Override
+    public boolean checkifAlreadyAnswered(String email, int idSondaggio) throws DataException {
+        boolean check = false;
+        try {
+            sPartecipanteCheckScaduto.setInt(1, idSondaggio);
+            sPartecipanteCheckScaduto.setString(2, email);
+            ResultSet rs = sPartecipanteCheckScaduto.executeQuery();
+                if (rs.next()) {
+                    if (rs.getBoolean("scaduto")){
+                        check = true;
+                    }
+                }
+        }catch (SQLException ex) {
+            Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return check;
+    }
+
+    @Override
+    public boolean checkWithMail(String email) throws DataException {
+        boolean check = false;
+        try {
+            sUtenteExistByEmail.setString(1, email);
+            try (ResultSet rs = sUtenteExistByEmail.executeQuery()) {
+                if (rs.next()) {
+                    check = true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }  
+        return check;
     }
 }

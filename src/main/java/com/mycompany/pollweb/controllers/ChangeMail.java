@@ -36,8 +36,11 @@ public class ChangeMail extends BaseController {
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {
+                if ((Integer)s.getAttribute("groupid") == 1){
+                    response.sendRedirect("partecipantDashboard");
+                    return;
+                }
                 if(request.getParameter("btnChangeEmail") != null){
-
                     if(request.getParameter("currentMail") != null && request.getParameter("newMail") != null && request.getParameter("confirmNewMail") != null && !request.getParameter("currentMail").isEmpty() && !request.getParameter("newMail").isEmpty() && !request.getParameter("confirmNewMail").isEmpty()){
 
                         if(request.getParameter("currentMail").equals((String)s.getAttribute("email"))){

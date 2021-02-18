@@ -42,6 +42,10 @@ public class AdminDashboard extends BaseController {
          try {
             HttpSession s = checkSession(request); //in teoria il controllo avviene prima ma lo eseguiamo comunque
             if (s!= null) {
+                if ((Integer)s.getAttribute("groupid") == 1){
+                    response.sendRedirect("partecipantDashboard");
+                    return;
+                }
                 if(request.getParameter("header-search-sondaggi") != null){
                     action_sondaggi_search(request, response);
                     return;

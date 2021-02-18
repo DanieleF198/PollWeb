@@ -106,6 +106,18 @@ public class SecurityLayer {
         s.setAttribute("domanda-in-creazione", 0);
         return s;
     }
+    //per i partecipanti
+    public static HttpSession createSession(HttpServletRequest request, Utente user) {
+        HttpSession s = request.getSession(true);
+        s.setAttribute("userid", -1);
+        s.setAttribute("email", user.getEmail());
+        s.setAttribute("password", user.getPassword());
+        s.setAttribute("groupid", 1);
+        s.setAttribute("ip", request.getRemoteHost());
+        s.setAttribute("inizio-sessione", Calendar.getInstance());
+        s.setAttribute("remember", false);
+        return s;
+    }
 
     public static void disposeSession(HttpServletRequest request) {
         HttpSession s = request.getSession(false);

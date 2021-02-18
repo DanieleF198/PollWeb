@@ -34,9 +34,13 @@ public class ChangePassword extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
-             HttpSession s = checkSession(request);
-             request.setAttribute("error", ""); 
-             if(request.getParameter("btnChangePassword") != null){
+            HttpSession s = checkSession(request);
+            if ((Integer)s.getAttribute("groupid") == 1){
+               response.sendRedirect("partecipantDashboard");
+               return;
+            }
+            request.setAttribute("error", ""); 
+            if(request.getParameter("btnChangePassword") != null){
 
                 if(request.getParameter("currentPassword") != null && request.getParameter("newPassword") != null && request.getParameter("confirmNewPassword") != null && !request.getParameter("currentPassword").isEmpty() && !request.getParameter("newPassword").isEmpty() && !request.getParameter("confirmNewPassword").isEmpty()){
                     
