@@ -332,8 +332,8 @@ public class QuestionsMaker extends BaseController {
 
                 Domanda currentDomanda = dl.getDomandaDAO().createDomanda();
                 currentDomanda.setIdSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
-                currentDomanda.setTitolo(title);
-                currentDomanda.setDescrizione(description);
+                currentDomanda.setTitolo(SecurityLayer.addSlashes(title));
+                currentDomanda.setDescrizione(SecurityLayer.addSlashes(description));
                 currentDomanda.setObbligatoria(obbligatory);
 
 
@@ -341,27 +341,27 @@ public class QuestionsMaker extends BaseController {
                     currentDomanda.setTipo("openShort");
                     if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
                         String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
-                        currentDomanda.setVincolo(vincolo);
+                        currentDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openLong")) {
                     currentDomanda.setTipo("openLong");
                     if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
                         String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
-                        currentDomanda.setVincolo(vincolo);
+                        currentDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openNumber")) {
                     currentDomanda.setTipo("openNumber");
                     if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
                         if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                             String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
-                            currentDomanda.setVincolo(vincolo);
+                            currentDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         } else {
                             String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
-                            currentDomanda.setVincolo(vincolo);
+                            currentDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         }
                     } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                         String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
-                        currentDomanda.setVincolo(vincolo);
+                        currentDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openDate")) {
                     currentDomanda.setTipo("openDate");
@@ -370,56 +370,56 @@ public class QuestionsMaker extends BaseController {
                             String strMinDate = request.getParameter("openDateConstraintMin");
                             String strMaxDate = request.getParameter("openDateConstraintMax");
                             String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
-                            currentDomanda.setVincolo(vincolo);
+                            currentDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         } else { 
                             String strMinDate = request.getParameter("openDateConstraintMin");
                             String vincolo = "Constraint: " +strMinDate;
-                            currentDomanda.setVincolo(vincolo);
+                            currentDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         }
                     } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
                         String strMaxDate = request.getParameter("openDateConstraintMax");
                         String vincolo = "Constraint: Null -- " +strMaxDate;
-                        currentDomanda.setVincolo(vincolo);
+                        currentDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("closeSingle")) {
                     currentDomanda.setTipo("closeSingle");
                     JSONObject opzioni = new JSONObject();
                     ArrayList<String> listOpzioni = new ArrayList<String>();
                     if(request.getParameter("option1")!=null && !request.getParameter("option1").isEmpty()){
-                        listOpzioni.add(request.getParameter("option1"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1")));
                     }
                     if(request.getParameter("option2")!=null && !request.getParameter("option2").isEmpty()){
-                        listOpzioni.add(request.getParameter("option2"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2")));
                     }
                     if(request.getParameter("option3")!=null && !request.getParameter("option3").isEmpty()){
-                        listOpzioni.add(request.getParameter("option3"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3")));
                     }
                     if(request.getParameter("option4")!=null && !request.getParameter("option4").isEmpty()){
-                        listOpzioni.add(request.getParameter("option4"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4")));
                     }
                     if(request.getParameter("option5")!=null && !request.getParameter("option5").isEmpty()){
-                        listOpzioni.add(request.getParameter("option5"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5")));
                     }
                     if(request.getParameter("option6")!=null && !request.getParameter("option6").isEmpty()){
-                        listOpzioni.add(request.getParameter("option6"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6")));
                     }
                     if(request.getParameter("option7")!=null && !request.getParameter("option7").isEmpty()){
-                        listOpzioni.add(request.getParameter("option7"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7")));
                     }
                     if(request.getParameter("option8")!=null && !request.getParameter("option8").isEmpty()){
-                        listOpzioni.add(request.getParameter("option8"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8")));
                     }
                     if(request.getParameter("option9")!=null && !request.getParameter("option9").isEmpty()){
-                        listOpzioni.add(request.getParameter("option9"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9")));
                     }
                     if(request.getParameter("option10")!=null && !request.getParameter("option10").isEmpty()){
-                        listOpzioni.add(request.getParameter("option10"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10")));
                     }
                     if(request.getParameter("option11")!=null && !request.getParameter("option11").isEmpty()){
-                        listOpzioni.add(request.getParameter("option11"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11")));
                     }
                     if(request.getParameter("option12")!=null && !request.getParameter("option12").isEmpty()){
-                        listOpzioni.add(request.getParameter("option12"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12")));
                     }
                     opzioni.put("opzioni", new JSONArray(listOpzioni));
                     currentDomanda.setOpzioni(opzioni);
@@ -428,40 +428,40 @@ public class QuestionsMaker extends BaseController {
                     JSONObject opzioni = new JSONObject();
                     ArrayList<String> listOpzioni = new ArrayList<String>();
                     if(request.getParameter("option1m")!=null && !request.getParameter("option1m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option1m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1m")));
                     }
                     if(request.getParameter("option2m")!=null && !request.getParameter("option2m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option2m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2m")));
                     }
                     if(request.getParameter("option3m")!=null && !request.getParameter("option3m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option3m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3m")));
                     }
                     if(request.getParameter("option4m")!=null && !request.getParameter("option4m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option4m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4m")));
                     }
                     if(request.getParameter("option5m")!=null && !request.getParameter("option5m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option5m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5m")));
                     }
                     if(request.getParameter("option6m")!=null && !request.getParameter("option6m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option6m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6m")));
                     }
                     if(request.getParameter("option7m")!=null && !request.getParameter("option7m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option7m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7m")));
                     }
                     if(request.getParameter("option8m")!=null && !request.getParameter("option8m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option8m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8m")));
                     }
                     if(request.getParameter("option9m")!=null && !request.getParameter("option9m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option9m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9m")));
                     }
                     if(request.getParameter("option10m")!=null  && !request.getParameter("option10m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option10m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10m")));
                     }
                     if(request.getParameter("option11m")!=null && !request.getParameter("option11m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option11m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11m")));
                     }
                     if(request.getParameter("option12m")!=null && !request.getParameter("option12m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option12m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12m")));
                     }
                     opzioni.put("opzioni", new JSONArray(listOpzioni));
                     currentDomanda.setOpzioni(opzioni);
@@ -506,8 +506,8 @@ public class QuestionsMaker extends BaseController {
 
                 Domanda newDomanda = dl.getDomandaDAO().createDomanda();
                 newDomanda.setIdSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
-                newDomanda.setTitolo(title);
-                newDomanda.setDescrizione(description);
+                newDomanda.setTitolo(SecurityLayer.addSlashes(title));
+                newDomanda.setDescrizione(SecurityLayer.addSlashes(description));
                 newDomanda.setObbligatoria(obbligatory);
 
 
@@ -515,27 +515,27 @@ public class QuestionsMaker extends BaseController {
                     newDomanda.setTipo("openShort");
                     if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
                         String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openLong")) {
                     newDomanda.setTipo("openLong");
                     if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
                         String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openNumber")) {
                     newDomanda.setTipo("openNumber");
                     if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
                         if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                             String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
-                            newDomanda.setVincolo(vincolo);
+                            newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         } else {
                             String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
-                            newDomanda.setVincolo(vincolo);
+                            newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         }
                     } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                         String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openDate")) {
                     newDomanda.setTipo("openDate");
@@ -544,56 +544,56 @@ public class QuestionsMaker extends BaseController {
                             String strMinDate = request.getParameter("openDateConstraintMin");
                             String strMaxDate = request.getParameter("openDateConstraintMax");
                             String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
-                            newDomanda.setVincolo(vincolo);
+                            newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         } else { 
                             String strMinDate = request.getParameter("openDateConstraintMin");
                             String vincolo = "Constraint: " +strMinDate;
-                            newDomanda.setVincolo(vincolo);
+                            newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         }
                     } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
                         String strMaxDate = request.getParameter("openDateConstraintMax");
                         String vincolo = "Constraint: Null -- " +strMaxDate;
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("closeSingle")) {
                     newDomanda.setTipo("closeSingle");
                     JSONObject opzioni = new JSONObject();
                     ArrayList<String> listOpzioni = new ArrayList<String>();
-                    if(request.getParameter("option1")!=null && !request.getParameter("option1").isEmpty()){
-                        listOpzioni.add(request.getParameter("option1"));
+                    if(request.getParameter("option1")!=null && !request.getParameter("option1").isEmpty()){ //ricordare di togliere gli slash quando recuperiamo le opzioni
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1")));
                     }
                     if(request.getParameter("option2")!=null && !request.getParameter("option2").isEmpty()){
-                        listOpzioni.add(request.getParameter("option2"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2")));
                     }
                     if(request.getParameter("option3")!=null && !request.getParameter("option3").isEmpty()){
-                        listOpzioni.add(request.getParameter("option3"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3")));
                     }
                     if(request.getParameter("option4")!=null && !request.getParameter("option4").isEmpty()){
-                        listOpzioni.add(request.getParameter("option4"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4")));
                     }
                     if(request.getParameter("option5")!=null && !request.getParameter("option5").isEmpty()){
-                        listOpzioni.add(request.getParameter("option5"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5")));
                     }
                     if(request.getParameter("option6")!=null && !request.getParameter("option6").isEmpty()){
-                        listOpzioni.add(request.getParameter("option6"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6")));
                     }
                     if(request.getParameter("option7")!=null && !request.getParameter("option7").isEmpty()){
-                        listOpzioni.add(request.getParameter("option7"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7")));
                     }
                     if(request.getParameter("option8")!=null && !request.getParameter("option8").isEmpty()){
-                        listOpzioni.add(request.getParameter("option8"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8")));
                     }
                     if(request.getParameter("option9")!=null && !request.getParameter("option9").isEmpty()){
-                        listOpzioni.add(request.getParameter("option9"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9")));
                     }
                     if(request.getParameter("option10")!=null && !request.getParameter("option10").isEmpty()){
-                        listOpzioni.add(request.getParameter("option10"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10")));
                     }
                     if(request.getParameter("option11")!=null && !request.getParameter("option11").isEmpty()){
-                        listOpzioni.add(request.getParameter("option11"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11")));
                     }
                     if(request.getParameter("option12")!=null && !request.getParameter("option12").isEmpty()){
-                        listOpzioni.add(request.getParameter("option12"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12")));
                     }
                     opzioni.put("opzioni", new JSONArray(listOpzioni));
                     newDomanda.setOpzioni(opzioni);
@@ -602,40 +602,40 @@ public class QuestionsMaker extends BaseController {
                     JSONObject opzioni = new JSONObject();
                     ArrayList<String> listOpzioni = new ArrayList<String>();
                     if(request.getParameter("option1m")!=null && !request.getParameter("option1m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option1m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1m")));
                     }
                     if(request.getParameter("option2m")!=null && !request.getParameter("option2m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option2m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2m")));
                     }
                     if(request.getParameter("option3m")!=null && !request.getParameter("option3m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option3m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3m")));
                     }
                     if(request.getParameter("option4m")!=null && !request.getParameter("option4m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option4m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4m")));
                     }
                     if(request.getParameter("option5m")!=null && !request.getParameter("option5m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option5m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5m")));
                     }
                     if(request.getParameter("option6m")!=null && !request.getParameter("option6m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option6m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6m")));
                     }
                     if(request.getParameter("option7m")!=null && !request.getParameter("option7m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option7m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7m")));
                     }
                     if(request.getParameter("option8m")!=null && !request.getParameter("option8m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option8m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8m")));
                     }
                     if(request.getParameter("option9m")!=null && !request.getParameter("option9m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option9m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9m")));
                     }
                     if(request.getParameter("option10m")!=null  && !request.getParameter("option10m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option10m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10m")));
                     }
                     if(request.getParameter("option11m")!=null && !request.getParameter("option11m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option11m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11m")));
                     }
                     if(request.getParameter("option12m")!=null && !request.getParameter("option12m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option12m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12m")));
                     }
                     opzioni.put("opzioni", new JSONArray(listOpzioni));
                     newDomanda.setOpzioni(opzioni);
@@ -810,8 +810,8 @@ public class QuestionsMaker extends BaseController {
 
                 Domanda oldDomanda = dl.getDomandaDAO().createDomanda();
                 oldDomanda.setIdSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
-                oldDomanda.setTitolo(title);
-                oldDomanda.setDescrizione(description);
+                oldDomanda.setTitolo(SecurityLayer.addSlashes(title));
+                oldDomanda.setDescrizione(SecurityLayer.addSlashes(description));
                 oldDomanda.setObbligatoria(obbligatory);
 
 
@@ -819,27 +819,27 @@ public class QuestionsMaker extends BaseController {
                     oldDomanda.setTipo("openShort");
                     if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
                         String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
-                        oldDomanda.setVincolo(vincolo);
+                        oldDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openLong")) {
                     oldDomanda.setTipo("openLong");
                     if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
                         String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
-                        oldDomanda.setVincolo(vincolo);
+                        oldDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openNumber")) {
                     oldDomanda.setTipo("openNumber");
                     if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
                         if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                             String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
-                            oldDomanda.setVincolo(vincolo);
+                            oldDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         } else {
                             String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
-                            oldDomanda.setVincolo(vincolo);
+                            oldDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         }
                     } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                         String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
-                        oldDomanda.setVincolo(vincolo);
+                        oldDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openDate")) {
                     oldDomanda.setTipo("openDate");
@@ -848,56 +848,56 @@ public class QuestionsMaker extends BaseController {
                             String strMinDate = request.getParameter("openDateConstraintMin");
                             String strMaxDate = request.getParameter("openDateConstraintMax");
                             String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
-                            oldDomanda.setVincolo(vincolo);
+                            oldDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         } else { 
                             String strMinDate = request.getParameter("openDateConstraintMin");
                             String vincolo = "Constraint: " +strMinDate;
-                            oldDomanda.setVincolo(vincolo);
+                            oldDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         }
                     } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
                         String strMaxDate = request.getParameter("openDateConstraintMax");
                         String vincolo = "Constraint: Null -- " +strMaxDate;
-                        oldDomanda.setVincolo(vincolo);
+                        oldDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("closeSingle")) {
                     oldDomanda.setTipo("closeSingle");
                     JSONObject opzioni = new JSONObject();
                     ArrayList<String> listOpzioni = new ArrayList<String>();
                     if(request.getParameter("option1")!=null && !request.getParameter("option1").isEmpty()){
-                        listOpzioni.add(request.getParameter("option1"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1")));
                     }
                     if(request.getParameter("option2")!=null && !request.getParameter("option2").isEmpty()){
-                        listOpzioni.add(request.getParameter("option2"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2")));
                     }
                     if(request.getParameter("option3")!=null && !request.getParameter("option3").isEmpty()){
-                        listOpzioni.add(request.getParameter("option3"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3")));
                     }
                     if(request.getParameter("option4")!=null && !request.getParameter("option4").isEmpty()){
-                        listOpzioni.add(request.getParameter("option4"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4")));
                     }
                     if(request.getParameter("option5")!=null && !request.getParameter("option5").isEmpty()){
-                        listOpzioni.add(request.getParameter("option5"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5")));
                     }
                     if(request.getParameter("option6")!=null && !request.getParameter("option6").isEmpty()){
-                        listOpzioni.add(request.getParameter("option6"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6")));
                     }
                     if(request.getParameter("option7")!=null && !request.getParameter("option7").isEmpty()){
-                        listOpzioni.add(request.getParameter("option7"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7")));
                     }
                     if(request.getParameter("option8")!=null && !request.getParameter("option8").isEmpty()){
-                        listOpzioni.add(request.getParameter("option8"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8")));
                     }
                     if(request.getParameter("option9")!=null && !request.getParameter("option9").isEmpty()){
-                        listOpzioni.add(request.getParameter("option9"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9")));
                     }
                     if(request.getParameter("option10")!=null && !request.getParameter("option10").isEmpty()){
-                        listOpzioni.add(request.getParameter("option10"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10")));
                     }
                     if(request.getParameter("option11")!=null && !request.getParameter("option11").isEmpty()){
-                        listOpzioni.add(request.getParameter("option11"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11")));
                     }
                     if(request.getParameter("option12")!=null && !request.getParameter("option12").isEmpty()){
-                        listOpzioni.add(request.getParameter("option12"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12")));
                     }
                     opzioni.put("opzioni", new JSONArray(listOpzioni));
                     oldDomanda.setOpzioni(opzioni);
@@ -906,40 +906,40 @@ public class QuestionsMaker extends BaseController {
                     JSONObject opzioni = new JSONObject();
                     ArrayList<String> listOpzioni = new ArrayList<String>();
                     if(request.getParameter("option1m")!=null && !request.getParameter("option1m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option1m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1m")));
                     }
                     if(request.getParameter("option2m")!=null && !request.getParameter("option2m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option2m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2m")));
                     }
                     if(request.getParameter("option3m")!=null && !request.getParameter("option3m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option3m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3m")));
                     }
                     if(request.getParameter("option4m")!=null && !request.getParameter("option4m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option4m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4m")));
                     }
                     if(request.getParameter("option5m")!=null && !request.getParameter("option5m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option5m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5m")));
                     }
                     if(request.getParameter("option6m")!=null && !request.getParameter("option6m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option6m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6m")));
                     }
                     if(request.getParameter("option7m")!=null && !request.getParameter("option7m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option7m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7m")));
                     }
                     if(request.getParameter("option8m")!=null && !request.getParameter("option8m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option8m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8m")));
                     }
                     if(request.getParameter("option9m")!=null && !request.getParameter("option9m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option9m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9m")));
                     }
                     if(request.getParameter("option10m")!=null  && !request.getParameter("option10m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option10m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10m")));
                     }
                     if(request.getParameter("option11m")!=null && !request.getParameter("option11m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option11m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11m")));
                     }
                     if(request.getParameter("option12m")!=null && !request.getParameter("option12m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option12m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12m")));
                     }
                     opzioni.put("opzioni", new JSONArray(listOpzioni));
                     oldDomanda.setOpzioni(opzioni);
@@ -1105,8 +1105,8 @@ public class QuestionsMaker extends BaseController {
 
                 Domanda newDomanda = dl.getDomandaDAO().createDomanda();
                 newDomanda.setIdSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
-                newDomanda.setTitolo(title);
-                newDomanda.setDescrizione(description);
+                newDomanda.setTitolo(SecurityLayer.addSlashes(title));
+                newDomanda.setDescrizione(SecurityLayer.addSlashes(description));
                 newDomanda.setObbligatoria(obbligatory);
 
 
@@ -1114,27 +1114,27 @@ public class QuestionsMaker extends BaseController {
                     newDomanda.setTipo("openShort");
                     if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
                         String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openLong")) {
                     newDomanda.setTipo("openLong");
                     if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
                         String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openNumber")) {
                     newDomanda.setTipo("openNumber");
                     if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
                         if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                             String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
-                            newDomanda.setVincolo(vincolo);
+                            newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         } else {
                             String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
-                            newDomanda.setVincolo(vincolo);
+                            newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         }
                     } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                         String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("openDate")) {
                     newDomanda.setTipo("openDate");
@@ -1143,56 +1143,56 @@ public class QuestionsMaker extends BaseController {
                             String strMinDate = request.getParameter("openDateConstraintMin");
                             String strMaxDate = request.getParameter("openDateConstraintMax");
                             String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
-                            newDomanda.setVincolo(vincolo);
+                            newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         } else { 
                             String strMinDate = request.getParameter("openDateConstraintMin");
                             String vincolo = "Constraint: " +strMinDate;
-                            newDomanda.setVincolo(vincolo);
+                            newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                         }
                     } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
                         String strMaxDate = request.getParameter("openDateConstraintMax");
                         String vincolo = "Constraint: Null -- " +strMaxDate;
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (tipo.equals("closeSingle")) {
                     newDomanda.setTipo("closeSingle");
                     JSONObject opzioni = new JSONObject();
                     ArrayList<String> listOpzioni = new ArrayList<String>();
                     if(request.getParameter("option1")!=null && !request.getParameter("option1").isEmpty()){
-                        listOpzioni.add(request.getParameter("option1"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1")));
                     }
                     if(request.getParameter("option2")!=null && !request.getParameter("option2").isEmpty()){
-                        listOpzioni.add(request.getParameter("option2"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2")));
                     }
                     if(request.getParameter("option3")!=null && !request.getParameter("option3").isEmpty()){
-                        listOpzioni.add(request.getParameter("option3"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3")));
                     }
                     if(request.getParameter("option4")!=null && !request.getParameter("option4").isEmpty()){
-                        listOpzioni.add(request.getParameter("option4"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4")));
                     }
                     if(request.getParameter("option5")!=null && !request.getParameter("option5").isEmpty()){
-                        listOpzioni.add(request.getParameter("option5"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5")));
                     }
                     if(request.getParameter("option6")!=null && !request.getParameter("option6").isEmpty()){
-                        listOpzioni.add(request.getParameter("option6"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6")));
                     }
                     if(request.getParameter("option7")!=null && !request.getParameter("option7").isEmpty()){
-                        listOpzioni.add(request.getParameter("option7"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7")));
                     }
                     if(request.getParameter("option8")!=null && !request.getParameter("option8").isEmpty()){
-                        listOpzioni.add(request.getParameter("option8"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8")));
                     }
                     if(request.getParameter("option9")!=null && !request.getParameter("option9").isEmpty()){
-                        listOpzioni.add(request.getParameter("option9"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9")));
                     }
                     if(request.getParameter("option10")!=null && !request.getParameter("option10").isEmpty()){
-                        listOpzioni.add(request.getParameter("option10"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10")));
                     }
                     if(request.getParameter("option11")!=null && !request.getParameter("option11").isEmpty()){
-                        listOpzioni.add(request.getParameter("option11"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11")));
                     }
                     if(request.getParameter("option12")!=null && !request.getParameter("option12").isEmpty()){
-                        listOpzioni.add(request.getParameter("option12"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12")));
                     }
                     opzioni.put("opzioni", new JSONArray(listOpzioni));
                     newDomanda.setOpzioni(opzioni);
@@ -1201,40 +1201,40 @@ public class QuestionsMaker extends BaseController {
                     JSONObject opzioni = new JSONObject();
                     ArrayList<String> listOpzioni = new ArrayList<String>();
                     if(request.getParameter("option1m")!=null && !request.getParameter("option1m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option1m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1m")));
                     }
                     if(request.getParameter("option2m")!=null && !request.getParameter("option2m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option2m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2m")));
                     }
                     if(request.getParameter("option3m")!=null && !request.getParameter("option3m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option3m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3m")));
                     }
                     if(request.getParameter("option4m")!=null && !request.getParameter("option4m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option4m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4m")));
                     }
                     if(request.getParameter("option5m")!=null && !request.getParameter("option5m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option5m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5m")));
                     }
                     if(request.getParameter("option6m")!=null && !request.getParameter("option6m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option6m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6m")));
                     }
                     if(request.getParameter("option7m")!=null && !request.getParameter("option7m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option7m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7m")));
                     }
                     if(request.getParameter("option8m")!=null && !request.getParameter("option8m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option8m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8m")));
                     }
                     if(request.getParameter("option9m")!=null && !request.getParameter("option9m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option9m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9m")));
                     }
                     if(request.getParameter("option10m")!=null  && !request.getParameter("option10m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option10m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10m")));
                     }
                     if(request.getParameter("option11m")!=null && !request.getParameter("option11m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option11m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11m")));
                     }
                     if(request.getParameter("option12m")!=null && !request.getParameter("option12m").isEmpty()){
-                        listOpzioni.add(request.getParameter("option12m"));
+                        listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12m")));
                     }
                     opzioni.put("opzioni", new JSONArray(listOpzioni));
                     newDomanda.setOpzioni(opzioni);
@@ -1473,8 +1473,8 @@ public class QuestionsMaker extends BaseController {
             Domanda newDomanda = dl.getDomandaDAO().createDomanda();
             
             newDomanda.setIdSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
-            newDomanda.setTitolo(title);
-            newDomanda.setDescrizione(description);
+            newDomanda.setTitolo(SecurityLayer.addSlashes(title));
+            newDomanda.setDescrizione(SecurityLayer.addSlashes(description));
             newDomanda.setObbligatoria(obbligatory);
 
 
@@ -1482,27 +1482,27 @@ public class QuestionsMaker extends BaseController {
                 newDomanda.setTipo("openShort");
                 if(request.getParameter("openShortConstraint")!=null && !request.getParameter("openShortConstraint").isEmpty()){
                     String vincolo = "Constraint: " + request.getParameter("openShortConstraint");
-                    newDomanda.setVincolo(vincolo);
+                    newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                 }
             } else if (tipo.equals("openLong")) {
                 newDomanda.setTipo("openLong");
                 if(request.getParameter("openLongConstraint")!=null && !request.getParameter("openLongConstraint").isEmpty()){
                     String vincolo = "Constraint: " + request.getParameter("openLongConstraint");
-                    newDomanda.setVincolo(vincolo);
+                    newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                 }
             } else if (tipo.equals("openNumber")) {
                 newDomanda.setTipo("openNumber");
                 if(request.getParameter("openNumberConstraintMin")!=null && !request.getParameter("openNumberConstraintMin").isEmpty()){
                     if(request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                         String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin") + " -- " + request.getParameter("openNumberConstraintMax");
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     } else {
                         String vincolo = "Constraint: " + request.getParameter("openNumberConstraintMin");
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (request.getParameter("openNumberConstraintMax") != null && !request.getParameter("openNumberConstraintMax").isEmpty()){
                     String vincolo = "Constraint: Null -- " + request.getParameter("openNumberConstraintMax");
-                    newDomanda.setVincolo(vincolo);
+                    newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                 }
             } else if (tipo.equals("openDate")) {
                 newDomanda.setTipo("openDate");
@@ -1511,56 +1511,56 @@ public class QuestionsMaker extends BaseController {
                         String strMinDate = request.getParameter("openDateConstraintMin");
                         String strMaxDate = request.getParameter("openDateConstraintMax");
                         String vincolo = "Constraint: " +strMinDate + " -- " + strMaxDate;
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     } else { 
                         String strMinDate = request.getParameter("openDateConstraintMin");
                         String vincolo = "Constraint: " +strMinDate;
-                        newDomanda.setVincolo(vincolo);
+                        newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                     }
                 } else if (request.getParameter("openDateConstraintMax") != null && !request.getParameter("openDateConstraintMax").isEmpty()){
                     String strMaxDate = request.getParameter("openDateConstraintMax");
                     String vincolo = "Constraint: null -- " +strMaxDate;
-                    newDomanda.setVincolo(vincolo);
+                    newDomanda.setVincolo(SecurityLayer.addSlashes(vincolo));
                 }
             } else if (tipo.equals("closeSingle")) {
                 newDomanda.setTipo("closeSingle");
                 JSONObject opzioni = new JSONObject();
                 ArrayList<String> listOpzioni = new ArrayList<String>();
                 if(request.getParameter("option1")!=null && !request.getParameter("option1").isEmpty()){
-                    listOpzioni.add(request.getParameter("option1"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1")));
                 }
                 if(request.getParameter("option2")!=null && !request.getParameter("option2").isEmpty()){
-                    listOpzioni.add(request.getParameter("option2"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2")));
                 }
                 if(request.getParameter("option3")!=null && !request.getParameter("option3").isEmpty()){
-                    listOpzioni.add(request.getParameter("option3"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3")));
                 }
                 if(request.getParameter("option4")!=null && !request.getParameter("option4").isEmpty()){
-                    listOpzioni.add(request.getParameter("option4"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4")));
                 }
                 if(request.getParameter("option5")!=null && !request.getParameter("option5").isEmpty()){
-                    listOpzioni.add(request.getParameter("option5"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5")));
                 }
                 if(request.getParameter("option6")!=null && !request.getParameter("option6").isEmpty()){
-                    listOpzioni.add(request.getParameter("option6"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6")));
                 }
                 if(request.getParameter("option7")!=null && !request.getParameter("option7").isEmpty()){
-                    listOpzioni.add(request.getParameter("option7"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7")));
                 }
                 if(request.getParameter("option8")!=null && !request.getParameter("option8").isEmpty()){
-                    listOpzioni.add(request.getParameter("option8"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8")));
                 }
                 if(request.getParameter("option9")!=null && !request.getParameter("option9").isEmpty()){
-                    listOpzioni.add(request.getParameter("option9"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9")));
                 }
                 if(request.getParameter("option10")!=null && !request.getParameter("option10").isEmpty()){
-                    listOpzioni.add(request.getParameter("option10"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10")));
                 }
                 if(request.getParameter("option11")!=null && !request.getParameter("option11").isEmpty()){
-                    listOpzioni.add(request.getParameter("option11"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11")));
                 }
                 if(request.getParameter("option12")!=null && !request.getParameter("option12").isEmpty()){
-                    listOpzioni.add(request.getParameter("option12"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12")));
                 }
                 opzioni.put("opzioni", new JSONArray(listOpzioni));
                 newDomanda.setOpzioni(opzioni);
@@ -1569,40 +1569,40 @@ public class QuestionsMaker extends BaseController {
                 JSONObject opzioni = new JSONObject();
                 ArrayList<String> listOpzioni = new ArrayList<String>();
                 if(request.getParameter("option1m")!=null && !request.getParameter("option1m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option1m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1m")));
                 }
                 if(request.getParameter("option2m")!=null && !request.getParameter("option2m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option2m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option2m")));
                 }
                 if(request.getParameter("option3m")!=null && !request.getParameter("option3m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option3m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option3m")));
                 }
                 if(request.getParameter("option4m")!=null && !request.getParameter("option4m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option4m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option4m")));
                 }
                 if(request.getParameter("option5m")!=null && !request.getParameter("option5m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option5m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option5m")));
                 }
                 if(request.getParameter("option6m")!=null && !request.getParameter("option6m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option6m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option6m")));
                 }
                 if(request.getParameter("option7m")!=null && !request.getParameter("option7m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option7m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option7m")));
                 }
                 if(request.getParameter("option8m")!=null && !request.getParameter("option8m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option8m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option8m")));
                 }
                 if(request.getParameter("option9m")!=null && !request.getParameter("option9m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option9m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option9m")));
                 }
                 if(request.getParameter("option10m")!=null  && !request.getParameter("option10m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option10m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option10m")));
                 }
                 if(request.getParameter("option11m")!=null && !request.getParameter("option11m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option11m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option11m")));
                 }
                 if(request.getParameter("option12m")!=null && !request.getParameter("option12m").isEmpty()){
-                    listOpzioni.add(request.getParameter("option12m"));
+                    listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option12m")));
                 }
                 opzioni.put("opzioni", new JSONArray(listOpzioni));
                 newDomanda.setOpzioni(opzioni);
