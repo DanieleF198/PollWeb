@@ -17,6 +17,7 @@ import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.impl.GruppoImpl;
+import com.mycompany.pollweb.model.Domanda;
 import com.mycompany.pollweb.model.Gruppo;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.model.Utente;
@@ -30,16 +31,22 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
 import javax.mail.*;
 import javax.mail.internet.*;
+import org.json.JSONArray;
 /**
  *
  * @author joker
@@ -78,6 +85,81 @@ public class Dashboard extends BaseController {
                         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
                         Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(Integer.parseInt(request.getParameter("changeVisibility")));
                         if(!(sondaggio.isVisibilita())){
+                            ArrayList<Domanda> domande =(ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio(sondaggio.getKey());
+                            Collections.sort(domande);
+                            boolean errors = false;
+                            if(domande.isEmpty()){
+                                errors = true;
+                            } else {
+                                for (int i = 0; i < domande.size(); i++){
+                                    Domanda d = domande.get(i);
+                                    if(d.getTitolo().isBlank()){
+                                        errors = true;
+                                    }
+                                    if (d.getTipo().equals("closeSingle") || d.getTipo().equals("closeMultiple")){
+                                        JSONArray opzioni = d.getOpzioni().getJSONArray("opzioni");
+                                        if(opzioni.length()<2){
+                                            errors = true;
+                                        }
+                                    }
+                                    if (d.getTipo().equals("openShort")){
+                                        if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
+                                            Pattern p = Pattern.compile("\\d+");
+                                            Matcher m = p.matcher(d.getVincolo());
+                                            if(m.find(0)){
+                                                String constraint = m.group(0);
+                                                int value = Integer.parseInt(constraint);
+                                                if(value > 64){
+                                                    errors = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (d.getTipo().equals("openLong")){
+                                        if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
+                                            Pattern p = Pattern.compile("\\d+");
+                                            Matcher m = p.matcher(d.getVincolo());
+                                            if(m.find(0)){
+                                                String constraint = m.group(0);
+                                                int value = Integer.parseInt(constraint);
+                                                if(value > 256){
+                                                    errors = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if(d.getTipo().equals("openNumber")){
+                                        if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
+                                            if(d.getVincolo().contains("-") && !(d.getVincolo().contains("Null"))){
+                                                int vincoloNumber1 = Integer.parseInt(d.getVincolo().substring(d.getVincolo().indexOf(":")+2, d.getVincolo().indexOf("-")-1));
+                                                int vincoloNumber2 = Integer.parseInt(d.getVincolo().substring(d.getVincolo().indexOf("-")+3));
+                                                if((vincoloNumber1 > vincoloNumber2) ||  (vincoloNumber1 == vincoloNumber2)){
+                                                    errors = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if(d.getTipo().equals("openDate")){
+                                        if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
+                                            if(d.getVincolo().contains("--") && !(d.getVincolo().contains("Null"))){
+                                                String vincoloDate1 = d.getVincolo().substring(12,22);
+                                                String vincoloDate2 = d.getVincolo().substring(26,36);
+                                                Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(vincoloDate1);
+                                                Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(vincoloDate2);
+                                                if((date1.after(date1)) ||  (date1.equals(date2))){
+                                                    errors = true;
+                                                }
+                                            }
+                                        }
+                                    }
+
+
+                                }
+                            }
+                            if(errors){
+                                response.sendRedirect("dashboard");
+                                return;
+                            }
                             sondaggio.setVisibilita(true);
                             dl.getSondaggioDAO().storeSondaggio(sondaggio);
                             if(sondaggio.isPrivato()){
@@ -201,6 +283,8 @@ public class Dashboard extends BaseController {
             request.setAttribute("exception", ex);
             action_error(request, response);
 
+        } catch (java.text.ParseException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

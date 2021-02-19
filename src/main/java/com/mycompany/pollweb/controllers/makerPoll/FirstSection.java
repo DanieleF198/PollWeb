@@ -351,7 +351,9 @@ public class FirstSection extends BaseController {
                 dl.getSondaggioDAO().storeSondaggio(newSondaggio);
                 s.setAttribute("sondaggio-in-creazione", newSondaggio.getKey());
             } else {
+                Sondaggio sond = dl.getSondaggioDAO().getSondaggio((int)s.getAttribute("sondaggio-in-creazione"));
                 newSondaggio.setKey((int)s.getAttribute("sondaggio-in-creazione"));
+                newSondaggio.setVersion(sond.getVersion());
                 newSondaggio.setCompilazioni(dl.getSondaggioDAO().getSondaggio(newSondaggio.getKey()).getCompilazioni());
                 dl.getSondaggioDAO().storeSondaggio(newSondaggio);
             }
