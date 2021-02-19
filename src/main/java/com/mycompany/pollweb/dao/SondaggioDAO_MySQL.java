@@ -67,7 +67,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggioByID = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idSondaggio=?");
             sSondaggioByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
             sSondaggiByIDUtente = connection.prepareStatement("SELECT * FROM Sondaggio WHERE idUtente=?");
-            sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND modificabile=0"); //update per far apparire i sondaggi solo non modificabili
+            sSondaggi = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 AND (dataChiusura >= CURDATE() OR dataChiusura IS NULL)"); //update per far apparire i sondaggi solo non modificabili
             sSondaggiAdmin = connection.prepareStatement("SELECT * FROM Sondaggio");
             
             iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,visibilita,dataCreazione,dataChiusura,privato,modificabile,compilazioni) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -87,10 +87,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiCompilati2 = connection.prepareStatement("SELECT * FROM RispostaDomanda WHERE idRisposta=?");
             sSondaggiCompilati3 = connection.prepareStatement("SELECT * FROM Domanda WHERE idDomanda=?");
             
-            sSondaggiRecent = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 ORDER BY dataCreazione DESC");
-            sSondaggiOld = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 ORDER BY dataCreazione");
-            sSondaggiPopolari = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 ORDER BY compilazioni DESC");
-            sSondaggiPopolari9 = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 ORDER BY compilazioni DESC LIMIT 9");
+            sSondaggiRecent = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 AND (dataChiusura >= CURDATE() OR dataChiusura IS NULL) ORDER BY dataCreazione DESC");
+            sSondaggiOld = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 AND (dataChiusura >= CURDATE() OR dataChiusura IS NULL) ORDER BY dataCreazione");
+            sSondaggiPopolari = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 AND (dataChiusura >= CURDATE() OR dataChiusura IS NULL) ORDER BY compilazioni DESC");
+            sSondaggiPopolari9 = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 AND (dataChiusura >= CURDATE() OR dataChiusura IS NULL) ORDER BY compilazioni DESC LIMIT 9");
             
             
             
