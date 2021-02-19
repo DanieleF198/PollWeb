@@ -53,6 +53,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     private PreparedStatement sListaPartecipantiWithMailToSendBySondaggio;
     private PreparedStatement sListaPartecipantiBySondaggioAll;
     private PreparedStatement dListaPartecipanti;
+    private PreparedStatement sListaPartecipantiEmailSondaggio;
 
     UtenteDAO_MySQL(DataLayer d) {
         super(d);
@@ -77,15 +78,17 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             
             iUtenteListaPartecipanti = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,nome,email,password,scaduto,emailMandata) VALUES(?,?,?,?,?,?)");
             iUtenteListaPartecipanti2 = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,idUtente,nome,email,password,scaduto,emailMandata) VALUES(?,?,?,?,?,?,?)");
-            uUtenteListaPartecipantiScaduto = connection.prepareStatement("UPDATE ListaPartecipanti SET scaduto=? WHERE idSondaggio=? AND email=?");
-            uUtenteListaPartecipanti = connection.prepareStatement("UPDATE ListaPartecipanti SET nome=?, password=?, scaduto=? WHERE idSondaggio=? AND email=?");
-            uPartecipanteSetScaduto = connection.prepareStatement("UPDATE ListaPartecipanti SET scaduto=? WHERE idSondaggio=? AND email=?");
+            uUtenteListaPartecipantiScaduto = connection.prepareStatement("UPDATE ListaPartecipanti SET scaduto=?, version=? WHERE idSondaggio=? AND email=? AND version=?");
+            uUtenteListaPartecipanti = connection.prepareStatement("UPDATE ListaPartecipanti SET nome=?, password=?, scaduto=?, version=? WHERE idSondaggio=? AND email=? AND version=?");
+            uPartecipanteSetScaduto = connection.prepareStatement("UPDATE ListaPartecipanti SET scaduto=?, version=? WHERE idSondaggio=? AND email=? AND version=?");
             sPartecipanteCheckScaduto = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idSondaggio=? AND email=?");
-            uUtenteListaPartecipantiSendEmail = connection.prepareStatement("UPDATE ListaPartecipanti SET emailMandata=? WHERE idSondaggio=? AND scaduto=?");
+            uUtenteListaPartecipantiSendEmail = connection.prepareStatement("UPDATE ListaPartecipanti SET emailMandata=?, version=? WHERE idSondaggio=? AND scaduto=? AND version=?");
             sListaPartecipantiBySondaggio = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idSondaggio=? AND scaduto=?");
             sListaPartecipantiWithMailToSendBySondaggio = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idSondaggio=? AND emailMandata=? AND scaduto=?");
             sListaPartecipantiBySondaggioAll = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idSondaggio=?");
             dListaPartecipanti = connection.prepareStatement("DELETE FROM ListaPartecipanti WHERE idSondaggio=?");
+            
+            sListaPartecipantiEmailSondaggio = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE email=? AND idSondaggio=?");
             
         } catch (SQLException ex) {
             throw new DataException("Error initializing PollWebdb data layer", ex);
@@ -108,6 +111,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             iUtenteListaPartecipanti2.close();
             uPartecipanteSetScaduto.close();
             sPartecipanteCheckScaduto.close();
+            sListaPartecipantiEmailSondaggio.close();
             
             iUtente.close();
             uUtente.close();
@@ -464,11 +468,25 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     
     @Override
     public void updatePartecipanteSetScaduto(String email, int idSondaggio) throws DataException {
+        long currentVersion;
+        long nextVersion;
         try {
-            uPartecipanteSetScaduto.setBoolean(1, true);
-            uPartecipanteSetScaduto.setInt(2, idSondaggio);
-            uPartecipanteSetScaduto.setString(3, email);
-            uPartecipanteSetScaduto.execute();
+            sListaPartecipantiEmailSondaggio.setString(1, email);
+            sListaPartecipantiEmailSondaggio.setInt(2, idSondaggio);
+            try (ResultSet rs = sListaPartecipantiEmailSondaggio.executeQuery()){
+                if(rs.next()){
+                    currentVersion = rs.getInt("version");
+                    nextVersion = currentVersion + 1;
+
+
+                    uPartecipanteSetScaduto.setBoolean(1, true);
+                    uPartecipanteSetScaduto.setLong(2, nextVersion);
+                    uPartecipanteSetScaduto.setInt(3, idSondaggio);
+                    uPartecipanteSetScaduto.setString(4, email);
+                    uPartecipanteSetScaduto.setLong(5, currentVersion);
+                    uPartecipanteSetScaduto.execute();
+                }
+            }
         } catch (SQLException ex) {
             Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -480,25 +498,48 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
         ArrayList<Utente> listaPartecipantiAttuale = (ArrayList<Utente>) this.getListaPartecipantiBySondaggioId(idSondaggio, true);
         System.out.println("LUNGHEZZA VECCHIO: " + listaPartecipantiAttuale.size());
         System.out.println("LUNGHEZZA NUOVO: " + partecipants.size());
+        
+        long currentVersion;
+        long nextVersion;
+        
         for(int i = listaPartecipantiAttuale.size()-1; i >= 0; i--){
             Utente u = listaPartecipantiAttuale.get(i);
             for(int j = partecipants.size()-1; j >= 0; j--){
                 Utente u2 = partecipants.get(j);
                 if(u.getEmail().equals(u2.getEmail())){
                     System.out.println("SONO ENTRATO QUI PER LA " + i + "-ESIMA VOLTA");
+                    
                     try {
-                        uUtenteListaPartecipanti.setString(1, u2.getNome());
-                        uUtenteListaPartecipanti.setString(2, u2.getPassword());
-                        uUtenteListaPartecipanti.setBoolean(3, false);
-                        uUtenteListaPartecipanti.setInt(4, idSondaggio);
-                        uUtenteListaPartecipanti.setString(5, u2.getEmail()); 
-                        uUtenteListaPartecipanti.execute();
-                    } catch (SQLException ex) {
+                        
+                        sListaPartecipantiEmailSondaggio.setString(1, u2.getEmail());
+                        sListaPartecipantiEmailSondaggio.setInt(2, idSondaggio);
+                        
+                        try (ResultSet rs = sListaPartecipantiEmailSondaggio.executeQuery()){
+                            if(rs.next()){
+                                if(!(rs.getString("nome").equals(u2.getNome()) && rs.getString("password").equals(u2.getPassword()))){
+                                    currentVersion = rs.getLong("version");
+                                    nextVersion = currentVersion + 1;
+
+                                    uUtenteListaPartecipanti.setString(1, u2.getNome());
+                                    uUtenteListaPartecipanti.setString(2, u2.getPassword());
+                                    uUtenteListaPartecipanti.setBoolean(3, false);
+                                    uUtenteListaPartecipanti.setLong(4, nextVersion);
+                                    uUtenteListaPartecipanti.setInt(5, idSondaggio);
+                                    uUtenteListaPartecipanti.setString(6, u2.getEmail()); 
+                                    uUtenteListaPartecipanti.setLong(7, currentVersion);
+
+                                    uUtenteListaPartecipanti.execute();
+                                }
+                            }
+                        } catch (SQLException ex) {
+                        Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        partecipants.remove(u2);
+                        listaPartecipantiAttuale.remove(u);
+                        break;
+                    }   catch (SQLException ex) {
                         Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    partecipants.remove(u2);
-                    listaPartecipantiAttuale.remove(u);
-                    break;
                 }
             }
         }
@@ -507,10 +548,24 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             Utente u = listaPartecipantiAttuale.get(i);
             System.out.println(u.getEmail() + "SCADUTO");
             try {
-                uUtenteListaPartecipantiScaduto.setBoolean(1, true);
-                uUtenteListaPartecipantiScaduto.setInt(2, idSondaggio);
-                uUtenteListaPartecipantiScaduto.setString(3, u.getEmail()); 
-                uUtenteListaPartecipantiScaduto.execute();
+                
+                sListaPartecipantiEmailSondaggio.setString(1, u.getEmail());
+                sListaPartecipantiEmailSondaggio.setInt(2, idSondaggio);
+                try (ResultSet rs = sListaPartecipantiEmailSondaggio.executeQuery()){
+                    if(rs.next()){
+                    currentVersion = rs.getInt("version");
+                    nextVersion = currentVersion + 1;
+                
+                
+                
+                    uUtenteListaPartecipantiScaduto.setBoolean(1, true);
+                    uUtenteListaPartecipantiScaduto.setLong(2, nextVersion);
+                    uUtenteListaPartecipantiScaduto.setInt(3, idSondaggio);
+                    uUtenteListaPartecipantiScaduto.setString(4, u.getEmail()); 
+                    uUtenteListaPartecipantiScaduto.setLong(5, currentVersion); 
+                    uUtenteListaPartecipantiScaduto.execute();
+                    }
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -548,12 +603,31 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     @Override
     public void ListaPartecipantiSetMailSend(int idSondaggio) throws DataException {
         ArrayList<Utente> listaPartecipantiAttuale = (ArrayList<Utente>) this.getListaPartecipantiBySondaggioId(idSondaggio, false);
+        long currentVersion;
+        long nextVersion;
+        
         for(int i = 0; i < listaPartecipantiAttuale.size(); i++){
             try {
-                uUtenteListaPartecipantiSendEmail.setBoolean(1, true);
-                uUtenteListaPartecipantiSendEmail.setInt(2, idSondaggio);
-                uUtenteListaPartecipantiSendEmail.setBoolean(3, false);
-                uUtenteListaPartecipantiSendEmail.execute();
+                Utente u = listaPartecipantiAttuale.get(i);
+                
+                sListaPartecipantiEmailSondaggio.setString(1, u.getEmail());
+                sListaPartecipantiEmailSondaggio.setInt(2, idSondaggio);
+                try (ResultSet rs = sListaPartecipantiEmailSondaggio.executeQuery()){
+                    if(rs.next()){
+                        
+                        currentVersion = rs.getLong("version");
+                        nextVersion = currentVersion + 1;
+
+
+                        uUtenteListaPartecipantiSendEmail.setBoolean(1, true);
+                        uUtenteListaPartecipantiSendEmail.setLong(2, nextVersion);
+                        uUtenteListaPartecipantiSendEmail.setInt(3, idSondaggio);
+                        uUtenteListaPartecipantiSendEmail.setBoolean(4, false);
+                        uUtenteListaPartecipantiSendEmail.setLong(5, currentVersion);
+                        uUtenteListaPartecipantiSendEmail.execute();
+                        
+                    }
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(UtenteDAO_MySQL.class.getName()).log(Level.SEVERE, null, ex);
             }

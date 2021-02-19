@@ -306,6 +306,8 @@ public class ConfirmSection extends BaseController {
                             }
                             if(!partecipants.isEmpty()){
                                 for(int i = 0; i < partecipants.size(); i++){
+                                    partecipants.get(i).setNome(SecurityLayer.addSlashes(partecipants.get(i).getNome()));
+                                    partecipants.get(i).setPassword(SecurityLayer.addSlashes(partecipants.get(i).getPassword()));
                                     dl.getUtenteDAO().insertUtenteListaPartecipanti(partecipants.get(i), (int)s.getAttribute("sondaggio-in-creazione"));
                                 }
                             }

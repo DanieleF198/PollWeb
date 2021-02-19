@@ -55,6 +55,7 @@ public class PartecipantDashboard extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
+            
             HttpSession s = checkSession(request);
             if (s!= null) {
                 System.out.println(s.getAttribute("groupid"));

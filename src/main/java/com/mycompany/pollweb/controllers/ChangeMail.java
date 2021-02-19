@@ -50,6 +50,7 @@ public class ChangeMail extends BaseController {
                                 Utente u = dl.getUtenteDAO().getUtente((Integer) s.getAttribute("userid"));
                                 u.setEmail(request.getParameter("newMail"));
                                 dl.getUtenteDAO().storeUtente(u);
+                                s.setAttribute("email", u.getEmail());
                                 request.setAttribute("success", "Operazione conclusa con successo");
                             }
                             else{

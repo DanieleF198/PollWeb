@@ -20,6 +20,7 @@ import com.mycompany.pollweb.impl.UtenteImpl;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -85,6 +86,8 @@ public class ChangePartecipants extends BaseController {
                 System.out.println("sondaggioId " + request.getParameter("changePartecipantsForm"));
                 if(!(listaPartecipanti.isEmpty())){
                     for(int i = 0; i < listaPartecipanti.size(); i++){
+                        listaPartecipanti.get(i).setNome(SecurityLayer.stripSlashes(listaPartecipanti.get(i).getNome()));
+                        listaPartecipanti.get(i).setPassword(SecurityLayer.stripSlashes(listaPartecipanti.get(i).getPassword()));
                         System.out.println("Partecipante " + i + ", nome: " + listaPartecipanti.get(i).getNome());
                         System.out.println("Partecipante " + i + ", eMail: " + listaPartecipanti.get(i).getEmail());
                         System.out.println("Partecipante " + i + ", password: " + listaPartecipanti.get(i).getPassword());
@@ -185,12 +188,17 @@ public class ChangePartecipants extends BaseController {
                                     }
                                 }
                             }
+                            for(int i = 0; i<partecipants.size(); i++){
+                                partecipants.get(i).setNome(SecurityLayer.stripSlashes(partecipants.get(i).getNome()));
+                                partecipants.get(i).setPassword(SecurityLayer.stripSlashes(partecipants.get(i).getPassword()));
+                            }
                             request.setAttribute("partecipants", partecipants);
                         }
                     }
                 }
             }
             request.setAttribute("idSondaggio", Integer.parseInt(request.getParameter("changePartecipants")));
+            
             res.activate("changePartecipants.ftl", request, response);
             return;
     }
@@ -401,8 +409,13 @@ public class ChangePartecipants extends BaseController {
                 return;
             }
             if(!partecipants.isEmpty()){
+                for(int i = 0; i<partecipants.size();i++){
+                    partecipants.get(i).setNome(SecurityLayer.addSlashes(partecipants.get(i).getNome()));
+                    partecipants.get(i).setPassword(SecurityLayer.addSlashes(partecipants.get(i).getPassword()));
+                }
                 dl.getUtenteDAO().updateUtenteListaPartecipanti(partecipants, Integer.parseInt(request.getParameter("changePartecipants")));
             }
+            
             response.sendRedirect("dashboard");
             return;
         } else {

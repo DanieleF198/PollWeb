@@ -22,6 +22,7 @@ import com.mycompany.pollweb.model.Domanda;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.result.SplitSlashesFmkExt;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.text.DateFormat;
@@ -49,6 +50,7 @@ public class FirstSection extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
             HttpSession s = checkSession(request);
             if (s!= null) {
                 if ((Integer)s.getAttribute("groupid") == 1){

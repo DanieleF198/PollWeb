@@ -29,7 +29,7 @@
                                     <label class="h5" for="title">Titolo</label>
                                     <#if sondaggio??>
                                         <#if sondaggio.getTitolo()??>
-                                            <input type="text" name="title" value="${sondaggio.getTitolo()}" class="form-control" id="title" placeholder="almeno 3 caratteri" maxlength="128" required> 
+                                            <input type="text" name="title" value="${strip_slashes(sondaggio.getTitolo())}" class="form-control" id="title" placeholder="almeno 3 caratteri" maxlength="128" required> 
                                         <#else>
                                             <input type="text" name="title" class="form-control" id="title" placeholder="almeno 3 caratteri" maxlength="128" required> 
                                         </#if>
@@ -46,7 +46,7 @@
                                     <label class="h5" for="description">Descrizione (facoltativa)</label>
                                     <#if sondaggio??>
                                         <#if sondaggio.getTestoApertura()??>
-                                            <textarea rows="5" name="description" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione. Sono consentiti al massimo 2048 caratteri" maxlength="2048">${sondaggio.getTestoApertura()}</textarea>                               
+                                            <textarea rows="5" name="description" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione. Sono consentiti al massimo 2048 caratteri" maxlength="2048">${strip_slashes(sondaggio.getTestoApertura())}</textarea>                               
                                         <#else>
                                             <textarea rows="5" name="description" class="form-control" id="description" placeholder="Questa descrizione apparir&#224; sia nella preview del sondaggio che nella pagina prima della compilazione. Sono consentiti al massimo 2048 caratteri" maxlength="2048"></textarea>
                                         </#if>
@@ -60,7 +60,7 @@
                                     <label class="h5" for="finalMessage">Messaggio di completamento (facoltativo)</label>
                                     <#if sondaggio??>
                                         <#if sondaggio.getTestoChiusura()??>
-                                            <textarea rows="3" name="finalMessage" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito apparir&#224; il messaggio di default. Sono consentiti al massimo 1024 caratteri" maxlength="1024">${sondaggio.getTestoChiusura()}</textarea>
+                                            <textarea rows="3" name="finalMessage" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito apparir&#224; il messaggio di default. Sono consentiti al massimo 1024 caratteri" maxlength="1024">${strip_slashes(sondaggio.getTestoChiusura())}</textarea>
                                         <#else>
                                             <textarea rows="3" name="finalMessage" class="form-control" id="finalMessage" placeholder="Messaggio che apparir&#224; alla fine della compilazione, se non riempito apparir&#224; il messaggio di default. Sono consentiti al massimo 1024 caratteri" maxlength="1024"></textarea>
                                         </#if>

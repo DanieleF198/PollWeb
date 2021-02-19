@@ -102,12 +102,12 @@
                                                             <div class="card h-100">
                                                                 <div class="card-body">
                                                                     <#if sondaggio.getTitolo()??>
-                                                                        <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                                                        <h5 class="card-title">${strip_slashes(sondaggio.getTitolo())}</h5>
                                                                     <#else>
                                                                         <h5 class="card-title">Sondaggio senza titolo</h5>
                                                                     </#if>
                                                                     <#if sondaggio.getTestoApertura()??>
-                                                                        <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                                                        <p class="card-text">${strip_slashes(sondaggio.getTestoApertura())}</p>
                                                                     <#else>
                                                                         <p class="card-text">Nessuna descrizione attribuita a questo sondaggio</p>
                                                                     </#if>
@@ -155,12 +155,12 @@
                                                             <div class="card h-100">
                                                                 <div class="card-body">
                                                                     <#if sondaggio.getTitolo()??>
-                                                                        <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                                                        <h5 class="card-title">${strip_slashes(sondaggio.getTitolo())}</h5>
                                                                     <#else>
                                                                         <h5 class="card-title">Sondaggio senza titolo</h5>
                                                                     </#if>
                                                                     <#if sondaggio.getTestoApertura()??>
-                                                                        <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                                                        <p class="card-text">${strip_slashes(sondaggio.getTestoApertura())}</p>
                                                                     <#else>
                                                                         <p class="card-text">Nessuna descrizione attribuita a questo sondaggio</p>
                                                                     </#if>
@@ -209,12 +209,12 @@
                                                             <div class="card h-100">
                                                                 <div class="card-body">
                                                                     <#if sondaggio.getTitolo()??>
-                                                                        <h5 class="card-title">${sondaggio.getTitolo()}</h5>
+                                                                        <h5 class="card-title">${strip_slashes(sondaggio.getTitolo())}</h5>
                                                                     <#else>
                                                                         <h5 class="card-title">Sondaggio senza titolo</h5>
                                                                     </#if>
                                                                     <#if sondaggio.getTestoApertura()??>
-                                                                        <p class="card-text">${sondaggio.getTestoApertura()}</p>
+                                                                        <p class="card-text">${strip_slashes(sondaggio.getTestoApertura())}</p>
                                                                     <#else>
                                                                         <p class="card-text">Nessuna descrizione attribuita a questo sondaggio</p>
                                                                     </#if>

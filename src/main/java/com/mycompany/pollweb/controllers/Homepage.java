@@ -18,6 +18,7 @@ import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.result.SplitSlashesFmkExt;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -35,6 +36,7 @@ public class Homepage extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
             HttpSession s = checkSession(request);
             if (s!= null) {
                 if ((Integer)s.getAttribute("groupid") == 1){

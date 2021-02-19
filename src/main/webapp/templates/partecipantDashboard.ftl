@@ -69,10 +69,10 @@
                                                             <td>${c}</td>
                                                             <#if sondaggio.getTitolo()?length \gt 42>
                                                                 <#assign titolo = sondaggio.getTitolo()?substring(0,42)>
-                                                                <td>${titolo}...</td>
+                                                                <td>${strip_slashes(titolo)}...</td>
                                                             <#else>
                                                                 <#assign titolo = sondaggio.getTitolo()>
-                                                                <td>${titolo}</td>
+                                                                <td>${strip_slashes(titolo)}</td>
                                                             </#if>
                                                             <td>${sondaggio.getCreazione()}</td>
                                                             <#if sondaggio.getScadenza()??>
@@ -152,7 +152,7 @@
                                                             <#list sondaggiPriv as sondaggio>  
                                                                 <tr>
                                                                     <th scope="row">${c}</th>
-                                                                    <td >${sondaggio.getTitolo()}</td>
+                                                                    <td >${strip_slashes(sondaggio.getTitolo())}</td>
                                                                     <td>${sondaggio.getCreazione()}</td>
                                                                     <#if sondaggio.getScadenza()??>
                                                                         <td>${sondaggio.getScadenza()}</td>

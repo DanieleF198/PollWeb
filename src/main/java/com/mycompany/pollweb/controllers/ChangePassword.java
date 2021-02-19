@@ -56,6 +56,7 @@ public class ChangePassword extends BaseController {
                             if(request.getAttribute("error") == ""){
                                 u.setPassword(request.getParameter("newPassword"));
                                 dl.getUtenteDAO().storeUtente(u);
+                                s.setAttribute("password", u.getPassword());
                                 request.setAttribute("success", "Operazione conclusa con successo");
                             }
                         }

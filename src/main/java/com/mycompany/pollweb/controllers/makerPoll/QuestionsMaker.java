@@ -20,6 +20,7 @@ import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.model.Domanda;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.result.SplitSlashesFmkExt;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.text.DateFormat;
@@ -166,10 +167,10 @@ public class QuestionsMaker extends BaseController {
                     request.setAttribute("noPrev", "yes");
                 }
                 if(domanda.getTitolo()!=null && !domanda.getTitolo().isEmpty()){
-                    request.setAttribute("titleQuestion", domanda.getTitolo());
+                    request.setAttribute("titleQuestion", SecurityLayer.stripSlashes((String)domanda.getTitolo()));
                 }
                 if(domanda.getDescrizione()!=null && !domanda.getDescrizione().isEmpty()){
-                    request.setAttribute("description", domanda.getDescrizione());
+                    request.setAttribute("description", SecurityLayer.stripSlashes((String)domanda.getDescrizione()));
                 }
                 if(domanda.isObbligatoria()){
                     request.setAttribute("obbligatory", "yes");
@@ -269,13 +270,13 @@ public class QuestionsMaker extends BaseController {
                     request.setAttribute("checked", "closeSingle");
                     JSONArray opzioni = domanda.getOpzioni().getJSONArray("opzioni");
                     for(int i = 0; i < opzioni.length(); i++){
-                        request.setAttribute("option"+ i, opzioni.get(i));
+                        request.setAttribute("option"+ i, SecurityLayer.stripSlashes((String)opzioni.get(i)));
                     }
                 } else if(domanda.getTipo().equals("closeMultiple")){
                     request.setAttribute("checked", "closeMultiple");
                     JSONArray opzioni = domanda.getOpzioni().getJSONArray("opzioni");
                     for(int i = 0; i < opzioni.length(); i++){
-                        request.setAttribute("option"+ i + "m", opzioni.get(i));
+                        request.setAttribute("option"+ i + "m", SecurityLayer.stripSlashes((String)opzioni.get(i)));
                     }
                 }
                 request.setAttribute("noPrev", "yes");
@@ -564,7 +565,7 @@ public class QuestionsMaker extends BaseController {
                     newDomanda.setTipo("closeSingle");
                     JSONObject opzioni = new JSONObject();
                     ArrayList<String> listOpzioni = new ArrayList<String>();
-                    if(request.getParameter("option1")!=null && !request.getParameter("option1").isEmpty()){ //ricordare di togliere gli slash quando recuperiamo le opzioni
+                    if(request.getParameter("option1")!=null && !request.getParameter("option1").isEmpty()){
                         listOpzioni.add(SecurityLayer.addSlashes(request.getParameter("option1")));
                     }
                     if(request.getParameter("option2")!=null && !request.getParameter("option2").isEmpty()){
@@ -656,10 +657,10 @@ public class QuestionsMaker extends BaseController {
                 request.setAttribute("noPrev", "yes");
             }
             if(domanda.getTitolo()!=null && !domanda.getTitolo().isEmpty()){
-                request.setAttribute("titleQuestion", domanda.getTitolo());
+                request.setAttribute("titleQuestion", SecurityLayer.stripSlashes((String)domanda.getTitolo()));
             }
             if(domanda.getDescrizione()!=null && !domanda.getDescrizione().isEmpty()){
-                request.setAttribute("description", domanda.getDescrizione());
+                request.setAttribute("description", SecurityLayer.stripSlashes((String)domanda.getDescrizione()));
             }
             if(domanda.isObbligatoria()){
                 request.setAttribute("obbligatory", "yes");
@@ -759,13 +760,13 @@ public class QuestionsMaker extends BaseController {
                 request.setAttribute("checked", "closeSingle");
                 JSONArray opzioni = domanda.getOpzioni().getJSONArray("opzioni");
                 for(int i = 0; i < opzioni.length(); i++){
-                    request.setAttribute("option"+ i, opzioni.get(i));
+                    request.setAttribute("option"+ i, SecurityLayer.stripSlashes((String)opzioni.get(i)));
                 }
             } else if(domanda.getTipo().equals("closeMultiple")){
                 request.setAttribute("checked", "closeMultiple");
                 JSONArray opzioni = domanda.getOpzioni().getJSONArray("opzioni");
                 for(int i = 0; i < opzioni.length(); i++){
-                    request.setAttribute("option"+ i + "m", opzioni.get(i));
+                    request.setAttribute("option"+ i + "m", SecurityLayer.stripSlashes((String)opzioni.get(i)));
                 }
             }
             s.setAttribute("domanda-in-creazione", domanda.getPosizione());
@@ -972,10 +973,10 @@ public class QuestionsMaker extends BaseController {
                 //nextDomanda
                 
                 if(domanda.getTitolo()!=null && !domanda.getTitolo().isEmpty()){
-                    request.setAttribute("titleQuestion", domanda.getTitolo());
+                    request.setAttribute("titleQuestion", SecurityLayer.stripSlashes((String)domanda.getTitolo()));
                 }
                 if(domanda.getDescrizione()!=null && !domanda.getDescrizione().isEmpty()){
-                    request.setAttribute("description", domanda.getDescrizione());
+                    request.setAttribute("description", SecurityLayer.stripSlashes((String)domanda.getDescrizione()));
                 }
                 if(domanda.isObbligatoria()){
                     request.setAttribute("obbligatory", "yes");
@@ -1075,13 +1076,13 @@ public class QuestionsMaker extends BaseController {
                     request.setAttribute("checked", "closeSingle");
                     JSONArray opzioni = domanda.getOpzioni().getJSONArray("opzioni");
                     for(int i = 0; i < opzioni.length(); i++){
-                        request.setAttribute("option"+ i, opzioni.get(i));
+                        request.setAttribute("option"+ i, SecurityLayer.stripSlashes((String)opzioni.get(i)));
                     }
                 } else if(domanda.getTipo().equals("closeMultiple")){
                     request.setAttribute("checked", "closeMultiple");
                     JSONArray opzioni = domanda.getOpzioni().getJSONArray("opzioni");
                     for(int i = 0; i < opzioni.length(); i++){
-                        request.setAttribute("option"+ i +"m", opzioni.get(i));
+                        request.setAttribute("option"+ i +"m", SecurityLayer.stripSlashes((String)opzioni.get(i)));
                     }
                 }
                 
@@ -1322,10 +1323,10 @@ public class QuestionsMaker extends BaseController {
             domandaSuccessiva = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("domanda-in-creazione"));
             if(domandaSuccessiva != null){
                 if(domandaSuccessiva.getTitolo()!=null && !domandaSuccessiva.getTitolo().isEmpty()){
-                    request.setAttribute("titleQuestion", domandaSuccessiva.getTitolo());
+                    request.setAttribute("titleQuestion", SecurityLayer.stripSlashes((String)domandaSuccessiva.getTitolo()));
                 }
                 if(domandaSuccessiva.getDescrizione()!=null && !domandaSuccessiva.getDescrizione().isEmpty()){
-                    request.setAttribute("description", domandaSuccessiva.getDescrizione());
+                    request.setAttribute("description", SecurityLayer.stripSlashes((String)domandaSuccessiva.getDescrizione()));
                 }
                 if(domandaSuccessiva.isObbligatoria()){
                     request.setAttribute("obbligatory", "yes");
@@ -1425,13 +1426,13 @@ public class QuestionsMaker extends BaseController {
                     request.setAttribute("checked", "closeSingle");
                     JSONArray opzioni = domandaSuccessiva.getOpzioni().getJSONArray("opzioni");
                     for(int i = 0; i < opzioni.length(); i++){
-                        request.setAttribute("option"+ i, opzioni.get(i));
+                        request.setAttribute("option"+ i, SecurityLayer.stripSlashes((String)opzioni.get(i)));
                     }
                 } else if(domandaSuccessiva.getTipo().equals("closeMultiple")){
                     request.setAttribute("checked", "closeMultiple");
                     JSONArray opzioni = domandaSuccessiva.getOpzioni().getJSONArray("opzioni");
                     for(int i = 0; i < opzioni.length(); i++){
-                        request.setAttribute("option"+ i +"m", opzioni.get(i));
+                        request.setAttribute("option"+ i +"m", SecurityLayer.stripSlashes((String)opzioni.get(i)));
                     }
                 }
             } else {
