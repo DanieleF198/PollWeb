@@ -149,9 +149,7 @@ public class PartecipantDashboard extends BaseController {
                 sondaggiPriv = (ArrayList<Sondaggio>) dl.getSondaggioDAO().searchSondaggi(sondaggiPriv, (String)request.getParameter("header-search-sondaggi-privati"));
                 request.setAttribute("sondaggiPriv", sondaggiPriv);
                 
-                if( sondaggiPriv.isEmpty() ){
-                    request.setAttribute("noSondaggiPriv", "yes");
-                }
+                
                 
                 if(!request.getParameter("header-search-sondaggi-privati").isEmpty()){
                     request.setAttribute("ricercaSondaggiPrivati", "yes");

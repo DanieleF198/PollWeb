@@ -135,7 +135,10 @@ public class SecurityLayer {
     //all the "malicious" charcaters, usually exploited
     //to perform SQL injection through form parameters
     public static String addSlashes(String s) {
-        return s.replaceAll("(['\"\\\\])", "\\\\$1");
+        if (s!=null){
+            return s.replaceAll("(['\"\\\\])", "\\\\$1");
+        }
+        return s;
     }
 
     //questa funzione rimuove gli slash aggiunti da addSlashes

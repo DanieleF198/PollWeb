@@ -666,7 +666,13 @@
                         <#list risposteNoMult?keys as key>
                             <#if key == domanda.getPosizione()?string>
                                 <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
-                                    <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}" value="${risposteNoMult[key]}">
+                                    <#if domanda.getVincolo()?contains("--") && !(domanda.getVincolo()?contains("Null"))>
+                                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}" value="${risposteNoMult[key]}">
+                                    <#elseif domanda.getVincolo()?contains("Null")>
+                                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero minore di ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}" value="${risposteNoMult[key]}">
+                                    <#elseif !(domanda.getVincolo()?contains("--"))>
+                                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero maggiore di ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]}" value="${risposteNoMult[key]}">
+                                    </#if>     
                                 <#else>
                                     <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Scrivi un numero qualsiasi" value="${risposteNoMult[key]}">
                                 </#if>
@@ -674,7 +680,13 @@
                         </#list>
                     <#else>
                         <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
-                            <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}">
+                            <#if domanda.getVincolo()?contains("--") && !(domanda.getVincolo()?contains("Null"))>
+                                <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}">
+                            <#elseif domanda.getVincolo()?contains("Null")>
+                                <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero minore di ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}">
+                            <#elseif !(domanda.getVincolo()?contains("--"))>
+                                <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero maggiore di ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..]}">
+                            </#if>     
                         <#else>
                             <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Scrivi un numero qualsiasi">
                         </#if>
@@ -726,9 +738,19 @@
                                 <input type="date" name="openDate${domanda.getPosizione()}" value="${risposteNoMult[key]}" class="form-control">
                             </div>
                             <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
-                                <div class="col-lg-8 col-md-7 col-sm-12">
-                                    <p class="text-muted pt-2">Data compresa tra il ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]} ed il ${domanda.getVincolo()[34..35]}/${domanda.getVincolo()[31..32]}/${domanda.getVincolo()[26..29]}</p>
-                                </div>
+                                <#if domanda.getVincolo()?contains("--") && !(domanda.getVincolo()?contains("Null"))>
+                                    <div class="col-lg-8 col-md-7 col-sm-12">
+                                        <p class="text-muted pt-2">Data compresa tra il ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]} ed il ${domanda.getVincolo()[34..35]}/${domanda.getVincolo()[31..32]}/${domanda.getVincolo()[26..29]}</p>
+                                    </div>
+                                <#elseif domanda.getVincolo()?contains("Null")>
+                                    <div class="col-lg-8 col-md-7 col-sm-12">
+                                        <p class="text-muted pt-2">Data minore di ${domanda.getVincolo()[28..29]}/${domanda.getVincolo()[25..26]}/${domanda.getVincolo()[20..23]}</p>
+                                    </div>
+                                <#elseif !(domanda.getVincolo()?contains("--"))>
+                                    <div class="col-lg-8 col-md-7 col-sm-12">
+                                        <p class="text-muted pt-2">Data maggiore di ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]}</p>
+                                    </div>
+                                </#if>     
                             </#if>
                         </#if>
                     </#list>
@@ -737,9 +759,19 @@
                         <input type="date" name="openDate${domanda.getPosizione()}" class="form-control">
                     </div>
                     <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
-                        <div class="col-lg-8 col-md-7 col-sm-12">
-                            <p class="text-muted pt-2">Data compresa tra il ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]} ed il ${domanda.getVincolo()[34..35]}/${domanda.getVincolo()[31..32]}/${domanda.getVincolo()[26..29]}</p>
-                        </div>
+                        <#if domanda.getVincolo()?contains("--") && !(domanda.getVincolo()?contains("Null"))>
+                            <div class="col-lg-8 col-md-7 col-sm-12">
+                                <p class="text-muted pt-2">Data compresa tra il ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]} ed il ${domanda.getVincolo()[34..35]}/${domanda.getVincolo()[31..32]}/${domanda.getVincolo()[26..29]}</p>
+                            </div>
+                        <#elseif domanda.getVincolo()?contains("Null")>
+                            <div class="col-lg-8 col-md-7 col-sm-12">
+                                <p class="text-muted pt-2">Data minore di ${domanda.getVincolo()[28..29]}/${domanda.getVincolo()[25..26]}/${domanda.getVincolo()[20..23]}</p>
+                            </div>
+                        <#elseif !(domanda.getVincolo()?contains("--"))>
+                            <div class="col-lg-8 col-md-7 col-sm-12">
+                                <p class="text-muted pt-2">Data maggiore di ${domanda.getVincolo()[20..21]}/${domanda.getVincolo()[17..18]}/${domanda.getVincolo()[12..15]}</p>
+                            </div>
+                        </#if>  
                     </#if>
                 </#if>
             </div>

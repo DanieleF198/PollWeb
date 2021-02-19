@@ -72,7 +72,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             
             iSondaggio = connection.prepareStatement("INSERT INTO Sondaggio (idUtente,titolo,testoApertura,testoChiusura,completo,visibilita,dataCreazione,dataChiusura,privato,modificabile,compilazioni) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?, privato=?,modificabile=?,compilazioni=? WHERE idSondaggio=?");
+            uSondaggio = connection.prepareStatement("UPDATE Sondaggio SET idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?, privato=?,modificabile=?,compilazioni=?,version=? WHERE idSondaggio=? AND version=?");
             uSondaggioCompilazioni = connection.prepareStatement("UPDATE SONDAGGIO SET compilazioni =? WHERE idSondaggio=?");
 
             dSondaggio = connection.prepareStatement("DELETE FROM Sondaggio WHERE idSondaggio=?");
@@ -87,10 +87,10 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
             sSondaggiCompilati2 = connection.prepareStatement("SELECT * FROM RispostaDomanda WHERE idRisposta=?");
             sSondaggiCompilati3 = connection.prepareStatement("SELECT * FROM Domanda WHERE idDomanda=?");
             
-            sSondaggiRecent = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 ORDER BY dataCreazione DESC");
-            sSondaggiOld = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 ORDER BY dataCreazione");
-            sSondaggiPopolari = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 ORDER BY compilazioni DESC");
-            sSondaggiPopolari9 = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 ORDER BY compilazioni DESC LIMIT 9");
+            sSondaggiRecent = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 ORDER BY dataCreazione DESC");
+            sSondaggiOld = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 ORDER BY dataCreazione");
+            sSondaggiPopolari = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 ORDER BY compilazioni DESC");
+            sSondaggiPopolari9 = connection.prepareStatement("SELECT * FROM Sondaggio WHERE privato=0 AND visibilita=1 ORDER BY compilazioni DESC LIMIT 9");
             
             
             
@@ -461,19 +461,23 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
         ArrayList<Sondaggio> sp = new ArrayList();
         Sondaggio s;
         int idSondaggio; 
-        
+        ArrayList<Sondaggio> sondaggiCompilati = getSondaggiCompilati(idUtente);
         try {
             sSondaggiPrivatiByIdUtente.setInt(1, idUtente);
             try (ResultSet rs = sSondaggiPrivatiByIdUtente.executeQuery()) {
                 while (rs.next()) {
                     idSondaggio = rs.getInt("idSondaggio");
                     s = getSondaggio(idSondaggio);
-                    sp.add(s);
+                    if(!sondaggiCompilati.contains(s)){      
+                        if (s.isVisibilita()){
+                            sp.add(s);
+                        }
+                    }
                 }
             }
             } catch (SQLException ex) {
                 //
-            }
+        }
         return sp;
     }
     
@@ -537,7 +541,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
         }
         try {
             if(!data){
-                if("indeterminata".equals(ricerca) || "indeterminato".equals(ricerca)){
+                if("indeterminata".equals(ricerca) || "indeterminato".equals(ricerca) || "N/A".equals(ricerca)){
                     try (ResultSet rsNoData = searchSondaggiNoData.executeQuery()) {
                         while (rsNoData.next()) {
                             Sondaggio sondaggio = ((Sondaggio) getSondaggio(rsNoData.getInt("idSondaggio"))); // SONDAGGIO: il sondaggio del result

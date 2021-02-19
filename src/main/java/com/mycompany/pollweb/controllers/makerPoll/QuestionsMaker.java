@@ -476,6 +476,7 @@ public class QuestionsMaker extends BaseController {
                     Domanda domandaToUpdate = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("updateDomanda"));
                     System.out.println("Ehy, la key è:" + domandaToUpdate.getKey());
                     currentDomanda.setKey(domandaToUpdate.getKey());
+                    currentDomanda.setVersion(domandaToUpdate.getVersion());
                 }
                 dl.getDomandaDAO().storeDomanda(currentDomanda);
             }
@@ -955,12 +956,14 @@ public class QuestionsMaker extends BaseController {
                 if(s.getAttribute("updateDomanda")!=null){
                     Domanda domandaToUpdate = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("updateDomanda"));
                     oldDomanda.setKey(domandaToUpdate.getKey());
+                    oldDomanda.setVersion(domandaToUpdate.getVersion());
                     //esiste ancora una next (abbiamo fatto n prev ed n - x next (con x < n)
                     s.setAttribute("updateDomanda", domanda.getPosizione());
                 }
                 
                 if(domandaE!=null){
                     oldDomanda.setKey(domandaE.getKey());
+                    oldDomanda.setVersion(domandaE.getVersion());
                 }
                         
                 dl.getDomandaDAO().storeDomanda(oldDomanda);
@@ -1254,10 +1257,12 @@ public class QuestionsMaker extends BaseController {
                 if(s.getAttribute("updateDomanda")!=null){
                     Domanda domandaToUpdate = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("updateDomanda"));
                     newDomanda.setKey(domandaToUpdate.getKey());
+                    newDomanda.setVersion(domandaToUpdate.getVersion());
                     s.removeAttribute("updateDomanda");
                 }
                 if(domandaE!=null){
                     newDomanda.setKey(domandaE.getKey());
+                    newDomanda.setVersion(domandaE.getVersion());
                 }
                 
                 dl.getDomandaDAO().storeDomanda(newDomanda);
@@ -1621,13 +1626,16 @@ public class QuestionsMaker extends BaseController {
             newDomanda.setPosizione((int)s.getAttribute("domanda-in-creazione"));
             System.out.println(s.getAttribute("updateDomanda"));
             if(s.getAttribute("updateDomanda")!=null){
-                newDomanda.setKey((int)s.getAttribute("updateDomanda"));
+                Domanda domandaToUpdate = dl.getDomandaDAO().getDomandaByIdSondaggioAndPosition((int)s.getAttribute("sondaggio-in-creazione"), (int)s.getAttribute("updateDomanda"));
+                newDomanda.setKey(domandaToUpdate.getKey());
+                newDomanda.setVersion(domandaToUpdate.getVersion());
                 s.removeAttribute("updateDomanda");
             }
             if(domandaE!=null){
                 newDomanda.setKey(domandaE.getKey());
+                newDomanda.setVersion(domandaE.getVersion());
             }
-
+            
             dl.getDomandaDAO().storeDomanda(newDomanda);
         }
         response.sendRedirect("confirmSection");

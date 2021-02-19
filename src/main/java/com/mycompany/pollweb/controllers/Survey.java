@@ -82,7 +82,6 @@ public class Survey extends BaseController {
             Logger.getLogger(Survey.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
     private void action_default(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
        try {
         TemplateResult res = new TemplateResult(getServletContext());
@@ -101,7 +100,7 @@ public class Survey extends BaseController {
         request.setAttribute("domande", domande);
         Collections.sort(domande);
         //controllo se l'utente ha già risposto al sondaggio in passato (caso impossibile per i sondaggi privati)
-        if(sondaggio.isPrivato()){
+        if(!sondaggio.isPrivato()){
             ArrayList<Risposta> risposte;
             HttpSession s = checkSession(request);
             if(s!=null){
@@ -114,11 +113,13 @@ public class Survey extends BaseController {
             for(int i = 0; i<risposte.size();i++){
                 risposta = risposte.get(i);
                 for(int j = 0; j<domande.size(); j++){
-                    Domanda d = domande.get(i);
-                    JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
-                    if(r != null){
-                        idRispostaCorretta = i;
-                        break;
+                    Domanda d = domande.get(j);
+                    if(dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey())!=null){
+                        JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                        if(r != null){
+                            idRispostaCorretta = i;
+                            break;
+                        }
                     }
                 }
                 if(idRispostaCorretta!=-1){
@@ -136,7 +137,10 @@ public class Survey extends BaseController {
             if(risposta != null){
                 for(int i = 0; i<domande.size(); i++){
                     Domanda d = domande.get(i);
-                    JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                    JSONArray r = null;
+                    if(dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey())!=null){
+                        r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                    }
                     if(r != null){
                         if (d.getTipo().equals("closeMultiple")){
                             HashMap<String, String> temp = new HashMap<String, String>();
@@ -177,6 +181,9 @@ public class Survey extends BaseController {
                 RequestDispatcher rd = request.getRequestDispatcher("/surveyAnswered");
                 rd.forward(request, response);
                 return;
+            }
+            if(atLeastOne){
+                request.setAttribute("modRisposta", "yes");
             }
         }
         res.activate("survey.ftl", request, response);
@@ -359,41 +366,56 @@ public class Survey extends BaseController {
         System.out.println("caso senza errori");
         
         Risposta risp = new RispostaImpl();
-        if(request.getParameter("ModAnswer")!=null){
-            ArrayList<Risposta> risposte;
-            if(s!=null){
-                risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIdUtente((int) s.getAttribute("userid"));
-            } else {
-                risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIPUtente(request.getRemoteHost());
-            }
-            int idRispostaCorretta = -1;
-            for(int i = 0; i<risposte.size();i++){
-                risp = risposte.get(i);
-                for(int j = 0; j<domande.size(); j++){
-                    Domanda d = domande.get(i);
+        ArrayList<Risposta> risposte;
+        if(s!=null){
+            risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIdUtente((int) s.getAttribute("userid"));
+        } else {
+            risposte = (ArrayList<Risposta>) dl.getRispostaDAO().getRispostaByIPUtente(request.getRemoteHost());
+        }
+        int idRispostaCorretta = -1;
+        for(int i = 0; i<risposte.size();i++){
+            risp = risposte.get(i);
+            for(int j = 0; j<domande.size(); j++){
+                Domanda d = domande.get(j);
+                if(dl.getRispostaDomandaDAO().getRispostaDomanda(risp.getKey(), d.getKey())!=null){
                     JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risp.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
                     if(r != null){
                         idRispostaCorretta = i;
                         break;
                     }
                 }
-                if(idRispostaCorretta!=-1){
-                    break;
-                }
             }
+            if(idRispostaCorretta!=-1){
+                break;
+            }
+        }
+        if(request.getParameter("ModAnswer")!=null && idRispostaCorretta != -1){
+            risp = risposte.get(idRispostaCorretta);   
+        } else if (request.getParameter("ModAnswer")!=null){
+            risp = dl.getRispostaDAO().createRisposta();
+        } else if (idRispostaCorretta != -1){
             risp = risposte.get(idRispostaCorretta);   
         } else {
             risp = dl.getRispostaDAO().createRisposta();
-        } 
+        }
+        
         
         int idRisposta = 0;
         Date nowTemp = new Date();
         if(s!=null){
             if(sondaggio.isPrivato()){
-                risp.setIpUtenteRisposta(request.getRemoteHost());
-                risp.setData(nowTemp);
-                risp.setUsernameUtenteRisposta((String)s.getAttribute("email"));
-                idRisposta = dl.getRispostaDAO().insertRispostaUserPartecipante(risp);
+                if((int) s.getAttribute("userid") != -1){
+                    risp.setIdUtente((int)s.getAttribute("userid"));
+                    risp.setIpUtenteRisposta((String)s.getAttribute("ip"));
+                    risp.setUsernameUtenteRisposta((String)s.getAttribute("username"));
+                    risp.setData(nowTemp);
+                    idRisposta = dl.getRispostaDAO().storeRispostaUserReg(risp);   
+                } else {
+                    risp.setIpUtenteRisposta(request.getRemoteHost());
+                    risp.setData(nowTemp);
+                    risp.setUsernameUtenteRisposta((String)s.getAttribute("email"));
+                    idRisposta = dl.getRispostaDAO().insertRispostaUserPartecipante(risp);
+                }
             } else {
                 risp.setIdUtente((int)s.getAttribute("userid"));
                 risp.setIpUtenteRisposta((String)s.getAttribute("ip"));
@@ -443,6 +465,8 @@ public class Survey extends BaseController {
             rispDom.setIdRisposta(idRisposta);
             rispDom.setRisposta(risposta);
             if(request.getParameter("ModAnswer")!=null){
+                dl.getRispostaDomandaDAO().updateRisposta(rispDom);
+            } else if(idRispostaCorretta!=-1) {
                 dl.getRispostaDomandaDAO().updateRisposta(rispDom);
             } else {
                 dl.getRispostaDomandaDAO().insertRisposta(rispDom);
@@ -514,10 +538,12 @@ public class Survey extends BaseController {
             risposta = risposte.get(i);
             for(int j = 0; j<domande.size(); j++){
                 Domanda d = domande.get(i);
-                JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
-                if(r != null){
-                    idRispostaCorretta = i;
-                    break;
+                if(dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey())!=null){
+                    JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+                    if(r != null){
+                        idRispostaCorretta = i;
+                        break;
+                    }
                 }
             }
             if(idRispostaCorretta!=-1){
@@ -530,7 +556,10 @@ public class Survey extends BaseController {
         HashMap<String, HashMap<String, String>> risposteSiMult = new HashMap<String, HashMap<String, String>>();
         for(int i = 0; i<domande.size(); i++){
             Domanda d = domande.get(i);
-            JSONArray r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+            JSONArray r = null;
+            if(dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey())!=null){            
+                r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposta.getKey(), d.getKey()).getRisposta().getJSONArray("risposta");
+            }
             if(r != null){
                 if (d.getTipo().equals("closeMultiple")){
                     HashMap<String, String> temp = new HashMap<String, String>();

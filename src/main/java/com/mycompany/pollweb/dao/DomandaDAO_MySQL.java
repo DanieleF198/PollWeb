@@ -65,7 +65,8 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
             
             sDomandaByID.close();
             sDomandaBySondaggioID.close();
-            
+            sDomandaBySondaggioIDAndPosition.close();
+
             sDomande.close();
             
             iDomanda.close();
@@ -229,7 +230,10 @@ public class DomandaDAO_MySQL extends DAO implements DomandaDAO  {
                 uDomanda.setLong(9, nextVersion);
                 uDomanda.setInt(10, domanda.getKey());
                 uDomanda.setLong(11, currentVersion);
-
+                
+                System.out.println("VERSIONE old: " + currentVersion);
+                System.out.println("VERSIONE old: " + nextVersion);
+                
                 if (uDomanda.executeUpdate() == 0) {
                     throw new OptimisticLockException(domanda);
                 }

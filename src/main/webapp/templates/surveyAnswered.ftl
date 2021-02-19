@@ -13,6 +13,40 @@
     <body class="bg-light">
         <#if isPrivato??>
             <div class="d-flex flex-column min-vh-100">
+                <main class="flex-fill">
+                    <div class="header-margin"></div>
+                    <div class="container-fluid">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="h1">La risposta &#232; stata registrata</p>
+                                    <#if sondaggio.getTestoChiusura()?? && sondaggio.getTestoChiusura()!="">
+                                        <p class="h4 text-muted mt-3">${sondaggio.getTestoChiusura()}</p>
+                                    <#else>
+                                        <p class="h4 text-muted mt-3">La ringraziamo per averci concesso il tempo necessario per rispondere a questo sondaggio</p>
+                                    </#if>
+                                </div>
+                            </div>
+                            <form id="returnPartecipantDashboard" action="partecipantDashboard" method="GET"></form>
+                            <div class="row mt-5">
+                                <div class="col-lg-12 mb-2 pr-1 pl-1 custom-right">
+                                        <button type="submit" name="returnPartecipantDashboardbtn" value="returnPartecipantDashboardButton" form="returnPartecipantDashboard" class="btn btn-lg btn-warning custom-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-person" viewBox="0 0 16 16">
+                                            <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2v9.255S12 12 8 12s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h5.5v2z"/>
+                                        </svg>
+                                        Ritorna alla scelta dei sondaggi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <@macros.footer />
+                <@macros.script />
+            </div>
+        <#else>
+            <div class="d-flex flex-column min-vh-100">
                 <@macros.header imagePath="images/logoDDP.png"/>
                 <main class="flex-fill">
                     <div class="header-margin"></div>
@@ -82,40 +116,6 @@
                                     </div>
                                 </#if>
                             </#if>
-                        </div>
-                    </div>
-                </main>
-                <@macros.footer />
-                <@macros.script />
-            </div>
-        <#else>
-            <div class="d-flex flex-column min-vh-100">
-                <main class="flex-fill">
-                    <div class="header-margin"></div>
-                    <div class="container-fluid">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-12">
-                                    <p class="h1">La risposta &#232; stata registrata</p>
-                                    <#if sondaggio.getTestoChiusura()?? && sondaggio.getTestoChiusura()!="">
-                                        <p class="h4 text-muted mt-3">${sondaggio.getTestoChiusura()}</p>
-                                    <#else>
-                                        <p class="h4 text-muted mt-3">La ringraziamo per averci concesso il tempo necessario per rispondere a questo sondaggio</p>
-                                    </#if>
-                                </div>
-                            </div>
-                            <form id="returnPartecipantDashboard" action="partecipantDashboard" method="GET"></form>
-                            <div class="row mt-5">
-                                <div class="col-lg-12 mb-2 pr-1 pl-1 custom-right">
-                                        <button type="submit" name="returnPartecipantDashboardbtn" value="returnPartecipantDashboardButton" form="returnPartecipantDashboard" class="btn btn-lg btn-warning custom-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-person" viewBox="0 0 16 16">
-                                            <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2v9.255S12 12 8 12s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h5.5v2z"/>
-                                        </svg>
-                                        Ritorna alla scelta dei sondaggi
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </main>

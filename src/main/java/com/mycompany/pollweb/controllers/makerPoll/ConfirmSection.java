@@ -564,24 +564,28 @@ public class ConfirmSection extends BaseController {
                     }
                     if(d.getTipo().equals("openNumber")){
                         if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
-                            int vincoloNumber1 = Integer.parseInt(d.getVincolo().substring(d.getVincolo().indexOf(":")+2, d.getVincolo().indexOf("-")-1));
-                            int vincoloNumber2 = Integer.parseInt(d.getVincolo().substring(d.getVincolo().indexOf("-")+3));
-                            if((vincoloNumber1 > vincoloNumber2) ||  (vincoloNumber1 == vincoloNumber2)){
-                                if(!errors.contains(err4)){
-                                    errors.add(err4);
+                            if(d.getVincolo().contains("-") && !(d.getVincolo().contains("Null"))){
+                                int vincoloNumber1 = Integer.parseInt(d.getVincolo().substring(d.getVincolo().indexOf(":")+2, d.getVincolo().indexOf("-")-1));
+                                int vincoloNumber2 = Integer.parseInt(d.getVincolo().substring(d.getVincolo().indexOf("-")+3));
+                                if((vincoloNumber1 > vincoloNumber2) ||  (vincoloNumber1 == vincoloNumber2)){
+                                    if(!errors.contains(err4)){
+                                        errors.add(err4);
+                                    }
                                 }
                             }
                         }
                     }
                     if(d.getTipo().equals("openDate")){
                         if(d.getVincolo()!=null && !d.getVincolo().isBlank()){
-                            String vincoloDate1 = d.getVincolo().substring(12,22);
-                            String vincoloDate2 = d.getVincolo().substring(26,36);
-                            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(vincoloDate1);
-                            Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(vincoloDate2);
-                            if((date1.after(date1)) ||  (date1.equals(date2))){
-                                if(!errors.contains(err4)){
-                                    errors.add(err4);
+                            if(d.getVincolo().contains("--") && !(d.getVincolo().contains("Null"))){
+                                String vincoloDate1 = d.getVincolo().substring(12,22);
+                                String vincoloDate2 = d.getVincolo().substring(26,36);
+                                Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(vincoloDate1);
+                                Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(vincoloDate2);
+                                if((date1.after(date1)) ||  (date1.equals(date2))){
+                                    if(!errors.contains(err4)){
+                                        errors.add(err4);
+                                    }
                                 }
                             }
                         }

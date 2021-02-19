@@ -683,6 +683,10 @@ input[type=number] {
   min-width: 500px;
 }
 
+.table{
+    overflow: hidden
+}
+
 @media screen and (max-width: 1200px){
     .particular-width{
         width: 7.5%

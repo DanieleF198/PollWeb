@@ -7,6 +7,7 @@ package com.mycompany.pollweb.controllers;
 
 import com.mycompany.pollweb.dao.PollWebDataLayer;
 import com.mycompany.pollweb.data.DataException;
+import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.result.HTMLResult;
@@ -89,6 +90,12 @@ public class LoginForPartecipants extends BaseController {
                         //come key abbiamo l'idSondaggio al quale il partecipante è riferito, value il partecipante effettivo
                         //questa cosa perché uno stesso partecipante può essere invitato a più sondaggi privati da diversi responsabili
                         HashMap<Integer, Utente> partecipante = ((PollWebDataLayer)request.getAttribute("datalayer")).getUtenteDAO().getPartecipanteLogin(email, password);
+                        for ( int key : partecipante.keySet() ) {
+                            Sondaggio sond = ((PollWebDataLayer)request.getAttribute("datalayer")).getSondaggioDAO().getSondaggio(key);
+                            if (!(sond.isVisibilita())){
+                                partecipante.remove(key);
+                            }
+                        }
                         if(partecipante != null){
                             if(!partecipante.isEmpty()){
                                 Utente u = ((PollWebDataLayer)request.getAttribute("datalayer")).getUtenteDAO().createUtente();
