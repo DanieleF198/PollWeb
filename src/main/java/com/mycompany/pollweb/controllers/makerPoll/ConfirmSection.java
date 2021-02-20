@@ -343,25 +343,10 @@ public class ConfirmSection extends BaseController {
                                 
                                 for(int i = 0; i < partecipants.size(); i++){
                                     try {
-                                        
                                         String to = partecipants.get(i).getEmail();
                                         
                                         String password = partecipants.get(i).getPassword();
                                         
-                                        MimeMessage message = new MimeMessage(session);
-
-                                        message.setFrom(new InternetAddress(from));
-
-                                        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-                                        message.setSubject("This is the Subject Line!");
-
-                                        message.setText("This is actual message");
-
-                                        Transport transport = session.getTransport("smtp");
-                                        transport.connect(host, from, pass);
-                                        transport.sendMessage(message, message.getAllRecipients());
-                                        transport.close();
                                         String contextPath = getServletContext().getRealPath("/");
                                         File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+(int)s.getAttribute("sondaggio-in-creazione")+".txt"); //daniele -> joker; Davide-> Cronio
                                         if (!f.createNewFile()) { System.out.println("File already exists"); }
@@ -371,33 +356,37 @@ public class ConfirmSection extends BaseController {
                                         
                                         String title = "Invito Sondaggio privato Quack, Duck, Poll";
                                         
-                                        String docType =
-                                           "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
-                                        
                                         String res = 
                                                 "Salve\n" + "sei stato invitato a partecipare ad un sondaggio privato su Quack, Duck, Poll dall\'utente " + u.getUsername() + "\n" +
                                                 "Le tue credenziali di accesso al sondaggio sono:\n" + "Email: " + partecipants.get(i).getEmail() + "\n" + "Password: " + password + "\n" +
                                                 "Puoi effettuare il login al seguente link: http://localhost:8080/PollWeb/loginForPartecipants \n" + "\n" +
                                                 "Questa mail viene inviata automaticamente dal sito Quack, Duck, Poll tramite la richiesta d\'invito da parte dell\'utente " + u.getUsername() + ", se pensi che la tua privacy sia stata lesa in un qualche modo contattaci all\'indirizzo: Quack@Duck.poll\n";
-//                                        Come sarebbe l'invio (esempio) vero
-                                        out.println(docType +
-                                           "<html>\n" +
-                                              "<head><title>" + title + "</title></head>\n" +
-                                                "<body bgcolor = \"#f0f0f0\">\n" +
-                                                    "<h1 align = \"center\">" + title + "</h1>\n" +
-                                                    "<p align = \"center\">" + res + "</p>\n" +
-                                                "</body>\n" +
-                                            "</html>\n" +
-                                            "---------------------"
-                                        );
-                                        System.out.println(
+
+                                        String output = 
                                            "Mail inviata da: "+ from + "\n" +
                                            "Mail ricevuta da: "+ to + "\n" +
                                            "Oggetto: " + title + "\n" +
                                            "Testo:\n" + res + "\n" + 
-                                           "---------------------"
-                                        );
-                                        System.setOut(standard);  
+                                           "---------------------";
+                                        
+                                        System.out.println(output);
+                                        
+                                        System.setOut(standard); 
+
+                                        MimeMessage message = new MimeMessage(session);
+
+                                        message.setFrom(new InternetAddress(from));
+
+                                        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                                        message.setSubject(title);
+
+                                        message.setText(res);
+
+                                        Transport transport = session.getTransport("smtp");
+                                        transport.connect(host, from, pass);
+                                        transport.sendMessage(message, message.getAllRecipients());
+                                        transport.close();
                                     } catch (MessagingException mex) {
                                         mex.printStackTrace();
                                     }

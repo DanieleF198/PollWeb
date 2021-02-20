@@ -26,6 +26,7 @@ import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.result.SplitSlashesFmkExt;
+import com.mycompany.pollweb.result.StreamResult;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import com.opencsv.CSVWriter;
@@ -36,6 +37,7 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Writer;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -194,60 +196,51 @@ public class Dashboard extends BaseController {
                                 
                                 for(int i = 0; i < partecipants.size(); i++){
                                     try {
-                                        
                                         String to = partecipants.get(i).getEmail();
                                         
                                         String password = partecipants.get(i).getPassword();
                                         
+                                        String contextPath = getServletContext().getRealPath("/");
+                                        File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+(request.getParameter("changeVisibility"))+".txt"); //daniele -> joker; Davide-> Cronio
+                                        if (!f.createNewFile()) { System.out.println("File already exists"); }
+                                        PrintStream standard = System.out;
+                                        PrintStream fileStream = new PrintStream(new FileOutputStream(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+(request.getParameter("changeVisibility"))+".txt", true));
+                                        System.setOut(fileStream);
+                                        
+                                        String title = "Invito Sondaggio privato Quack, Duck, Poll";
+                                        
+
+                                        String res = 
+                                                "Salve\n" + "sei stato invitato a partecipare ad un sondaggio privato su Quack, Duck, Poll dall\'utente " + u.getUsername() + "\n" +
+                                                "Le tue credenziali di accesso al sondaggio sono:\n" + "Email: " + partecipants.get(i).getEmail() + "\n" + "Password: " + password + "\n" +
+                                                "Puoi effettuare il login al seguente link: http://localhost:8080/PollWeb/loginForPartecipants \n" + "\n" +
+                                                "Questa mail viene inviata automaticamente dal sito Quack, Duck, Poll tramite la richiesta d\'invito da parte dell\'utente " + u.getUsername() + ", se pensi che la tua privacy sia stata lesa in un qualche modo contattaci all\'indirizzo: Quack@Duck.poll\n";
+
+                                        String output =
+                                           "Mail inviata da: "+ from + "\n" +
+                                           "Mail ricevuta da: "+ to + "\n" +
+                                           "Oggetto: " + title + "\n" +
+                                           "Testo:\n" + res + "\n" + 
+                                           "---------------------";
+                                        
+                                        System.out.println(output);
+                                        
+                                        System.setOut(standard); 
+
                                         MimeMessage message = new MimeMessage(session);
 
                                         message.setFrom(new InternetAddress(from));
 
                                         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
-                                        message.setSubject("This is the Subject Line!");
+                                        message.setSubject(title);
 
-                                        message.setText("This is actual message");
+                                        message.setText(res);
 
                                         Transport transport = session.getTransport("smtp");
                                         transport.connect(host, from, pass);
                                         transport.sendMessage(message, message.getAllRecipients());
                                         transport.close();
-                                        String contextPath = getServletContext().getRealPath("/");
-                                        File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+Integer.parseInt(request.getParameter("changeVisibility"))+".txt");
-                                        if (!f.createNewFile()) { System.out.println("File already exists"); }
-                                        PrintStream standard = System.out;
-                                        PrintStream fileStream = new PrintStream(new FileOutputStream(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+Integer.parseInt(request.getParameter("changeVisibility"))+".txt", true));
-                                        System.setOut(fileStream);
-                                        
-                                        String title = "Invito Sondaggio privato Quack, Duck, Poll";
-                                        
-                                        String docType =
-                                           "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
-                                        
-                                        String res = 
-                                                "Salve\n" + "sei stato invitato a partecipare ad un sondaggio privato su Quack, Duck, Poll dall\'utente " + u.getUsername() + "\n" +
-                                                "Le tue credenziali di accesso al sondaggio sono:\n" + "Email: " + partecipants.get(i).getEmail() + "\n" + "Password: " + password + "\n" +
-                                                "Puoi effettuare il login al seguente link: http://localhost:8080/PollWeb/loginForPartecipants \n" + "\n" +
-                                                "Questa mail viene inviata automaticamente dal sito Quack, Duck, Poll tramite la richiesta d\'invito da parte dell\'utente " + u.getUsername() + ", se pensi che la tua privacy sia stata lesa in un qualche modo contattaci all\'indirizzo: Quack@Duck.poll\n";
-                                        out.println(docType +
-                                           "<html>\n" +
-                                              "<head><title>" + title + "</title></head>\n" +
-                                                "<body bgcolor = \"#f0f0f0\">\n" +
-                                                    "<h1 align = \"center\">" + title + "</h1>\n" +
-                                                    "<p align = \"center\">" + res + "</p>\n" +
-                                                "</body>\n" +
-                                            "</html>\n" +
-                                            "---------------------"
-                                        );
-                                        System.out.println(
-                                           "Mail inviata da: "+ from + "\n" +
-                                           "Mail ricevuta da: "+ to + "\n" +
-                                           "Oggetto: " + title + "\n" +
-                                           "Testo:\n" + res + "\n" + 
-                                           "---------------------"
-                                        );
-                                        System.setOut(standard);  
                                     } catch (MessagingException mex) {
                                         mex.printStackTrace();
                                     }
@@ -280,7 +273,7 @@ public class Dashboard extends BaseController {
                             Collections.sort(domande);
                             if(risposteDomande.isEmpty()){
                                 String contextPath = getServletContext().getRealPath("/");
-                                File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\download\\risposte"+request.getParameter("downloadAnswer"));
+                                File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\download\\risposte"+request.getParameter("downloadAnswer")+".csv");
                                 FileWriter outputFile = new FileWriter(f);
                                 CSVWriter writer = new CSVWriter(outputFile); 
                                 ArrayList<String> headerList = new ArrayList<String>();
@@ -296,6 +289,9 @@ public class Dashboard extends BaseController {
                                 }
                                 writer.writeNext(header);
                                 writer.close();
+                                StreamResult result = new StreamResult(getServletContext());
+                                result.setResource(f);
+                                result.activate(request, response);
                             } else {
                                 for(int i = 0; i<risposteDomande.size();i++){
                                     Risposta r = dl.getRispostaDAO().getRisposta(risposteDomande.get(i).getIdRisposta());
@@ -304,7 +300,7 @@ public class Dashboard extends BaseController {
                                     }
                                 }
                                 String contextPath = getServletContext().getRealPath("/");
-                                File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\download\\risposte"+request.getParameter("downloadAnswer"));
+                                File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\download\\risposte"+request.getParameter("downloadAnswer")+".csv");
                                 FileWriter outputFile = new FileWriter(f);
                                 CSVWriter writer = new CSVWriter(outputFile); 
                                 ArrayList<String> headerList = new ArrayList<String>();
@@ -350,8 +346,12 @@ public class Dashboard extends BaseController {
                                     writer.writeNext(dataArray); 
                                 }
                                 writer.close();
+                                StreamResult result = new StreamResult(getServletContext());
+                                result.setResource(f);
+                                result.activate(request, response);
                             }
                         } else {
+                            
                             response.sendRedirect("dashboard");
                         }
                     }
