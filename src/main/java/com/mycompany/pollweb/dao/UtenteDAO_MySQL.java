@@ -667,4 +667,22 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
         }  
         return check;
     }
+
+    @Override
+    public Utente getUtenteByMail(String mail) throws DataException {
+        Utente u = null;
+        try {
+            sUtenteExistByEmail.setString(1, mail);
+            try (ResultSet rs = sUtenteExistByEmail.executeQuery()) {
+                if (rs.next()) {
+                    u = createUtente(rs);
+                    //e lo mettiamo anche nella cache
+                    dataLayer.getCache().add(Utente.class, u);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataException("Unable to load Utente by idUtente", ex);
+        }
+        return u;
+    }
 }

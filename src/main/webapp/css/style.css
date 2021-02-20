@@ -676,7 +676,7 @@ input[type=number] {
 
 .particular-width{
     box-sizing: border-box;
-    width: 10%
+    width: 0%
 }
 
 .tales {
@@ -689,25 +689,29 @@ input[type=number] {
 
 @media screen and (max-width: 1200px){
     .particular-width{
-        width: 7.5%
+        width: 5%
     }
 }
 
 @media screen and (max-width: 992px){
     .particular-width{
-        width: 5%
+        width: 2.5%
     }
 }
 
 @media screen and (max-width: 768px){
     .particular-width{
-        width: 2.5%
+        width: 0%
     }
 }
 
 @media screen and (max-width: 576px){
     .particular-width{
         width: 0%
+    }
+    
+    .particular-visibility{
+        display: none;
     }
 }
 

@@ -123,6 +123,8 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
                 try (ResultSet rs = sRispostaByID.executeQuery()) {
                     if (rs.next()) {
                         r = createRisposta(rs);
+                        System.out.println("userId " + r.getIdUtente());
+                        System.out.println("userId2 " + rs.getInt("idUtente"));
                         //e lo mettiamo anche nella cache
                         dataLayer.getCache().add(Risposta.class, r);
                     }

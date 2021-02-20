@@ -29,7 +29,13 @@
                                     <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
                                     <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, e se sei abilitato alla creazione dei sondaggi, gestire i tuoi sondaggi.</p>
 
+<<<<<<< HEAD
                                         
+=======
+                                    <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
+                                    <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, gestire i tuoi sondaggi, e visualizzare i sondaggi alla quale sei stato invitato.</p>
+                                    <p><b>I tuoi dati personali:</b></p>
+>>>>>>> 483e1b5ac0ed01b45c7c45b69193e4b3559bb898
 
                                     <p><b>I tuoi dati personali:</b></p>
                                     <div class="row">
@@ -121,9 +127,9 @@
                                                     <tr class="bg-warning">
                                                         <th scope="col">#</th>
                                                         <th scope="col">Titolo</th>
-                                                        <th scope="col">Data creazione</th>
+                                                        <th scope="col" class="particular-visibility">Data creazione</th>
                                                         <th scope="col">Data scadenza </th>
-                                                        <th scope="col" class="w-25" style="min-width:126px"></th>
+                                                        <th scope="col" style="width: 40%; min-width:126px"></th>
                                                         <th scope="col" class="particular-width"></th>
                                                     </tr>
                                                 </thead>
@@ -139,7 +145,7 @@
                                                                 <#assign titolo = sondaggio.getTitolo()>
                                                                 <td>${titolo}</td>
                                                             </#if>
-                                                            <td>${sondaggio.getCreazione()}</td>
+                                                            <td class="particular-visibility">${sondaggio.getCreazione()}</td>
                                                             <#if sondaggio.getScadenza()??>
                                                                 <td>${sondaggio.getScadenza()}</td>
                                                             <#else>
@@ -206,6 +212,18 @@
                                                                             </form>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="row mr-3 mt-2">
+                                                                        <div class="col-6 pl-1 pr-1">
+                                                                            <form id="downloadAnswer${sondaggio.getKey()}" method="POST" action="dashboard">
+                                                                                <button name="downloadAnswer" value="${sondaggio.getKey()}" class="btn brn-lg btn-success" type="submit" title="scarica risposte">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
+                                                                                        <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/>
+                                                                                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                                                                                    </svg>
+                                                                                </button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </td>
                                                             <td></td>
@@ -255,9 +273,9 @@
                                                             <tr class="bg-warning">
                                                                 <th scope="col">#</th>
                                                                 <th scope="col">Titolo</th>
-                                                                <th scope="col">Data creazione</th>
-                                                                <th scope="col">data scadenza</th>
-                                                                <th scope="col" class="w-25" style="min-width:126px"></th>
+                                                                <th scope="col" class="particular-visibility">Data creazione</th>
+                                                                <th scope="col">Data scadenza </th>
+                                                                <th scope="col" style="width: 40%; min-width:126px"></th>
                                                                 <th scope="col" class="particular-width"></th>
                                                             </tr>
                                                         </thead>
@@ -267,11 +285,11 @@
                                                                 <tr>
                                                                     <th scope="row">${c}</th>
                                                                     <td >${sondaggio.getTitolo()}</td>
-                                                                    <td>${sondaggio.getCreazione()}</td>
+                                                                    <td class="particular-visibility">${sondaggio.getCreazione()}</td>
                                                                     <#if sondaggio.getScadenza()??>
                                                                         <td>${sondaggio.getScadenza()}</td>
                                                                     <#else>
-                                                                        <td>Indeterminata</td>
+                                                                        <td>N/B</td>
                                                                     </#if>
                                                                     <td style="text-align:center;">
                                                                         <div class="row justify-content-center">
@@ -329,6 +347,18 @@
                                                                                         <button name="removeSurvey" value="${sondaggio.getKey()}" class="btn brn-lg btn-danger" type="submit" title="elimina">
                                                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                                                                                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                                                            </svg>
+                                                                                        </button>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row mr-3 mt-2">
+                                                                                <div class="col-6 pl-1 pr-1">
+                                                                                    <form id="downloadAnswer${sondaggio.getKey()}" method="POST" action="dashboard">
+                                                                                        <button name="downloadAnswer" value="${sondaggio.getKey()}" class="btn brn-lg btn-success" type="submit" title="scarica risposte">
+                                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
+                                                                                                <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/>
+                                                                                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
                                                                                             </svg>
                                                                                         </button>
                                                                                     </form>
