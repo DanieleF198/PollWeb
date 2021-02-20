@@ -46,36 +46,7 @@ import org.json.JSONObject;
 public class QuestionsMaker extends BaseController {
 
     @Override
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
-        //caso 1:
-        //l'utente arriva qui per la prima volta/creazione prima domanda
-        //caso 2:
-        //l'utente arriva qui non per la prima volta, ma dopo aver lasciato in sospeso la domanda x.
-        //data la gestione fatta in "firstSection" e "sondaggio-in-creazione" nel sessionamento, farò
-        //in modo che l'utente possa Arrivare a questa pagina solo passando prima in FirstSection.
-        //In questo caso la domanda X si assume non salvata nel database, mentre le domande precedenti sì.
-        //In generale, quando l'utente arriva da firstSection (cioè sempre), partirà dalla prima domanda.
-        //caso 3:
-        //l'utente arriva qui dopo aver cliccato "domanda successiva". Da notare le seguenti osservazioni:
-        //1- quando viene cliccato domanda successiva viene cmq memorizzata la domanda nel DB, anche se inconpleta.
-        //   Semplicemente, quando verrà cliccato "vai alla conferma", verrà fatto un controllo su tutte le domande
-        //   del sondaggio. In caso di errori, l'utente verrà reindirizzato in una pagina che segnala tutti gli
-        //   errori da correggere per poter andare nella conferma.
-        //   l'utente semplicemente vuole passare alla domanda successiva dopo essere andato alla precedente, in questo
-        //   caso si deve prevedere eventuali modifiche fatte alla domanda corrente prima di passare alla successiva
-        //NOTA: per capire la domanda successiva (se esiste) basta controllare se esiste una domanda con posizione immediatamente successiva
-        //caso 4:
-        //l'utente arriva qui dopo aver cliccato "domanda precedente". Questo caso è una versione semplificata del caso 3
-        //con in più il solo controllo che domanda precedente è disabilitato alla creazione della prima domanda.
-        //NOTA: per capire se si tratta della prima domanda basti controllare o che non esistano domande associate al sondaggio (caso 1),
-        //      che esista una sola domanda, oppure che se ne esistono più di una si trovi quella con posizione 1
-        //caso 5: l'utente arriva da "confirmSection", in questo caso, verrà ricondotto al 2 caso. Per fare questo dovrò introdurre un ulteriore
-        //        valore nel sessionamento per controllare se è passato per "confirmSection", in tal caso, rimando a warningPage, quindi da lì
-        //        a firstSection con creazione di un nuovo sondaggio o revisione di tutte le pagine create relative al sondaggio
-        //OSS.: in caso di rimozione di una domanda vanno messe a posto le posizioni, o in alternativa costruito un algoritmo a livello java
-        //      che sappia gestire tutte le situazioni 
-        //NOTA: DA PREVEDERE I CASI IN CUI TORNI "INDIETRO" O "AVANTI" TRAMITE BROWSER - ANCORA NON FATTO
-        
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{        
          try {
             HttpSession s = checkSession(request);
             if (s!= null) {

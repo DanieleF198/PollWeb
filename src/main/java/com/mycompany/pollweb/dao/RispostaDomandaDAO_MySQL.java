@@ -16,6 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONObject;
@@ -27,6 +29,7 @@ import org.json.JSONObject;
 public class RispostaDomandaDAO_MySQL extends DAO implements RispostaDomandaDAO  {
 
     private PreparedStatement sRispostaDomanda;
+    private PreparedStatement sRispostaDomandaByDomandaId;
     private PreparedStatement iRispostaDomanda;
     private PreparedStatement uRispostaDomanda;
     
@@ -40,6 +43,7 @@ public class RispostaDomandaDAO_MySQL extends DAO implements RispostaDomandaDAO 
             super.init();
             
             sRispostaDomanda = connection.prepareStatement("SELECT * FROM RispostaDomanda WHERE idRisposta=? AND idDomanda=?");
+            sRispostaDomandaByDomandaId = connection.prepareStatement("SELECT * FROM RispostaDomanda WHERE idDomanda=?");
             iRispostaDomanda = connection.prepareStatement("INSERT INTO RispostaDomanda (idRisposta,idDomanda,risposta) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
             uRispostaDomanda = connection.prepareStatement("UPDATE RispostaDomanda SET risposta=? WHERE idRisposta=? AND idDomanda=?");
             
@@ -55,6 +59,7 @@ public class RispostaDomandaDAO_MySQL extends DAO implements RispostaDomandaDAO 
         try {
 
             sRispostaDomanda.close();
+            sRispostaDomandaByDomandaId.close();
             iRispostaDomanda.close();
             uRispostaDomanda.close();
             
@@ -73,7 +78,7 @@ public class RispostaDomandaDAO_MySQL extends DAO implements RispostaDomandaDAO 
     private RispostaDomandaProxy createRispostaDomanda(ResultSet rs) throws DataException {
         RispostaDomandaProxy r = createRispostaDomanda();
         try {
-            r.setKey(rs.getInt("idRisposta"));
+            r.setIdRisposta(rs.getInt("idRisposta"));
             r.setIdDomanda(rs.getInt("idDomanda"));
             String jsonString = rs.getObject("risposta").toString().replaceAll("\"", "\\\"");
             JSONObject risposta = new JSONObject(jsonString);
@@ -144,6 +149,22 @@ public class RispostaDomandaDAO_MySQL extends DAO implements RispostaDomandaDAO 
             ((DataItemProxy) rispostaDomanda).setModified(false);
         }
     }      
+
+    @Override
+    public List<RispostaDomanda> getRispostaDomandaByDomandaId(int idDomanda) throws DataException {
+        List<RispostaDomanda> result = new ArrayList();
+            try {
+                sRispostaDomandaByDomandaId.setInt(1, idDomanda);
+                try (ResultSet rs = sRispostaDomandaByDomandaId.executeQuery()) {
+                    while (rs.next()) {
+                        result.add((RispostaDomanda) getRispostaDomanda(rs.getInt("idRisposta"), idDomanda));
+                    }   
+                }
+            } catch (SQLException ex) {
+                throw new DataException("Unable to load Risposta by idRisposta", ex);
+            }
+        return result;
+    }
 }
     
     

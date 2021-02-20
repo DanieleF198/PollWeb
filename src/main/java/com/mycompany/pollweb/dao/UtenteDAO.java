@@ -22,6 +22,8 @@ public interface UtenteDAO {
     
     public Utente getUtente(int idUtente) throws DataException;
     
+    public Utente getUtenteByMail(String mail) throws DataException;
+    
     public void banUtente(int idUtente) throws DataException;
     
     public Utente getUtenteLogin(String username, String password) throws DataException;

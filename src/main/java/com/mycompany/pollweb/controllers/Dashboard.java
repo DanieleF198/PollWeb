@@ -17,20 +17,26 @@ import com.mycompany.pollweb.result.TemplateManagerException;
 import com.mycompany.pollweb.result.TemplateResult;
 import com.mycompany.pollweb.data.DataException;
 import com.mycompany.pollweb.impl.GruppoImpl;
+import com.mycompany.pollweb.impl.UtenteImpl;
 import com.mycompany.pollweb.model.Domanda;
 import com.mycompany.pollweb.model.Gruppo;
+import com.mycompany.pollweb.model.Risposta;
+import com.mycompany.pollweb.model.RispostaDomanda;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.model.Utente;
 import com.mycompany.pollweb.result.FailureResult;
 import com.mycompany.pollweb.result.SplitSlashesFmkExt;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
+import com.opencsv.CSVWriter;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Writer;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -208,7 +214,7 @@ public class Dashboard extends BaseController {
                                         transport.sendMessage(message, message.getAllRecipients());
                                         transport.close();
                                         String contextPath = getServletContext().getRealPath("/");
-                                        File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+Integer.parseInt(request.getParameter("changeVisibility"))+".txt"); //daniele -> joker; Davide-> Cronio
+                                        File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+Integer.parseInt(request.getParameter("changeVisibility"))+".txt");
                                         if (!f.createNewFile()) { System.out.println("File already exists"); }
                                         PrintStream standard = System.out;
                                         PrintStream fileStream = new PrintStream(new FileOutputStream(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+Integer.parseInt(request.getParameter("changeVisibility"))+".txt", true));
@@ -224,7 +230,6 @@ public class Dashboard extends BaseController {
                                                 "Le tue credenziali di accesso al sondaggio sono:\n" + "Email: " + partecipants.get(i).getEmail() + "\n" + "Password: " + password + "\n" +
                                                 "Puoi effettuare il login al seguente link: http://localhost:8080/PollWeb/loginForPartecipants \n" + "\n" +
                                                 "Questa mail viene inviata automaticamente dal sito Quack, Duck, Poll tramite la richiesta d\'invito da parte dell\'utente " + u.getUsername() + ", se pensi che la tua privacy sia stata lesa in un qualche modo contattaci all\'indirizzo: Quack@Duck.poll\n";
-//                                        Come sarebbe l'invio (esempio) vero
                                         out.println(docType +
                                            "<html>\n" +
                                               "<head><title>" + title + "</title></head>\n" +
@@ -266,7 +271,90 @@ public class Dashboard extends BaseController {
                         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
                         dl.getSondaggioDAO().deleteSondaggio(Integer.parseInt(request.getParameter("removeSurvey")));
                         response.sendRedirect("dashboard");
-                    } 
+                    } else if(request.getParameter("downloadAnswer")!=null){
+                        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
+                        ArrayList<Domanda> domande = (ArrayList<Domanda>) dl.getDomandaDAO().getDomandaByIdSondaggio(Integer.parseInt(request.getParameter("downloadAnswer")));
+                        if(!domande.isEmpty()){
+                            ArrayList<Risposta> risposte = new ArrayList<Risposta>();
+                            ArrayList<RispostaDomanda> risposteDomande = (ArrayList<RispostaDomanda>) dl.getRispostaDomandaDAO().getRispostaDomandaByDomandaId(domande.get(0).getKey());
+                            Collections.sort(domande);
+                            if(risposteDomande.isEmpty()){
+                                String contextPath = getServletContext().getRealPath("/");
+                                File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\download\\risposte"+request.getParameter("downloadAnswer"));
+                                FileWriter outputFile = new FileWriter(f);
+                                CSVWriter writer = new CSVWriter(outputFile); 
+                                ArrayList<String> headerList = new ArrayList<String>();
+                                headerList.add("email");
+                                headerList.add("data");
+                                for (int i = 0; i<domande.size(); i++){
+                                    Domanda d = domande.get(i);
+                                    headerList.add(d.getTitolo());
+                                }
+                                String[] header = new String[headerList.size()];
+                                for(int i = 0; i<headerList.size(); i++){
+                                    header[i] = headerList.get(i);
+                                }
+                                writer.writeNext(header);
+                                writer.close();
+                            } else {
+                                for(int i = 0; i<risposteDomande.size();i++){
+                                    Risposta r = dl.getRispostaDAO().getRisposta(risposteDomande.get(i).getIdRisposta());
+                                    if(!risposte.contains(r)){
+                                        risposte.add(r);;
+                                    }
+                                }
+                                String contextPath = getServletContext().getRealPath("/");
+                                File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\download\\risposte"+request.getParameter("downloadAnswer"));
+                                FileWriter outputFile = new FileWriter(f);
+                                CSVWriter writer = new CSVWriter(outputFile); 
+                                ArrayList<String> headerList = new ArrayList<String>();
+                                headerList.add("email");
+                                headerList.add("data");
+                                for (int i = 0; i<domande.size(); i++){
+                                    Domanda d = domande.get(i);
+                                    headerList.add(d.getTitolo());
+                                }
+                                String[] header = new String[headerList.size()];
+                                for(int i = 0; i<headerList.size(); i++){
+                                    header[i] = headerList.get(i);
+                                }
+                                writer.writeNext(header);
+                                for (int i = 0; i<risposte.size(); i++){
+                                    ArrayList<String> data = new ArrayList<String>();
+                                    data.add(risposte.get(i).getUsernameUtenteRisposta());
+                                    Date dataRisposta = risposte.get(i).getData();
+                                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    String strDate = dateFormat.format(dataRisposta);
+                                    data.add(strDate);
+                                    for (int j = 0; j<domande.size(); j++){
+                                        RispostaDomanda r = dl.getRispostaDomandaDAO().getRispostaDomanda(risposte.get(i).getKey(), domande.get(j).getKey());
+                                        if(r!=null){
+                                            JSONArray jsonRisposta = r.getRisposta().getJSONArray("risposta");
+                                            String rispostaFinale = "";
+                                            for(int k = 0; k <jsonRisposta.length(); k++){
+                                                if(k == jsonRisposta.length()-1){
+                                                    rispostaFinale += SecurityLayer.stripSlashes(jsonRisposta.getString(k));
+                                                } else {
+                                                    rispostaFinale += SecurityLayer.stripSlashes(jsonRisposta.getString(k)+ ";");
+                                                }
+                                            }
+                                            data.add(rispostaFinale);
+                                        } else {
+                                            data.add("N/A");
+                                        }
+                                    }
+                                    String[] dataArray = new String[data.size()];
+                                    for(int j = 0; j < data.size(); j++){
+                                        dataArray[j] = data.get(j);
+                                    }
+                                    writer.writeNext(dataArray); 
+                                }
+                                writer.close();
+                            }
+                        } else {
+                            response.sendRedirect("dashboard");
+                        }
+                    }
                     action_default(request, response);
                     return;
                 }
@@ -322,7 +410,7 @@ public class Dashboard extends BaseController {
                 if( sondaggiComp.isEmpty() ){
                     request.setAttribute("noSondaggiComp", "yes");
                 }
-                
+
                 request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
                 res.activate("dashboard.ftl", request, response);
             }
