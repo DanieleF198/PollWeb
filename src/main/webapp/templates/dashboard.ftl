@@ -29,7 +29,7 @@
                                     <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
                                     <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, e se sei abilitato alla creazione dei sondaggi, gestire i tuoi sondaggi.</p>
 
-                                        <p>PENSARE AD UNA FRASE DECENTE DA METTERE QUI O ELIMINARE LA SEZIONE</p>
+                                        
 
                                     <p><b>I tuoi dati personali:</b></p>
                                     <div class="row">

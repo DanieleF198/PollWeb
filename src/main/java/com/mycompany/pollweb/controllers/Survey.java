@@ -22,6 +22,7 @@ import com.mycompany.pollweb.model.Risposta;
 import com.mycompany.pollweb.model.RispostaDomanda;
 import com.mycompany.pollweb.model.Sondaggio;
 import com.mycompany.pollweb.result.FailureResult;
+import com.mycompany.pollweb.result.SplitSlashesFmkExt;
 import com.mycompany.pollweb.security.SecurityLayer;
 import static com.mycompany.pollweb.security.SecurityLayer.checkSession;
 import java.text.ParseException;
@@ -47,6 +48,7 @@ public class Survey extends BaseController {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, DataException{
          try {
+            request.setAttribute("strip_slashes", new SplitSlashesFmkExt());
             HttpSession s = checkSession(request);
             PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
             if(request.getParameter("btnCompile")!=null){
