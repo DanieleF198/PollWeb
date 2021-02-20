@@ -531,16 +531,16 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}</p>
                     </#if>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
                     <#if domanda.getDescrizione()??>
-                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                        <p class="text-muted">${strip_slashes(domanda.getDescrizione())}</p>
                     </#if>
                 </div>
             </div>
@@ -550,9 +550,9 @@
                         <#list risposteNoMult?keys as key>
                             <#if key == domanda.getPosizione()?string>
                                 <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
-                                    <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo: 128" value="${risposteNoMult[key]}" maxlength="128">
+                                    <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo: 128" value="${strip_slashes(risposteNoMult[key])}" maxlength="128">
                                 <#else>
-                                    <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 128" value="${risposteNoMult[key]}" maxlength="128">
+                                    <input type="text" name="openShort${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 128" value="${strip_slashes(risposteNoMult[key])}" maxlength="128">
                                 </#if>
                             </#if>
                         </#list>
@@ -589,16 +589,16 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}</p>
                     </#if>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
                     <#if domanda.getDescrizione()??>
-                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                        <p class="text-muted">${strip_slashes(domanda.getDescrizione())}</p>
                     </#if>
                 </div>
             </div>
@@ -608,9 +608,9 @@
                         <#list risposteNoMult?keys as key>
                             <#if key == domanda.getPosizione()?string>
                                 <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
-                                    <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo 512" value="${risposteNoMult[key]}" maxlength="512">
+                                    <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="minimo numero di caratteri: ${domanda.getVincolo()[12..]}, massimo 512" value="${strip_slashes(risposteNoMult[key])}" maxlength="512">
                                 <#else>
-                                    <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 512" value="${risposteNoMult[key]}" maxlength="512">
+                                    <input type="text" name="openLong${domanda.getPosizione()}" class="form-control" placeholder="massimo numero di caratteri: 512" value="${strip_slashes(risposteNoMult[key])}" maxlength="512">
                                 </#if>
                             </#if>
                         </#list>
@@ -656,7 +656,7 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.getDescrizione()??>
-                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                        <p class="text-muted">${strip_slashes(domanda.getDescrizione())}</p>
                     </#if>
                 </div>
             </div>
@@ -667,14 +667,14 @@
                             <#if key == domanda.getPosizione()?string>
                                 <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
                                     <#if domanda.getVincolo()?contains("--") && !(domanda.getVincolo()?contains("Null"))>
-                                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}" value="${risposteNoMult[key]}">
+                                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero compreso tra ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]} e ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}" value="${strip_slashes(risposteNoMult[key])}">
                                     <#elseif domanda.getVincolo()?contains("Null")>
-                                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero minore di ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}" value="${risposteNoMult[key]}">
+                                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero minore di ${domanda.getVincolo()[domanda.getVincolo()?index_of("-")+3..]}" value="${strip_slashes(risposteNoMult[key])}">
                                     <#elseif !(domanda.getVincolo()?contains("--"))>
-                                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero maggiore di ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]}" value="${risposteNoMult[key]}">
+                                        <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Numero maggiore di ${domanda.getVincolo()[domanda.getVincolo()?index_of(":")+2..<domanda.getVincolo()?index_of("-")-1]}" value="${strip_slashes(risposteNoMult[key])}">
                                     </#if>     
                                 <#else>
-                                    <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Scrivi un numero qualsiasi" value="${risposteNoMult[key]}">
+                                    <input type="number" name="openNumber${domanda.getPosizione()}" class="form-control" placeholder="Scrivi un numero qualsiasi" value="${strip_slashes(risposteNoMult[key])}">
                                 </#if>
                             </#if>
                         </#list>
@@ -717,16 +717,16 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}</p>
                     </#if>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
                     <#if domanda.getDescrizione()??>
-                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                        <p class="text-muted">${strip_slashes(domanda.getDescrizione())}</p>
                     </#if>
                 </div>
             </div>
@@ -735,7 +735,7 @@
                     <#list risposteNoMult?keys as key>
                         <#if key == domanda.getPosizione()?string>
                             <div class="col-lg-4 col-md-5 col-sm-12">
-                                <input type="date" name="openDate${domanda.getPosizione()}" value="${risposteNoMult[key]}" class="form-control">
+                                <input type="date" name="openDate${domanda.getPosizione()}" value="${strip_slashes(risposteNoMult[key])}" class="form-control">
                             </div>
                             <#if domanda.getVincolo()?? && domanda.getVincolo()!="">
                                 <#if domanda.getVincolo()?contains("--") && !(domanda.getVincolo()?contains("Null"))>
@@ -799,16 +799,16 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}</p>
                     </#if>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
                     <#if domanda.getDescrizione()??>
-                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                        <p class="text-muted">${strip_slashes(domanda.getDescrizione())}</p>
                     <#else>
                         <p class="text-muted"></p>
                     </#if>
@@ -888,16 +888,16 @@
             <div class="row">
                 <div class="col-12">
                     <#if domanda.isObbligatoria()>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}<span class="text-danger">*<span></p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}<span class="text-danger">*<span></p>
                     <#else>
-                        <p class="h4">${domanda.getPosizione()+1}- ${domanda.getTitolo()}</p>
+                        <p class="h4">${domanda.getPosizione()+1}- ${strip_slashes(domanda.getTitolo())}</p>
                     </#if>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
                     <#if domanda.getDescrizione()??>
-                        <p class="text-muted">${domanda.getDescrizione()}</p>
+                        <p class="text-muted">${strip_slashes(domanda.getDescrizione())}</p>
                     </#if>
                 </div>
             </div>
