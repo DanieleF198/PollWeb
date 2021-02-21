@@ -495,10 +495,10 @@ public class ChangePartecipants extends BaseController {
                     String password = partecipants2.get(i).getPassword();
 
                     String contextPath = getServletContext().getRealPath("/");
-                    File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+(request.getParameter("changeVisibility"))+".txt"); //daniele -> joker; Davide-> Cronio
+                    File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+Integer.parseInt(request.getParameter("changePartecipants"))+".txt"); //daniele -> joker; Davide-> Cronio
                     if (!f.createNewFile()) { System.out.println("File already exists"); }
                     PrintStream standard = System.out;
-                    PrintStream fileStream = new PrintStream(new FileOutputStream(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+(request.getParameter("changeVisibility"))+".txt", true));
+                    PrintStream fileStream = new PrintStream(new FileOutputStream(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+Integer.parseInt(request.getParameter("changePartecipants"))+".txt", true));
                     System.setOut(fileStream);
 
                     String title = "Invito Sondaggio privato Quack, Duck, Poll";

@@ -521,11 +521,11 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                                     nextVersion = currentVersion + 1;
 
                                     uUtenteListaPartecipanti.setString(1, u2.getNome());
-                                    uUtenteListaPartecipanti.setBoolean(3, false);
-                                    uUtenteListaPartecipanti.setLong(4, nextVersion);
-                                    uUtenteListaPartecipanti.setInt(5, idSondaggio);
-                                    uUtenteListaPartecipanti.setString(6, u2.getEmail()); 
-                                    uUtenteListaPartecipanti.setLong(7, currentVersion);
+                                    uUtenteListaPartecipanti.setBoolean(2, false);
+                                    uUtenteListaPartecipanti.setLong(3, nextVersion);
+                                    uUtenteListaPartecipanti.setInt(4, idSondaggio);
+                                    uUtenteListaPartecipanti.setString(5, u2.getEmail()); 
+                                    uUtenteListaPartecipanti.setLong(6, currentVersion);
 
                                     uUtenteListaPartecipanti.execute();
                                 }
