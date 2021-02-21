@@ -42,10 +42,6 @@
         <servlet-class>com.mycompany.pollweb.controllers.AdminDashboard</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SendRespRequest</servlet-name>
-        <servlet-class>com.mycompany.pollweb.controllers.SendRespRequest</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ChangePassword</servlet-name>
         <servlet-class>com.mycompany.pollweb.controllers.ChangePassword</servlet-class>
     </servlet>
@@ -124,10 +120,6 @@
     <servlet-mapping>
         <servlet-name>AdminDashboard</servlet-name>
         <url-pattern>/adminDashboard</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SendRespRequest</servlet-name>
-        <url-pattern>/sendRespRequest</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ChangePassword</servlet-name>
