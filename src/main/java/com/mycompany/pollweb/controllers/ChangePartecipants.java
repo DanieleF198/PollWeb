@@ -30,11 +30,22 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
@@ -73,6 +84,8 @@ public class ChangePartecipants extends BaseController {
             request.setAttribute("exception", ex);
             action_error(request, response);
         } catch (CsvException ex) {
+            Logger.getLogger(ChangePartecipants.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
             Logger.getLogger(ChangePartecipants.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -203,7 +216,7 @@ public class ChangePartecipants extends BaseController {
             return;
     }
     
-    private void action_change_partecipants(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException, CsvException {
+    private void action_change_partecipants(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException, CsvException, AddressException, MessagingException {
         ArrayList<Utente> partecipants = new ArrayList<Utente>();   
         HttpSession s = checkSession(request);
         PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
@@ -415,7 +428,82 @@ public class ChangePartecipants extends BaseController {
                 }
                 dl.getUtenteDAO().updateUtenteListaPartecipanti(partecipants, Integer.parseInt(request.getParameter("changePartecipants")));
             }
-            
+            ArrayList<Utente> partecipants2 = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiWithMailToSendBySondaggioId(Integer.parseInt(request.getParameter("changePartecipants")));
+            Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(Integer.parseInt(request.getParameter("changePartecipants")));
+            final String from = "daniele.fossemo@outlook.it";
+
+            final String pass = "Password2021!";
+            String host = "localhost";
+            Properties properties = System.getProperties();
+            properties.put("mail.smtp.starttls.enable", "true");
+            properties.put("mail.smtp.ssl.enable", "true");
+            properties.put("mail.smtp.host", host);
+            properties.put("mail.smtp.port", "587");
+            properties.put("mail.smtp.auth", "true");
+            Authenticator auth = new Authenticator() {
+                    //override the getPasswordAuthentication method
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(from, pass);
+                    }
+            };
+            Session session = Session.getDefaultInstance(properties, auth);
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+            Utente u = dl.getUtenteDAO().getUtente(sondaggio.getIdUtente());
+
+            for(int i = 0; i < partecipants2.size(); i++){
+                try {
+                    String to = partecipants2.get(i).getEmail();
+
+                    String password = partecipants2.get(i).getPassword();
+
+                    String contextPath = getServletContext().getRealPath("/");
+                    File f = new File(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+(request.getParameter("changeVisibility"))+".txt"); //daniele -> joker; Davide-> Cronio
+                    if (!f.createNewFile()) { System.out.println("File already exists"); }
+                    PrintStream standard = System.out;
+                    PrintStream fileStream = new PrintStream(new FileOutputStream(contextPath.substring(0,contextPath.length()-28)+"src\\main\\webapp\\emails\\emailSurvey"+(request.getParameter("changeVisibility"))+".txt", true));
+                    System.setOut(fileStream);
+
+                    String title = "Invito Sondaggio privato Quack, Duck, Poll";
+
+
+                    String res = 
+                            "Salve\n" + "sei stato invitato a partecipare ad un sondaggio privato su Quack, Duck, Poll dall\'utente " + u.getUsername() + "\n" +
+                            "Le tue credenziali di accesso al sondaggio sono:\n" + "Email: " + partecipants2.get(i).getEmail() + "\n" + "Password: " + password + "\n" +
+                            "Puoi effettuare il login al seguente link: http://localhost:8080/PollWeb/loginForPartecipants \n" + "\n" +
+                            "Questa mail viene inviata automaticamente dal sito Quack, Duck, Poll tramite la richiesta d\'invito da parte dell\'utente " + u.getUsername() + ", se pensi che la tua privacy sia stata lesa in un qualche modo contattaci all\'indirizzo: Quack@Duck.poll\n";
+
+                    String output =
+                       "Mail inviata da: "+ from + "\n" +
+                       "Mail ricevuta da: "+ to + "\n" +
+                       "Oggetto: " + title + "\n" +
+                       "Testo:\n" + res + "\n" + 
+                       "---------------------";
+
+                    System.out.println(output);
+
+                    System.setOut(standard); 
+
+                    MimeMessage message = new MimeMessage(session);
+
+                    message.setFrom(new InternetAddress(from));
+
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                    message.setSubject(title);
+
+                    message.setText(res);
+
+                    Transport transport = session.getTransport("smtp");
+                    transport.connect(host, from, pass);
+                    transport.sendMessage(message, message.getAllRecipients());
+                    transport.close();
+                } catch (MessagingException mex) {
+                    mex.printStackTrace();
+                }
+            }
+            dl.getUtenteDAO().ListaPartecipantiSetMailSend(Integer.parseInt(request.getParameter("changePartecipants")));
+
             response.sendRedirect("dashboard");
             return;
         } else {
