@@ -27,16 +27,7 @@
                             <div class="row mt-2 pt-2 pb-1 pl-2 pr-2">
                                 <div class="col-lg-12">
                                     <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
-                                    <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, e se sei abilitato alla creazione dei sondaggi, gestire i tuoi sondaggi.</p>
-
-<<<<<<< HEAD
-                                        
-=======
-                                    <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
                                     <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, gestire i tuoi sondaggi, e visualizzare i sondaggi alla quale sei stato invitato.</p>
-                                    <p><b>I tuoi dati personali:</b></p>
->>>>>>> 483e1b5ac0ed01b45c7c45b69193e4b3559bb898
-
                                     <p><b>I tuoi dati personali:</b></p>
                                     <div class="row">
                                         <div class="col-lg-3">
