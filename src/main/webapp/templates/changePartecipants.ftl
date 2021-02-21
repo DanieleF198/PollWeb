@@ -8,6 +8,15 @@
         <meta charset="${charset}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <@macros.style imagePath="images/favicon.ico" stylePath="css/style.css" bootstrapPath="css/bootstrap.css"/>
+        <style>
+            input[type="text"]:read-only, input[type="email"]:read-only  {
+                background-color: #f2f2f2;
+            }
+            input[type="text"]:disabled, input[type="email"]:disabled  {
+                background-color: #b3b3b3;
+            }
+                
+        </style>
     </head>
     <body class="bg-light">
         <div class="d-flex flex-column min-vh-100">
@@ -48,30 +57,21 @@
                                             <#list partecipants as partecipant>
                                                 <#if partecipant?has_next>
                                                     <#if partecipant.getNome()?? && partecipant.getNome()!="">
-                                                        <div class="col-lg-3 col-md-3 col-sx-12 col-12 mb-2">
-                                                            <input type="text" name="usersName[]" id="name${c}" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}">
+                                                        <div class="col-lg-5 col-md-5 col-sx-12 col-12 mb-2">
+                                                            <input type="text" name="usersName[]" id="name${c}" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}" readonly>
                                                         </div>
                                                     <#else>
-                                                        <div class="col-lg-3 col-md-3 col-sx-10 col-10 mb-2">
-                                                            <input type="text" name="usersName[]" id="name${c}" class="form-control" placeholder="Nome Utente" >
+                                                        <div class="col-lg-5 col-md-5 col-sx-10 col-10 mb-2">
+                                                            <input type="text" name="usersName[]" id="name${c}" class="form-control" placeholder="Nome Utente" readonly>
                                                         </div>
                                                     </#if>
                                                     <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
-                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                        <div class="col-lg-6 col-md-6 col-sx-12 col-12 mb-2">
                                                             <input type="email" name="usersMail[]" id="mail${c}" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}" readonly>
                                                         </div>
                                                     <#else>
-                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
+                                                        <div class="col-lg-6 col-md-6 col-sx-12 col-12 mb-2">
                                                             <input type="email" name="usersMail[]" id="mail${c}" class="form-control" placeholder="E-mail utente" readonly>
-                                                        </div>
-                                                    </#if>
-                                                    <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
-                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                            <input type="password" name="usersPass[]" id="pass${c}" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}">
-                                                        </div>
-                                                    <#else>
-                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                            <input type="password" name="usersPass[]" id="pass${c}" class="form-control" placeholder="Password utente" >
                                                         </div>
                                                     </#if>
                                                     <div class="col-lg-1 col-md-1 col-sx-12 col-12 mb-1 justify-content-end">
@@ -87,30 +87,21 @@
                                                     <div class="col-12 border-bottom mb-2"></div>
                                                 <#else>
                                                     <#if partecipant.getNome()?? && partecipant.getNome()!="">
-                                                        <div class="col-lg-3 col-md-3 col-sx-12 col-12 mb-2">
-                                                            <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}">
+                                                        <div class="col-lg-5 col-md-5 col-sx-12 col-12 mb-2">
+                                                            <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente" value="${partecipant.getNome()}" readonly>
                                                         </div>
                                                     <#else>
-                                                        <div class="col-lg-3 col-md-3 col-sx-10 col-10 mb-2">
-                                                            <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  >
+                                                        <div class="col-lg-5 col-md-5 col-sx-10 col-10 mb-2">
+                                                            <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente" readonly>
                                                         </div>
                                                     </#if>
                                                     <#if partecipant.getEmail()?? && partecipant.getEmail()!="">
-                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                            <input type="email" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}"  readonly>
+                                                        <div class="col-lg-6 col-md-6 col-sx-12 col-12 mb-2">
+                                                            <input type="email" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente" value="${partecipant.getEmail()}" readonly>
                                                         </div>
                                                     <#else>
-                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                            <input type="email" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"   readonly>
-                                                        </div>
-                                                    </#if>
-                                                    <#if partecipant.getPassword()?? && partecipant.getPassword()!="">
-                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                            <input type="password" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente" value="${partecipant.getPassword()}">
-                                                        </div>
-                                                    <#else>
-                                                        <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                            <input type="password" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  >
+                                                        <div class="col-lg-6 col-md-6 col-sx-12 col-12 mb-2">
+                                                            <input type="email" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  readonly>
                                                         </div>
                                                     </#if>
                                                     <div class="col-lg-1 col-md-1 col-sx-12 col-12 mb-1">
@@ -131,13 +122,13 @@
                                     <#else>
                                         <div id="fieldList" class="row mb-3">
                                             <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                <input type="text" name="usersName[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  >
+                                                <input type="text" name="usersNameNew[]" id="firstUserName" class="form-control" placeholder="Nome Utente"  >
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                <input type="text" name="usersMail[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  >
+                                                <input type="text" name="usersMailNew[]" id="firstUserMail" class="form-control" placeholder="E-mail utente"  >
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sx-12 col-12 mb-2">
-                                                <input type="text" name="usersPass[]" id="firstUserPass" class="form-control" placeholder="Password utente"  >
+                                                <input type="text" name="usersPassNew[]" id="firstUserPass" class="form-control" placeholder="Password utente"  >
                                             </div>
                                             <div class="col-12 border-bottom mb-2"></div>
                                         </div>
@@ -193,22 +184,15 @@
     <@macros.footer />
     <@macros.script />
             <script>
+                var checkDisattivo = true;
                 $(function() {
                     $("#addMore").click(function(e) {
                         e.preventDefault();
-                        if(document.getElementById('firstUserName').disabled === false){
-                            $("#fieldList").append("<div class='col-lg-3 col-md-3 col-sx-12 col-12 mb-2'><input type='text' name='usersName[]' class='form-control' placeholder='Nome Utente'></div>");
-                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersMail[]' class='form-control' placeholder='E-mail utente'></div>"); 
-                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersPass[]' class='form-control' placeholder='Password utente'></div>"); 
-                            $("#fieldList").append("<div class='col-lg-1 col-md-1 col-sx-1 col-1 mb-2'></div>"); 
-                            $("#fieldList").append("<div class='col-12 border-bottom mb-2'></div>"); 
-                        } else {
-                            $("#fieldList").append("<div class='col-lg-3 col-md-3 col-sx-12 col-12 mb-2'><input type='text' name='usersName[]' class='form-control' placeholder='Nome Utente' disabled></div>");
-                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersMail[]' class='form-control' placeholder='E-mail utente' disabled></div>"); 
-                            $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersPass[]' class='form-control' placeholder='Password utente' disabled></div>"); 
-                            $("#fieldList").append("<div class='col-lg-1 col-md-1 col-sx-1 col-1 mb-2'></div>"); 
-                            $("#fieldList").append("<div class='col-12 border-bottom mb-2'></div>"); 
-                        }
+                        $("#fieldList").append("<div class='col-lg-3 col-md-3 col-sx-12 col-12 mb-2'><input type='text' name='usersNameNew[]' class='form-control' placeholder='Nome Utente'></div>");
+                        $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersMailNew[]' class='form-control' placeholder='E-mail utente'></div>"); 
+                        $("#fieldList").append("<div class='col-lg-4 col-md-4 col-sx-12 col-12 mb-2'><input type='text' name='usersPassNew[]' class='form-control' placeholder='Password utente'></div>"); 
+                        $("#fieldList").append("<div class='col-lg-1 col-md-1 col-sx-1 col-1 mb-2'></div>"); 
+                        $("#fieldList").append("<div class='col-12 border-bottom mb-2'></div>"); 
                     });
                 });    
                 function disable(){
@@ -216,22 +200,19 @@
                         var btnArr = document.querySelectorAll('.btn-danger');
                         var emailArr = document.querySelectorAll('input[type=email]');    
                         var i;
-                        if(document.getElementById('firstUserName').disabled === false){
+                        if(checkDisattivo){
                             $("input[type=text]").prop("disabled", true);
-                            $("input[type=password]").prop("disabled", true);
+                            $("input[type=email]").prop("disabled", true);
+                            checkDisattivo = false;
                         } else {
                             $("input[type=text]").prop("disabled", false);
-                            $("input[type=password]").prop("disabled", false);
+                            $("input[type=email]").prop("disabled", false);
+                            checkDisattivo = true;
                         }
                         if(document.getElementById('file').disabled === true){
                             $('#file').prop("disabled", false);
                         } else {
                             $('#file').prop("disabled", true);
-                        }
-                        for (i = 0; i < emailArr.length; i++) {
-                            if(emailArr[i].disabled === true){
-                                emailArr[i].disabled = false;
-                            }
                         }
                         for (i = 0; i < btnArr.length; i++) {
                             if(btnArr[i].disabled === true){
@@ -246,18 +227,14 @@
                 function removeOne(parameter1){
                     var str1 = 'name' + parameter1;
                     var str2 = 'mail' + parameter1;
-                    var str3 = 'pass' + parameter1;
                     var res1 = '#' + str1;
                     var res2 = '#' + str2;
-                    var res3 = '#' + str3;
                     if(document.getElementById(str1).disabled === true){
                         $(res1).prop("disabled", false);
                         $(res2).prop("disabled", false);
-                        $(res3).prop("disabled", false); 
                     } else {
                         $(res1).prop("disabled", true);
-                        $(res2).prop("disabled", true);
-                        $(res3).prop("disabled", true); 
+                        $(res2).prop("disabled", true); 
                     }
                                 
                 };

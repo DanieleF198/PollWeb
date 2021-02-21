@@ -27,7 +27,11 @@
                             <div class="row mt-2 pt-2 pb-1 pl-2 pr-2">
                                 <div class="col-lg-12">
                                     <p>Ciao <b>${username}</b>, questa &#232; la tua area personale! </p>
+<<<<<<< HEAD
                                     <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, e se sei abilitato alla creazione dei sondaggi, gestire i tuoi sondaggi.</p>
+=======
+                                    <p>Da questa pagina potrai facilmente consultare e modificare i tuoi dati, rivedere i sondaggi che hai compilato, gestire i tuoi sondaggi, e visualizzare i sondaggi alla quale sei stato invitato.</p>
+>>>>>>> f19140faf482a88f592ff3b163299d2d2ca5060b
                                     <p><b>I tuoi dati personali:</b></p>
                                     <div class="row">
                                         <div class="col-lg-3">

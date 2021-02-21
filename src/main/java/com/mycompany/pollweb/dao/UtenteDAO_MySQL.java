@@ -79,7 +79,7 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
             iUtenteListaPartecipanti = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,nome,email,password,scaduto,emailMandata) VALUES(?,?,?,?,?,?)");
             iUtenteListaPartecipanti2 = connection.prepareStatement("INSERT INTO ListaPartecipanti (idSondaggio,idUtente,nome,email,password,scaduto,emailMandata) VALUES(?,?,?,?,?,?,?)");
             uUtenteListaPartecipantiScaduto = connection.prepareStatement("UPDATE ListaPartecipanti SET scaduto=?, version=? WHERE idSondaggio=? AND email=? AND version=?");
-            uUtenteListaPartecipanti = connection.prepareStatement("UPDATE ListaPartecipanti SET nome=?, password=?, scaduto=?, version=? WHERE idSondaggio=? AND email=? AND version=?");
+            uUtenteListaPartecipanti = connection.prepareStatement("UPDATE ListaPartecipanti SET nome=?, scaduto=?, version=? WHERE idSondaggio=? AND email=? AND version=?");
             uPartecipanteSetScaduto = connection.prepareStatement("UPDATE ListaPartecipanti SET scaduto=?, version=? WHERE idSondaggio=? AND email=? AND version=?");
             sPartecipanteCheckScaduto = connection.prepareStatement("SELECT * FROM ListaPartecipanti WHERE idSondaggio=? AND email=?");
             uUtenteListaPartecipantiSendEmail = connection.prepareStatement("UPDATE ListaPartecipanti SET emailMandata=?, version=? WHERE idSondaggio=? AND scaduto=? AND version=?");
@@ -521,7 +521,6 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                                     nextVersion = currentVersion + 1;
 
                                     uUtenteListaPartecipanti.setString(1, u2.getNome());
-                                    uUtenteListaPartecipanti.setString(2, u2.getPassword());
                                     uUtenteListaPartecipanti.setBoolean(3, false);
                                     uUtenteListaPartecipanti.setLong(4, nextVersion);
                                     uUtenteListaPartecipanti.setInt(5, idSondaggio);

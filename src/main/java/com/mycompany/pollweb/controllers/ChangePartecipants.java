@@ -120,11 +120,12 @@ public class ChangePartecipants extends BaseController {
     
     private void action_default2(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, TemplateManagerException, DataException {
         TemplateResult res = new TemplateResult(getServletContext());
+        PollWebDataLayer dl = ((PollWebDataLayer)request.getAttribute("datalayer"));
         if(!(request.getParameter("withCSV") != null && request.getParameter("withCSV").equals("withCSV"))){
-                if(request.getParameter("usersName[]")!=null || request.getParameter("usersMail[]")!=null || request.getParameter("usersPass[]")!=null){
-                    String[] name = request.getParameterValues("usersName[]");
-                    String[] mail = request.getParameterValues("usersMail[]");
-                    String[] pass = request.getParameterValues("usersPass[]");
+                if(request.getParameter("usersNameNew[]")!=null || request.getParameter("usersMailNew[]")!=null || request.getParameter("usersPassNew[]")!=null){
+                    String[] name = request.getParameterValues("usersNameNew[]");
+                    String[] mail = request.getParameterValues("usersMailNew[]");
+                    String[] pass = request.getParameterValues("usersPassNew[]");
                     int maxIndex; 
                     maxIndex = Integer.max(name.length, mail.length);
                     maxIndex = Integer.max(maxIndex, pass.length);
@@ -156,6 +157,13 @@ public class ChangePartecipants extends BaseController {
                                 u.setPassword("");
                             }
                             partecipants.add(u);
+                        }
+                        //mi prendo gli "oldPartecipants"
+                        ArrayList<Utente> oldPartecipants = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiBySondaggioId(Integer.parseInt(request.getParameter("changePartecipants")), false);
+                        if(!oldPartecipants.isEmpty()){
+                            for(int j = 0; j<oldPartecipants.size();j++){
+                                partecipants.add(0, oldPartecipants.get(j));
+                            }
                         }
                         if(!partecipants.isEmpty()){
                             ArrayList<Utente> tempPartecipants = new ArrayList<Utente>();
@@ -201,11 +209,7 @@ public class ChangePartecipants extends BaseController {
                                     }
                                 }
                             }
-                            for(int i = 0; i<partecipants.size(); i++){
-                                partecipants.get(i).setNome(SecurityLayer.stripSlashes(partecipants.get(i).getNome()));
-                                partecipants.get(i).setPassword(SecurityLayer.stripSlashes(partecipants.get(i).getPassword()));
-                            }
-                            request.setAttribute("partecipants", partecipants);
+                            request.setAttribute("partecipants", oldPartecipants);
                         }
                     }
                 }
@@ -344,10 +348,10 @@ public class ChangePartecipants extends BaseController {
                     }
                 }
                 uploaded_file.delete();
-            } else if(request.getParameter("usersName[]")!=null || request.getParameter("usersMail[]")!=null || request.getParameter("usersPass[]")!=null){
-                String[] name = request.getParameterValues("usersName[]");
-                String[] mail = request.getParameterValues("usersMail[]");
-                String[] pass = request.getParameterValues("usersPass[]");
+            } else if(request.getParameter("usersNameNew[]")!=null || request.getParameter("usersMailNew[]")!=null || request.getParameter("usersPassNew[]")!=null){
+                String[] name = request.getParameterValues("usersNameNew[]");
+                String[] mail = request.getParameterValues("usersMailNew[]");
+                String[] pass = request.getParameterValues("usersPassNew[]");
                 int maxIndex; 
                 maxIndex = Integer.max(name.length, mail.length);
                 maxIndex = Integer.max(maxIndex, pass.length);
@@ -417,16 +421,49 @@ public class ChangePartecipants extends BaseController {
                     }
                 }    
             }
+            //get dei vecchi partecipanti (oldEmails per un controllo)
+            ArrayList<Utente> oldPartecipants = new ArrayList<Utente>();
+            ArrayList<String> oldEmails = new ArrayList<String>();
+            if(request.getParameter("usersName[]")!=null || request.getParameter("usersMail[]")!=null){
+                String[] nameOld = request.getParameterValues("usersName[]");
+                String[] mailOld = request.getParameterValues("usersMail[]");
+                //non serve fare controlli perché se c'erano prima erano già corretti, al più sono solo stati rimossi
+                for(int i = 0; i < nameOld.length; i++){
+                    Utente u = new UtenteImpl();
+                    u.setNome(nameOld[i]);
+                    u.setEmail(mailOld[i]);
+                    oldPartecipants.add(u);
+                    oldEmails.add(u.getEmail());
+                }  
+            }
+            
+            //ultimo controllo per partecipants
+            if(!oldEmails.isEmpty()){
+                for(int i = 0; i<partecipants.size(); i++){
+                    if(oldEmails.contains(partecipants.get(i).getEmail())){
+                        checkError = true;
+                    }
+                }
+            }
+            
             if(checkError){
                 action_default2(request, response);
                 return;
             }
+            
+            for(int i = 0; i<oldPartecipants.size();i++){
+                    oldPartecipants.get(i).setNome(SecurityLayer.addSlashes(oldPartecipants.get(i).getNome()));
+                    oldPartecipants.get(i).setPassword(SecurityLayer.addSlashes(oldPartecipants.get(i).getPassword()));
+                }
+            dl.getUtenteDAO().updateUtenteListaPartecipanti(oldPartecipants, Integer.parseInt(request.getParameter("changePartecipants")));
+
             if(!partecipants.isEmpty()){
                 for(int i = 0; i<partecipants.size();i++){
                     partecipants.get(i).setNome(SecurityLayer.addSlashes(partecipants.get(i).getNome()));
                     partecipants.get(i).setPassword(SecurityLayer.addSlashes(partecipants.get(i).getPassword()));
+                    dl.getUtenteDAO().insertUtenteListaPartecipanti(partecipants.get(i), Integer.parseInt(request.getParameter("changePartecipants")));
                 }
-                dl.getUtenteDAO().updateUtenteListaPartecipanti(partecipants, Integer.parseInt(request.getParameter("changePartecipants")));
+                
             }
             ArrayList<Utente> partecipants2 = (ArrayList<Utente>) dl.getUtenteDAO().getListaPartecipantiWithMailToSendBySondaggioId(Integer.parseInt(request.getParameter("changePartecipants")));
             Sondaggio sondaggio = dl.getSondaggioDAO().getSondaggio(Integer.parseInt(request.getParameter("changePartecipants")));
