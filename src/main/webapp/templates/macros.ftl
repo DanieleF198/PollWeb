@@ -826,13 +826,13 @@
                         <#list domanda.getOpzioni().opzioni as opzione>
                             <#if opzione == optVal>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${opzione}" checked>
+                                    <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${strip_slashes(opzione)}" checked>
                                     <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${opzione}</label><br>
                                 </div>
                             <#else>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${opzione}">
-                                    <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${opzione}</label><br>
+                                    <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${strip_slashes(opzione)}">
+                                    <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${strip_slashes(opzione)}</label><br>
                                 </div>
                             </#if>
                              <#assign c = c + 1>
@@ -841,8 +841,8 @@
                         <#assign c = 0> 
                         <#list domanda.getOpzioni().opzioni as opzione>
                             <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${opzione}">
-                                <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${opzione}</label><br>
+                                <input type="radio" class="custom-control-input" id="opzione${domanda.getPosizione()}-${c}" name="closeSingle${domanda.getPosizione()}" value="${strip_slashes(opzione)}">
+                                <label for="opzione${domanda.getPosizione()}-${c}" class="custom-control-label">${strip_slashes(opzione)}</label><br>
                             </div>
                             <#assign c = c + 1>
                         </#list>
@@ -916,20 +916,20 @@
                                     <div class="col-12">
                                         <div>
                                             <label class="checkbox mb-3">
-                                                <input type="checkbox" name="opzioneM${domanda.getPosizione()}-${c}" value="${opzione}" checked/>
+                                                <input type="checkbox" name="opzioneM${domanda.getPosizione()}-${c}" value="${strip_slashes(opzione)}" checked/>
                                                 <span class="warning"></span>
                                             </label>
-                                            &nbsp${opzione}
+                                            &nbsp${strip_slashes(opzione)}
                                         </div>
                                     </div>
                                 <#else>
                                     <div class="col-12">
                                         <div>
                                             <label class="checkbox mb-3">
-                                                <input type="checkbox" name="opzioneM${domanda.getPosizione()}-${c}" value="${opzione}"/>
+                                                <input type="checkbox" name="opzioneM${domanda.getPosizione()}-${c}" value="${strip_slashes(opzione)}"/>
                                                 <span class="warning"></span>
                                             </label>
-                                            &nbsp${opzione}
+                                            &nbsp${strip_slashes(opzione)}
                                         </div>
                                     </div>
                                 </#if>
@@ -943,10 +943,10 @@
                         <div class="col-12">
                             <div>
                                 <label class="checkbox mb-3">
-                                    <input type="checkbox" name="opzioneM${domanda.getPosizione()}-${c}" value="${opzione}"/>
+                                    <input type="checkbox" name="opzioneM${domanda.getPosizione()}-${c}" value="${strip_slashes(opzione)}"/>
                                     <span class="warning"></span>
                                 </label>
-                                &nbsp${opzione}
+                                &nbsp${strip_slashes(opzione)}
                             </div>
                         </div>
                         <#assign c = c + 1>
