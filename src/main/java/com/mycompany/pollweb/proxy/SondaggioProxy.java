@@ -41,7 +41,6 @@ public class SondaggioProxy extends SondaggioImpl implements DataItemProxy   {
     
     @Override
     public Utente getUtente() {
-        //notare come il Gruppo in relazione venga caricato solo su richiesta
         if (super.getUtente() == null && idUtente > 0) {
             try {
                 super.setUtente(((UtenteDAO) dataLayer.getDAO(Utente.class)).getUtente(idUtente));

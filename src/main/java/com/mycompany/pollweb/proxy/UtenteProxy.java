@@ -43,7 +43,6 @@ public class UtenteProxy extends UtenteImpl implements DataItemProxy  {
     
     @Override
     public Gruppo getGruppo() {
-        //notare come il Gruppo in relazione venga caricato solo su richiesta
         if (super.getGruppo() == null && idGruppo > 0) {
             try {
                 super.setGruppo(((GruppoDAO) dataLayer.getDAO(Gruppo.class)).getGruppo(idGruppo));

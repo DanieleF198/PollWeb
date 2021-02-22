@@ -113,11 +113,9 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     @Override
     public Risposta getRisposta(int idRisposta) throws DataException {
         Risposta r = null;
-        //prima vediamo se l'oggetto è già stato caricato
         if (dataLayer.getCache().has(Risposta.class, idRisposta)) {
             r = dataLayer.getCache().get(Risposta.class, idRisposta);
         } else {
-            //altrimenti lo carichiamo dal database
             try {
                 sRispostaByID.setInt(1, idRisposta);
                 try (ResultSet rs = sRispostaByID.executeQuery()) {
@@ -125,7 +123,6 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
                         r = createRisposta(rs);
                         System.out.println("userId " + r.getIdUtente());
                         System.out.println("userId2 " + rs.getInt("idUtente"));
-                        //e lo mettiamo anche nella cache
                         dataLayer.getCache().add(Risposta.class, r);
                     }
                 }
@@ -139,7 +136,6 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     @Override
     public List<Risposta> getRispostaByIdUtente(int idUtente) throws DataException {
         List<Risposta> result = new ArrayList();
-            //altrimenti lo carichiamo dal database
             try {
                 sRispostaByIDUtente.setInt(1, idUtente);
                 try (ResultSet rs = sRispostaByIDUtente.executeQuery()) {
@@ -156,7 +152,6 @@ public class RispostaDAO_MySQL extends DAO implements RispostaDAO {
     @Override
     public List<Risposta> getRispostaByIPUtente(String ipUtente) throws DataException {
         List<Risposta> result = new ArrayList();
-            //altrimenti lo carichiamo dal database
             try {
                 sRispostaByIPUtente.setString(1, ipUtente);
                 sRispostaByIPUtente.setString(2, "no!username");

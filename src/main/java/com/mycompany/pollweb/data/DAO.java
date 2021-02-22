@@ -2,10 +2,6 @@ package com.mycompany.pollweb.data;
 
 import java.sql.Connection;
 
-/**
- *
- * @author Giuseppe Della Penna
- */
 public class DAO {
 
     protected final DataLayer dataLayer;

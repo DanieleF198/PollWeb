@@ -151,17 +151,14 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     @Override
     public Utente getUtente(int idUtente) throws DataException {
         Utente u = null;
-        //prima vediamo se l'oggetto è già stato caricato
         if (dataLayer.getCache().has(Utente.class, idUtente)) {
             u = dataLayer.getCache().get(Utente.class, idUtente);
         } else {
-            //altrimenti lo carichiamo dal database
             try {
                 sUtenteByID.setInt(1, idUtente);
                 try (ResultSet rs = sUtenteByID.executeQuery()) {
                     if (rs.next()) {
                         u = createUtente(rs);
-                        //e lo mettiamo anche nella cache
                         dataLayer.getCache().add(Utente.class, u);
                     }
                 }
@@ -180,7 +177,6 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 try (ResultSet rs = sUtenteByID.executeQuery()) {
                     if (rs.next()) {
                         u = createUtente(rs);
-                        //e lo mettiamo anche nella cache
                         dataLayer.getCache().add(Utente.class, u);
                     }
                 }
@@ -212,7 +208,6 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 try (ResultSet rs = sUtenteLogin.executeQuery()) {
                     if (rs.next()) {
                         u = createUtente(rs);
-                        //e lo mettiamo anche nella cache
                         dataLayer.getCache().add(Utente.class, u);
                     }
                 }
@@ -276,8 +271,6 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
     public void storeUtente (Utente utente) throws DataException {
         try {
             if (utente.getKey() != null && utente.getKey() > 0) { //update
-                //non facciamo nulla se l'oggetto è un proxy e indica di non aver subito modifiche
-                //do not store the object if it is a proxy and does not indicate any modification
                 if (utente instanceof DataItemProxy && !((DataItemProxy) utente).isModified()) {
                     return;
                 }
@@ -323,46 +316,15 @@ public class UtenteDAO_MySQL extends DAO implements UtenteDAO  {
                 iUtente.setBoolean(8, utente.isBloccato());
                 
                 if (iUtente.executeUpdate() == 1) {
-                    //per leggere la chiave generata dal database
-                    //per il record appena inserito, usiamo il metodo
-                    //getGeneratedKeys sullo statement.
-                    //to read the generated record key from the database
-                    //we use the getGeneratedKeys method on the same statement
                     try (ResultSet keys = iUtente.getGeneratedKeys()) {
-                        //il valore restituito è un ResultSet con un record
-                        //per ciascuna chiave generata (uno solo nel nostro caso)
-                        //the returned value is a ResultSet with a distinct record for
-                        //each generated key (only one in our case)
                         if (keys.next()) {
-                            //i campi del record sono le componenti della chiave
-                            //(nel nostro caso, un solo intero)
-                            //the record fields are the key componenets
-                            //(a single integer in our case)
                             int key = keys.getInt(1);
-                            //aggiornaimo la chiave in caso di inserimento
-                            //after an insert, uopdate the object key
                             utente.setKey(key);
-                            //inseriamo il nuovo oggetto nella cache
-                            //add the new object to the cache
                             dataLayer.getCache().add(Utente.class, utente);
                         }
                     }
                 }
             }
-
-//            //se possibile, restituiamo l'oggetto appena inserito RICARICATO
-//            //dal database tramite le API del modello. In tal
-//            //modo terremo conto di ogni modifica apportata
-//            //durante la fase di inserimento
-//            //if possible, we return the just-inserted object RELOADED from the
-//            //database through our API. In this way, the resulting
-//            //object will ambed any data correction performed by
-//            //the DBMS
-//            if (key > 0) {
-//                gruppo.copyFrom(getGruppo(key));
-//            }
-            //se abbiamo un proxy, resettiamo il suo attributo dirty
-            //if we have a proxy, reset its dirty attribute
             if (utente instanceof DataItemProxy) {
                 ((DataItemProxy) utente).setModified(false);
             }

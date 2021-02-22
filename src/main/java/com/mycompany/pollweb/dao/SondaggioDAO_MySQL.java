@@ -101,7 +101,7 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     
     @Override
     public void destroy() throws DataException {
-        //anche chiudere i PreparedStamenent � una buona pratica...
+
         try {
             
             sSondaggioByID.close();
@@ -315,14 +315,9 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
     public void storeSondaggio (Sondaggio sondaggio) throws DataException {
         try {
             if (sondaggio.getKey() != null && sondaggio.getKey() > 0) { //update
-                //non facciamo nulla se l'oggetto è un proxy e indica di non aver subito modifiche
-                //do not store the object if it is a proxy and does not indicate any modification
                 if (sondaggio instanceof DataItemProxy && !((DataItemProxy) sondaggio).isModified()) {
                     return;
                 }
-                //idUtente=?,titolo=?,testoApertura=?,testoChiusura=?,completo=?,visibilita=?,dataChiusura=?,
-                //privato=?,modificabile=?,compilazioni=?,version=? WHERE idSondaggio=? AND version=?
-                java.sql.Date sqlCreazione = new java.sql.Date( sondaggio.getCreazione().getTime() );
                 if(sondaggio.getScadenza() != null){
                     java.sql.Date sqlScadenza = new java.sql.Date( sondaggio.getScadenza().getTime() );
                     uSondaggio.setDate(7, sqlScadenza);
@@ -408,46 +403,15 @@ public class SondaggioDAO_MySQL extends DAO implements SondaggioDAO {
                 iSondaggio.setInt(11, sondaggio.getCompilazioni());
                 
                 if (iSondaggio.executeUpdate() == 1) {
-                    //per leggere la chiave generata dal database
-                    //per il record appena inserito, usiamo il metodo
-                    //getGeneratedKeys sullo statement.
-                    //to read the generated record key from the database
-                    //we use the getGeneratedKeys method on the same statement
                     try (ResultSet keys = iSondaggio.getGeneratedKeys()) {
-                        //il valore restituito è un ResultSet con un record
-                        //per ciascuna chiave generata (uno solo nel nostro caso)
-                        //the returned value is a ResultSet with a distinct record for
-                        //each generated key (only one in our case)
                         if (keys.next()) {
-                            //i campi del record sono le componenti della chiave
-                            //(nel nostro caso, un solo intero)
-                            //the record fields are the key componenets
-                            //(a single integer in our case)
                             int key = keys.getInt(1);
-                            //aggiornaimo la chiave in caso di inserimento
-                            //after an insert, uopdate the object key
                             sondaggio.setKey(key);
-                            //inseriamo il nuovo oggetto nella cache
-                            //add the new object to the cache
                             dataLayer.getCache().add(Sondaggio.class, sondaggio);
                         }
                     }
                 }
             }
-
-//            //se possibile, restituiamo l'oggetto appena inserito RICARICATO
-//            //dal database tramite le API del modello. In tal
-//            //modo terremo conto di ogni modifica apportata
-//            //durante la fase di inserimento
-//            //if possible, we return the just-inserted object RELOADED from the
-//            //database through our API. In this way, the resulting
-//            //object will ambed any data correction performed by
-//            //the DBMS
-//            if (key > 0) {
-//                gruppo.copyFrom(getGruppo(key));
-//            }
-            //se abbiamo un proxy, resettiamo il suo attributo dirty
-            //if we have a proxy, reset its dirty attribute
             if (sondaggio instanceof DataItemProxy) {
                 ((DataItemProxy) sondaggio).setModified(false);
             }

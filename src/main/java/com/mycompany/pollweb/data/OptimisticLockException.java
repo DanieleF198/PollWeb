@@ -1,9 +1,5 @@
 package com.mycompany.pollweb.data;
 
-/**
- *
- * @author giuse
- */
 public class OptimisticLockException extends DataException {
 
     private DataItem item;
@@ -13,16 +9,10 @@ public class OptimisticLockException extends DataException {
         this.item = item;
     }
 
-    /**
-     * @return the item
-     */
     public DataItem getItem() {
         return item;
     }
 
-    /**
-     * @param item the item to set
-     */
     public void setItem(DataItem item) {
         this.item = item;
     }
